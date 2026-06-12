@@ -35,8 +35,15 @@ const DashboardGuru = () => {
       try {
         const res = await axiosInstance.get('/nutrition-histories');
         if (res.data?.status === 'success' && res.data.data && res.data.data.length > 0) {
-          // Assume the first one is the most recent
-          setLatestHistory(res.data.data[0]);
+          const latest = res.data.data[0];
+          const latestDate = new Date(latest.created_at).toDateString();
+          const todayDate = new Date().toDateString();
+          
+          if (latestDate === todayDate) {
+            setLatestHistory(latest);
+          } else {
+            setLatestHistory(null);
+          }
         }
 
         // Fetch dynamic stats
@@ -92,19 +99,23 @@ const DashboardGuru = () => {
           <div className="topbar-right">
             <CurrentDate />
             <NotificationBell />
-            <TopbarProfile name="Pramsus Pr" role="GURU" avatarText="P" />
+            <TopbarProfile 
+              name={JSON.parse(localStorage.getItem('user'))?.name || 'Guru'} 
+              role="GURU" 
+              avatarText={(JSON.parse(localStorage.getItem('user'))?.name || 'G').charAt(0).toUpperCase()} 
+            />
           </div>
         </header>
 
         <div className="dashboard-content">
           <div className="welcome-section">
             <div className="welcome-text">
-              <h1>Halo, Ibu Siti! <span>👋</span></h1>
+              <h1>Halo, {JSON.parse(localStorage.getItem('user'))?.name?.split(' ')[0] || 'Guru'}! <span>👋</span></h1>
               <p>Berikut ringkasan nutrisi sekolah Anda hari ini.</p>
             </div>
             <div className="date-badge">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              Senin, 18 November 2024
+              {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </div>
           </div>
 
@@ -143,8 +154,8 @@ const DashboardGuru = () => {
 
           <div className="section-container">
             <div className="section-header">
-              <h3 className="section-title">Menu Hari Ini</h3>
-              <a href="#" className="link-green">Lihat Detail &gt;</a>
+              <h3 className="guru-section-title">Menu Hari Ini</h3>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('/analisis-gizi'); }} className="link-green">Lihat Detail &gt;</a>
             </div>
             <div className="menu-grid">
               {isLoading ? (
@@ -169,7 +180,7 @@ const DashboardGuru = () => {
           </div>
 
           <div className="section-container">
-            <h3 className="section-title" style={{marginBottom: '20px'}}>
+            <h3 className="guru-section-title" style={{marginBottom: '20px'}}>
               <div className="stat-icon icon-green" style={{display:'inline-flex', verticalAlign:'middle', marginRight:'8px'}}>
                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
               </div>
