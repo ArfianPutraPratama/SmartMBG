@@ -14,6 +14,16 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
+Route::get('/laporan-mitra', [App\Http\Controllers\LaporanMitraController::class, 'index']);
+Route::post('/laporan-mitra', [App\Http\Controllers\LaporanMitraController::class, 'store']);
+Route::get('/laporan-mitra/{id}', [App\Http\Controllers\LaporanMitraController::class, 'show']);
+Route::put('/laporan-mitra/{id}', [App\Http\Controllers\LaporanMitraController::class, 'update']);
+Route::delete('/laporan-mitra/{id}', [App\Http\Controllers\LaporanMitraController::class, 'destroy']);
+
+Route::get('/gudang-mitra', [App\Http\Controllers\GudangMitraController::class, 'index']);
+Route::post('/gudang-mitra/reset', [App\Http\Controllers\GudangMitraController::class, 'reset']);
+Route::post('/gudang-mitra/capacity', [App\Http\Controllers\GudangMitraController::class, 'updateCapacity']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -41,6 +51,7 @@ use App\Http\Controllers\EntitasController;
 // Entitas Routes
 Route::get('/entitas', [EntitasController::class, 'index']);
 Route::post('/entitas', [EntitasController::class, 'store']);
+Route::delete('/entitas/{id}', [EntitasController::class, 'destroy']);
 
 // Mitra Routes
 Route::get('/mitras', function () {

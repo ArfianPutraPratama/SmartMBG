@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
 import CurrentDate from '../../../components/CurrentDate/CurrentDate';
@@ -19,11 +20,9 @@ const FoodWasteSPPG = () => {
   const [showForm, setShowForm] = useState(false);
   const [entities, setEntities] = useState(initialEntities);
 
-  useEffect(() => {
-    // Fetch initial data from backend
+  const fetchEntities = () => {
     axios.get('http://localhost:8000/api/entitas')
       .then(response => {
-        // Map database response to frontend state format if needed
         const fetchedEntities = response.data.map(item => {
           let color = '#ffeb3b'; // Yellow default for Belum
           if(item.status_mbg === 'Sudah menerima MBG' || item.status_mbg === 'Sudah Mendapat MBG') color = 'green';
@@ -49,6 +48,10 @@ const FoodWasteSPPG = () => {
       .catch(error => {
         console.error("Error fetching entities:", error);
       });
+  };
+
+  useEffect(() => {
+    fetchEntities();
   }, []);
 
   const handleSaveEntity = (newEntityData) => {
@@ -65,33 +68,37 @@ const FoodWasteSPPG = () => {
 
     axios.post('http://localhost:8000/api/entitas', payload)
       .then(response => {
-        const item = response.data;
-        let color = '#ffeb3b'; // Yellow default for Belum
-        if(item.status_mbg === 'Sudah menerima MBG' || item.status_mbg === 'Sudah Mendapat MBG') color = 'green';
-        if(item.status_mbg === 'Ada Food Waste') color = 'orange';
-
-        const date = new Date(item.created_at);
-        const formattedDate = `${date.getDate()} ${date.toLocaleString('id-ID', { month: 'short' })} ${date.getFullYear()}`;
-
-        const newEntity = {
-          id: item.id,
-          nama: item.nama,
-          tipe: item.tipe,
-          statusMBG: item.status_mbg,
-          alamat: item.alamat,
-          tanggal: formattedDate,
-          statusColor: color,
-          lat: item.lat,
-          lng: item.lng
-        };
-
-        setEntities([newEntity, ...entities]);
+        fetchEntities();
         setShowForm(false);
       })
       .catch(error => {
         console.error("Error saving entity:", error);
         alert("Gagal menyimpan entitas. Silakan coba lagi.");
       });
+  };
+
+  const handleDeleteEntity = (id) => {
+    Swal.fire({
+      title: 'Hapus Entitas?',
+      text: "Data ini tidak dapat dikembalikan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d32f2f',
+      cancelButtonColor: '#666',
+      confirmButtonText: 'Ya, Hapus',
+      cancelButtonText: 'Batal'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`http://localhost:8000/api/entitas/${id}`);
+          Swal.fire('Terhapus!', 'Entitas berhasil dihapus.', 'success');
+          fetchEntities(); // Refresh data
+        } catch (error) {
+          console.error('Error deleting entity:', error);
+          Swal.fire('Error', 'Gagal menghapus entitas.', 'error');
+        }
+      }
+    });
   };
 
   return (
@@ -136,7 +143,7 @@ const FoodWasteSPPG = () => {
 
                 <FoodWasteStats />
                 <FoodWasteMap entities={entities} />
-                <ManajemenEntitasTable entities={entities} onAddClick={() => setShowForm(true)} />
+                <ManajemenEntitasTable entities={entities} onAddClick={() => setShowForm(true)} onDeleteClick={handleDeleteEntity} />
               </>
             ) : (
               <TambahEntitasForm onCancel={() => setShowForm(false)} onSave={handleSaveEntity} />

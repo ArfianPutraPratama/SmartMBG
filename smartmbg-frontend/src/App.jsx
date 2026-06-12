@@ -8,6 +8,7 @@ import OTPVerification from './pages/OTPVerification/OTPVerification';
 import DashboardGuru from './pages/DashboardGuru/DashboardGuru';
 import AnalisisGizi from './pages/DashboardGuru/AnalisisGizi/AnalisisGizi';
 import EvaluasiUlasan from './pages/DashboardGuru/EvaluasiUlasan/EvaluasiUlasan';
+import WebGISGuru from './pages/DashboardGuru/WebGISGuru/WebGISGuru';
 
 import DashboardSPPG from './pages/DashboardSPPG/DashboardSPPG';
 import EvaluasiMenuSPPG from './pages/DashboardSPPG/EvaluasiMenuSPPG/EvaluasiMenuSPPG';
@@ -22,6 +23,11 @@ import RiwayatSisaMakananPage from './pages/DashboardSPPG/RiwayatSisaMakananPage
 import RiwayatDistribusiSPPG from './pages/DashboardSPPG/RiwayatDistribusiSPPG/RiwayatDistribusiSPPG';
 import TambahDistribusiSPPG from './pages/DashboardSPPG/TambahDistribusiSPPG/TambahDistribusiSPPG';
 
+import LaporanMitra from './pages/DashboardMitra/LaporanMitra/LaporanMitra';
+import TambahLaporanMitra from './pages/DashboardMitra/TambahLaporanMitra/TambahLaporanMitra';
+import EditLaporanMitra from './pages/DashboardMitra/TambahLaporanMitra/EditLaporanMitra';
+import WebGISMitra from './pages/DashboardMitra/WebGISMitra/WebGISMitra';
+
 function App() {
   return (
     <Router>
@@ -35,6 +41,7 @@ function App() {
         <Route path="/dashboard-guru" element={<DashboardGuru />} />
         <Route path="/analisis-gizi" element={<AnalisisGizi />} />
         <Route path="/evaluasi-ulasan" element={<EvaluasiUlasan />} />
+        <Route path="/webgis-guru" element={<WebGISGuru />} />
 
         <Route path="/dashboard-sppg" element={<DashboardSPPG />} />
         <Route path="/dashboard-sppg/evaluasi-menu" element={<EvaluasiMenuSPPG />} />
@@ -45,6 +52,10 @@ function App() {
         <Route path="/dashboard-sppg/tambah-distribusi" element={<TambahDistribusiSPPG />} />
         <Route path="/dashboard-mitra" element={<DashboardMitra />} />
         <Route path="/dashboard-mitra/food-waste" element={<FoodWasteMitra />} />
+        <Route path="/dashboard-mitra/laporan" element={<LaporanMitra />} />
+        <Route path="/dashboard-mitra/tambah-laporan" element={<TambahLaporanMitra />} />
+        <Route path="/dashboard-mitra/edit-laporan/:id" element={<EditLaporanMitra />} />
+        <Route path="/dashboard-mitra/webgis" element={<WebGISMitra />} />
       </Routes>
     </Router>
   );

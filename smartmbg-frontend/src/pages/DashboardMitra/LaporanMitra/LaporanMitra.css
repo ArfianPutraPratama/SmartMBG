@@ -1,0 +1,322 @@
+.laporan-mitra-container {
+  padding: 24px 32px;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Page Header */
+.laporan-header {
+  margin-bottom: 24px;
+}
+
+.laporan-header h1 {
+  font-size: 24px;
+  color: #1a5d2c;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.laporan-header p {
+  color: #666;
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Summary Cards */
+.laporan-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.summary-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #e8f5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: #1a5d2c;
+}
+
+.summary-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.summary-badge.optimal {
+  color: #1a5d2c;
+  background: transparent;
+}
+
+.summary-title {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.summary-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.summary-unit {
+  font-size: 14px;
+  font-weight: normal;
+  color: #666;
+}
+
+/* Stacked Icons for Batch Aktif */
+.stacked-icons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+}
+
+.stacked-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #e8f5e9;
+  border: 2px solid white;
+  margin-left: -8px;
+}
+.stacked-icon:first-child {
+  margin-left: 0;
+}
+
+/* Chart Section */
+.chart-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.chart-title h2 {
+  font-size: 18px;
+  color: #333;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.chart-title p {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+.chart-dropdown {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+  color: #555;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #666;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background-color: #1a5d2c;
+}
+
+.legend-trend {
+  color: #2e7d32;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Table Section */
+.table-section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 20px 24px;
+}
+
+.table-header h2 {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+  font-weight: 600;
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-export {
+  color: #1a5d2c;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.btn-add-laporan {
+  background-color: #0b4a1f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.mitra-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mitra-table th {
+  text-align: left;
+  padding: 16px 24px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #f9f9f9;
+}
+
+.mitra-table td {
+  padding: 16px 24px;
+  font-size: 14px;
+  color: #444;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.table-id-batch {
+  color: #444;
+  font-weight: 500;
+}
+
+.table-volume {
+  font-weight: 600;
+  color: #333;
+}
+
+.table-harga {
+  color: #666;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.status-badge.selesai {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.status-badge.diproses {
+  background-color: #fff8e1;
+  color: #f57f17;
+  border: 1px solid #ffecb3;
+}
+
+.status-badge.dibatalkan {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
+.table-row-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.table-row-actions svg {
+  color: #1a5d2c;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.load-more {
+  display: block;
+  text-align: center;
+  padding: 16px;
+  background-color: #f9f9f9;
+  color: #888;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}

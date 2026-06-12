@@ -38,4 +38,14 @@ class EntitasController extends Controller
 
         return response()->json($entitas, 201);
     }
+
+    public function destroy($id)
+    {
+        $entitas = Entitas::find($id);
+        if (!$entitas) {
+            return response()->json(['message' => 'Entitas not found'], 404);
+        }
+        $entitas->delete();
+        return response()->json(['message' => 'Entitas deleted successfully']);
+    }
 }

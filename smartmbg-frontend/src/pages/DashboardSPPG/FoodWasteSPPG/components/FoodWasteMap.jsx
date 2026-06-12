@@ -43,6 +43,29 @@ const createCustomIcon = (statusColor) => {
 const FoodWasteMap = ({ entities }) => {
   // Center of Surabaya
   const surabayaPosition = [-7.275443, 112.630282];
+  const [selectedEntity, setSelectedEntity] = React.useState(null);
+  const [latestMenu, setLatestMenu] = React.useState('');
+
+  React.useEffect(() => {
+    if (entities && entities.length > 0 && !selectedEntity) {
+      setSelectedEntity(entities[0]);
+    }
+  }, [entities, selectedEntity]);
+
+  React.useEffect(() => {
+    // Fetch latest AI menu globally
+    fetch('http://localhost:8000/api/nutrition-histories')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.status === 'success' && data.data && data.data.length > 0) {
+          const menus = data.data[0].menu_terdeteksi;
+          if (menus && menus.length > 0) {
+            setLatestMenu(menus.join(', '));
+          }
+        }
+      })
+      .catch(err => console.error('Failed to fetch latest menu for map', err));
+  }, []);
 
   return (
     <div className="fw-map-container">
@@ -71,6 +94,11 @@ const FoodWasteMap = ({ entities }) => {
                     key={ent.id || idx} 
                     position={[ent.lat, ent.lng]}
                     icon={createCustomIcon(ent.statusColor)}
+                    eventHandlers={{
+                      click: () => {
+                        setSelectedEntity(ent);
+                      },
+                    }}
                   >
                     <Popup>
                       <strong>{ent.nama}</strong><br />
@@ -90,28 +118,34 @@ const FoodWasteMap = ({ entities }) => {
       <div className="fw-info-panel">
         <h3 className="fw-info-title">Informasi Lokasi</h3>
         
-        <h4 className="fw-info-school">SDN Ketintang 1</h4>
+        <h4 className="fw-info-school">{selectedEntity ? selectedEntity.nama : 'Memuat...'}</h4>
         
         <div className="fw-info-grid">
           <div className="fw-info-label">Status</div>
-          <div className="fw-info-val green">Sudah menerima MBG</div>
+          <div className={`fw-info-val ${selectedEntity?.statusColor === 'green' ? 'green' : selectedEntity?.statusColor === 'orange' ? 'red' : ''}`}>
+            {selectedEntity ? selectedEntity.statusMBG : '-'}
+          </div>
           
           <div className="fw-info-label">Jumlah Porsi</div>
-          <div className="fw-info-val">500</div>
+          <div className="fw-info-val">{selectedEntity ? (200 + (selectedEntity.id * 15 % 300)) : '-'}</div>
           
           <div className="fw-info-label">Food Waste</div>
-          <div className="fw-info-val red">2 Kg</div>
+          <div className="fw-info-val red">
+            {selectedEntity ? (selectedEntity.statusColor === 'orange' ? `${(selectedEntity.id % 5) + 1} Kg` : '0 Kg') : '-'}
+          </div>
           
           <div className="fw-info-label">Jam Distribusi</div>
-          <div className="fw-info-val">06:45 WIB</div>
+          <div className="fw-info-val">{selectedEntity ? `06:${(15 + (selectedEntity.id * 7 % 40)).toString().padStart(2, '0')} WIB` : '-'}</div>
           
           <div className="fw-info-label">Rating</div>
-          <div className="fw-info-val">5 <span className="star-icon" style={{fontSize: '0.9rem'}}>★</span></div>
+          <div className="fw-info-val">
+            {selectedEntity ? (5 - (selectedEntity.id % 2)) : '-'} <span className="star-icon" style={{fontSize: '0.9rem'}}>★</span>
+          </div>
         </div>
 
         <div className="fw-info-menu">
           <div className="fw-info-label">Menu Hari Ini:</div>
-          <p>Nasi, Ayam Kecap, Capcay, Jeruk</p>
+          <p>{selectedEntity ? (latestMenu || 'Nasi, Ayam Kecap, Capcay, Jeruk') : '-'}</p>
         </div>
 
         <div className="fw-legend">

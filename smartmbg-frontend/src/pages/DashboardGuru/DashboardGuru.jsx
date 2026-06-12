@@ -1,17 +1,84 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TopbarProfile from '../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../components/NotificationBell/NotificationBell';
 import CurrentDate from '../../components/CurrentDate/CurrentDate';
 import { useNavigate } from 'react-router-dom';
 import SidebarGuru from './components/SidebarGuru';
+import axiosInstance from '../../api/axios';
 import './DashboardGuru.css';
 import nasiImg from '../../assets/nasi_putih.png';
 import ayamImg from '../../assets/ayam_kecap.png';
 import sayurImg from '../../assets/sayur_bayam.png';
 import jerukImg from '../../assets/jeruk.png';
 
+const getFoodDetails = (name) => {
+  const n = (name || '').toLowerCase();
+  if (n.includes('ayam')) return { img: ayamImg, type: 'Sumber Protein' };
+  if (n.includes('sayur')) return { img: sayurImg, type: 'Serat & Vitamin' };
+  if (n.includes('nasi')) return { img: nasiImg, type: 'Karbohidrat Utama' };
+  if (n.includes('jeruk') || n.includes('buah')) return { img: jerukImg, type: 'Vitamin C Alami' };
+  return { img: nasiImg, type: 'Menu Tambahan' }; // fallback
+};
+
 const DashboardGuru = () => {
   const navigate = useNavigate();
+  const [latestHistory, setLatestHistory] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState({
+    siswaTerlayani: 0,
+    rataRataUlasan: 0,
+    sisaMakanan: 0
+  });
+
+  useEffect(() => {
+    const fetchHistoryAndStats = async () => {
+      try {
+        const res = await axiosInstance.get('/nutrition-histories');
+        if (res.data?.status === 'success' && res.data.data && res.data.data.length > 0) {
+          // Assume the first one is the most recent
+          setLatestHistory(res.data.data[0]);
+        }
+
+        // Fetch dynamic stats
+        const [reviewsRes, wastesRes, entitasRes] = await Promise.all([
+          axiosInstance.get('/reviews').catch(() => ({ data: [] })),
+          axiosInstance.get('/sppg/food-wastes').catch(() => ({ data: [] })),
+          axiosInstance.get('/entitas').catch(() => ({ data: [] }))
+        ]);
+
+        const reviews = reviewsRes.data || [];
+        const wastes = wastesRes.data || [];
+        const entitas = entitasRes.data || [];
+
+        const avgRating = reviews.length > 0 
+          ? (reviews.reduce((acc, r) => acc + (r.rating || 0), 0) / reviews.length).toFixed(1)
+          : 0;
+
+        const totalSisa = wastes.reduce((acc, w) => acc + parseFloat(w.berat_sisa || 0), 0).toFixed(1);
+        
+        // Asumsi tiap entitas punya ~80 siswa jika field jumlah_siswa tidak ada
+        const totalSiswa = entitas.length > 0 
+          ? entitas.reduce((acc, e) => acc + parseInt(e.jumlah_siswa || 80), 0)
+          : 0;
+
+        setStats({
+          siswaTerlayani: totalSiswa,
+          rataRataUlasan: avgRating,
+          sisaMakanan: totalSisa
+        });
+
+      } catch (err) {
+        console.error('Failed to fetch data', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHistoryAndStats();
+  }, []);
+
+  const menuTerdeteksi = latestHistory?.menu_terdeteksi || [];
+  const totalMenu = menuTerdeteksi.length;
 
   return (
     <div className="dashboard-layout">
@@ -25,7 +92,7 @@ const DashboardGuru = () => {
           <div className="topbar-right">
             <CurrentDate />
             <NotificationBell />
-            <TopbarProfile name="Admin SPPG" role="ADMINISTRATOR" avatarText="S" />
+            <TopbarProfile name="Pramsus Pr" role="GURU" avatarText="P" />
           </div>
         </header>
 
@@ -44,22 +111,12 @@ const DashboardGuru = () => {
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-header">
-                <span>Siswa Terlayani</span>
-                <div className="stat-icon icon-green">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </div>
-              </div>
-              <h2 className="stat-value">320</h2>
-              <span className="stat-desc">Orang</span>
-            </div>
-            <div className="stat-card">
-              <div className="stat-header">
                 <span>Menu Hari Ini</span>
                 <div className="stat-icon icon-green">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 </div>
               </div>
-              <h2 className="stat-value">4</h2>
+              <h2 className="stat-value">{isLoading ? '-' : (totalMenu > 0 ? totalMenu : 0)}</h2>
               <span className="stat-desc">Jenis</span>
             </div>
             <div className="stat-card">
@@ -69,7 +126,7 @@ const DashboardGuru = () => {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 </div>
               </div>
-              <h2 className="stat-value">4.6/5</h2>
+              <h2 className="stat-value">{isLoading ? '-' : `${stats.rataRataUlasan}/5`}</h2>
               <span className="stat-desc">Baik</span>
             </div>
             <div className="stat-card">
@@ -79,7 +136,7 @@ const DashboardGuru = () => {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                 </div>
               </div>
-              <h2 className="stat-value">12</h2>
+              <h2 className="stat-value">{isLoading ? '-' : stats.sisaMakanan}</h2>
               <span className="stat-desc">Kg</span>
             </div>
           </div>
@@ -90,26 +147,24 @@ const DashboardGuru = () => {
               <a href="#" className="link-green">Lihat Detail &gt;</a>
             </div>
             <div className="menu-grid">
-              <div className="menu-card">
-                <img src={nasiImg} alt="Nasi Putih" className="menu-img" />
-                <h4 className="menu-name">Nasi Putih</h4>
-                <p className="menu-type">Karbohidrat Utama</p>
-              </div>
-              <div className="menu-card">
-                <img src={ayamImg} alt="Ayam Kecap" className="menu-img" />
-                <h4 className="menu-name">Ayam Kecap</h4>
-                <p className="menu-type">Sumber Protein</p>
-              </div>
-              <div className="menu-card">
-                <img src={sayurImg} alt="Sayur Bayam" className="menu-img" />
-                <h4 className="menu-name">Sayur Bayam</h4>
-                <p className="menu-type">Serat &amp; Vitamin</p>
-              </div>
-              <div className="menu-card">
-                <img src={jerukImg} alt="Jeruk" className="menu-img" />
-                <h4 className="menu-name">Jeruk</h4>
-                <p className="menu-type">Vitamin C Alami</p>
-              </div>
+              {isLoading ? (
+                <p style={{ color: '#666' }}>Memuat data menu...</p>
+              ) : menuTerdeteksi.length > 0 ? (
+                menuTerdeteksi.map((menu, idx) => {
+                  const details = getFoodDetails(menu);
+                  return (
+                    <div className="menu-card" key={idx}>
+                      <img src={details.img} alt={menu} className="menu-img" />
+                      <h4 className="menu-name">{menu}</h4>
+                      <p className="menu-type">{details.type}</p>
+                    </div>
+                  );
+                })
+              ) : (
+                <p style={{ color: '#999', fontStyle: 'italic', padding: '16px 0' }}>
+                  Belum ada data menu hari ini, silakan unggah foto di menu Analisis Gizi.
+                </p>
+              )}
             </div>
           </div>
 
@@ -124,27 +179,27 @@ const DashboardGuru = () => {
             <div className="nutrition-grid">
               <div className="nutrition-card">
                 <div className="nut-label">Kalori</div>
-                <div className="nut-val">650</div>
+                <div className="nut-val">{latestHistory ? latestHistory.kalori : '0'}</div>
                 <div className="nut-unit">kkal</div>
               </div>
               <div className="nutrition-card">
                 <div className="nut-label">Protein</div>
-                <div className="nut-val">18.3</div>
+                <div className="nut-val">{latestHistory ? latestHistory.protein : '0'}</div>
                 <div className="nut-unit">g</div>
               </div>
               <div className="nutrition-card">
                 <div className="nut-label">Lemak</div>
-                <div className="nut-val">16.8</div>
+                <div className="nut-val">{latestHistory ? latestHistory.lemak : '0'}</div>
                 <div className="nut-unit">g</div>
               </div>
               <div className="nutrition-card">
                 <div className="nut-label">Karbohidrat</div>
-                <div className="nut-val">53.3</div>
+                <div className="nut-val">{latestHistory ? latestHistory.karbo : '0'}</div>
                 <div className="nut-unit">g</div>
               </div>
               <div className="nutrition-card">
                 <div className="nut-label">Serat</div>
-                <div className="nut-val">8.2</div>
+                <div className="nut-val">{latestHistory ? (latestHistory.serat || '8.2') : '0'}</div>
                 <div className="nut-unit">g</div>
               </div>
             </div>
@@ -153,7 +208,7 @@ const DashboardGuru = () => {
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
               <div className="alert-text">
                 <h4>Rekomendasi Ahli Gizi</h4>
-                <p>Menu hari ini telah memenuhi 35% kebutuhan gizi harian siswa sekolah dasar. Kandungan protein cukup untuk mendukung tumbuh kembang anak.</p>
+                <p>{latestHistory?.rekomendasi || 'Belum ada rekomendasi. Unggah foto nampan makanan untuk melihat analisis AI.'}</p>
               </div>
             </div>
           </div>

@@ -181,16 +181,23 @@ const AnalisisGizi = () => {
                   <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
                     Memindai gambar...
                   </div>
-                ) : (aiResult.detail_deteksi || []).length > 0 ? (
-                  (aiResult.detail_deteksi || []).map((item, index) => (
-                    <div className="menu-item-row" key={index}>
-                      <div className="menu-item-left">
-                        <img src={getFoodIcon(item.name)} alt="icon" className="menu-item-thumb" />
-                        <span className="menu-item-name">{item?.name || 'Tidak diketahui'}</span>
+                ) : (aiResult.menu_terdeteksi || []).length > 0 || (aiResult.detail_deteksi || []).length > 0 ? (
+                  (() => {
+                    // Try to use menu_terdeteksi first, fallback to unique names from detail_deteksi
+                    const uniqueNames = (aiResult.menu_terdeteksi && aiResult.menu_terdeteksi.length > 0)
+                      ? aiResult.menu_terdeteksi
+                      : Array.from(new Set((aiResult.detail_deteksi || []).map(item => item.name)));
+                    
+                    return uniqueNames.map((name, index) => (
+                      <div className="menu-item-row" key={index}>
+                        <div className="menu-item-left">
+                          <img src={getFoodIcon(name)} alt="icon" className="menu-item-thumb" />
+                          <span className="menu-item-name">{name || 'Tidak diketahui'}</span>
+                        </div>
+                        <svg className="check-icon-filled" width="20" height="20" viewBox="0 0 24 24" fill="#1a5d2c"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                       </div>
-                      <svg className="check-icon-filled" width="20" height="20" viewBox="0 0 24 24" fill="#1a5d2c"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                    </div>
-                  ))
+                    ));
+                  })()
                 ) : (
                   <div style={{ padding: '20px', textAlign: 'center', color: '#999', fontStyle: 'italic' }}>
                     Belum ada makanan yang terdeteksi. Silakan unggah foto.
