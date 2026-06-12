@@ -143,6 +143,17 @@
   transition: border-color 0.2s;
 }
 
+/* Hide number input arrows to prevent overlap with suffix */
+.sppg-td-input-wrapper input[type="number"]::-webkit-inner-spin-button, 
+.sppg-td-input-wrapper input[type="number"]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+.sppg-td-input-wrapper input[type="number"] {
+  -moz-appearance: textfield;
+  padding-right: 70px;
+}
+
 .sppg-td-input-wrapper select {
   appearance: none;
   cursor: pointer;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
@@ -7,6 +7,32 @@ import SidebarSPPG from '../components/SidebarSPPG';
 import './RiwayatDistribusiSPPG.css';
 
 const RiwayatDistribusiSPPG = () => {
+  const [distribusiList, setDistribusiList] = useState([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('sppg_distribusi_data');
+    if (saved) {
+      setDistribusiList(JSON.parse(saved));
+    } else {
+      // Default hardcoded data to initialize
+      const defaultData = [
+        { id: 1, tanggal: '23 Mei 2025', namaSekolah: 'SDN Ketintang 1 Surabaya', totalPorsi: '450 Box', status: 'Delivered', waktu: '09:15 WIB', detailInfo: '' },
+        { id: 2, tanggal: '23 Mei 2025', namaSekolah: 'SMPN 12 Surabaya', totalPorsi: '820 Box', status: 'In Progress', waktu: 'Estimasi 11:00', detailInfo: '' },
+        { id: 3, tanggal: '22 Mei 2025', namaSekolah: 'SDK Petra 1', totalPorsi: '320 Box', status: 'Delivered', waktu: '08:45 WIB', detailInfo: '' },
+        { id: 4, tanggal: '22 Mei 2025', namaSekolah: 'SMKN 1 Surabaya', totalPorsi: '1,200 Box', status: 'Delayed', waktu: '09:55 WIB (+25m)', detailInfo: '' },
+        { id: 5, tanggal: '21 Mei 2025', namaSekolah: 'TK Pembina Nasional', totalPorsi: '150 Box', status: 'Delivered', waktu: '08:10 WIB', detailInfo: '' }
+      ];
+      setDistribusiList(defaultData);
+      localStorage.setItem('sppg_distribusi_data', JSON.stringify(defaultData));
+    }
+  }, []);
+
+  const getStatusClass = (status) => {
+    if (status === 'Delivered') return 'delivered';
+    if (status === 'Delayed') return 'delayed';
+    return 'inprogress';
+  };
+
   return (
     <div className="dashboard-layout">
       {/* Sidebar */}
@@ -73,7 +99,7 @@ const RiwayatDistribusiSPPG = () => {
             {/* Table Header Section */}
             <div className="sppg-rd-table-top">
               <h3>Data Distribusi</h3>
-              <span>SHOWING 5 OF 124 RESULTS</span>
+              <span>MENAMPILKAN {distribusiList.length} HASIL</span>
             </div>
 
             {/* Table */}
@@ -90,46 +116,16 @@ const RiwayatDistribusiSPPG = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>23 Mei 2025</td>
-                    <td className="sppg-rd-school-name">SDN Ketintang 1 Surabaya</td>
-                    <td>450 Box</td>
-                    <td><span className="sppg-rd-badge delivered">Delivered</span></td>
-                    <td>09:15 WIB</td>
-                    <td><a href="#" className="sppg-rd-action-link">Lihat Detail</a></td>
-                  </tr>
-                  <tr>
-                    <td>23 Mei 2025</td>
-                    <td className="sppg-rd-school-name">SMPN 12 Surabaya</td>
-                    <td>820 Box</td>
-                    <td><span className="sppg-rd-badge inprogress">In Progress</span></td>
-                    <td className="sppg-rd-estimate">Estimasi 11:00</td>
-                    <td><a href="#" className="sppg-rd-action-link">Lihat Detail</a></td>
-                  </tr>
-                  <tr>
-                    <td>22 Mei 2025</td>
-                    <td className="sppg-rd-school-name">SDK Petra 1</td>
-                    <td>320 Box</td>
-                    <td><span className="sppg-rd-badge delivered">Delivered</span></td>
-                    <td>08:45 WIB</td>
-                    <td><a href="#" className="sppg-rd-action-link">Lihat Detail</a></td>
-                  </tr>
-                  <tr>
-                    <td>22 Mei 2025</td>
-                    <td className="sppg-rd-school-name">SMKN 1 Surabaya</td>
-                    <td>1,200 Box</td>
-                    <td><span className="sppg-rd-badge delayed">Delayed</span></td>
-                    <td>09:55 WIB <span className="sppg-rd-delay-time">(+25m)</span></td>
-                    <td><a href="#" className="sppg-rd-action-link">Lihat Detail</a></td>
-                  </tr>
-                  <tr>
-                    <td>21 Mei 2025</td>
-                    <td className="sppg-rd-school-name">TK Pembina Nasional</td>
-                    <td>150 Box</td>
-                    <td><span className="sppg-rd-badge delivered">Delivered</span></td>
-                    <td>08:10 WIB</td>
-                    <td><a href="#" className="sppg-rd-action-link">Lihat Detail</a></td>
-                  </tr>
+                  {distribusiList.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.tanggal}</td>
+                      <td className="sppg-rd-school-name">{item.namaSekolah}</td>
+                      <td>{item.totalPorsi}</td>
+                      <td><span className={`sppg-rd-badge ${getStatusClass(item.status)}`}>{item.status}</span></td>
+                      <td>{item.waktu}</td>
+                      <td><a href="#" onClick={(e) => e.preventDefault()} className="sppg-rd-action-link">Lihat Detail</a></td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

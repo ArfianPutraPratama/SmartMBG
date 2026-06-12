@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api/axios';
 import Swal from 'sweetalert2';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
@@ -22,9 +22,16 @@ const FoodWasteSPPG = () => {
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [editEntity, setEditEntity] = useState(null);
   const [entities, setEntities] = useState(initialEntities);
+  
+  const [stats, setStats] = useState({
+    totalPorsi: 0,
+    limbahMakanan: 0,
+    ratingMBG: 0,
+    totalUlasan: 0
+  });
 
   const fetchEntities = () => {
-    axios.get('http://localhost:8000/api/entitas')
+    axios.get('/entitas')
       .then(response => {
         const fetchedEntities = response.data.map(item => {
           let color = '#ffeb3b'; // Yellow default for Belum
@@ -54,8 +61,57 @@ const FoodWasteSPPG = () => {
       });
   };
 
+  const fetchStats = async () => {
+    try {
+      let calcTotalPorsi = 0;
+      const savedDist = localStorage.getItem('sppg_distribusi_data');
+      if (savedDist) {
+        const distData = JSON.parse(savedDist);
+        distData.forEach(d => {
+          if (d.totalPorsi) {
+            const strValue = String(d.totalPorsi);
+            const num = parseInt(strValue.replace(/\D/g, ''));
+            if (!isNaN(num)) calcTotalPorsi += num;
+          }
+        });
+      }
+
+      let calcLimbah = 0;
+      try {
+        const fwRes = await axios.get('/sppg/food-wastes');
+        if (fwRes.data) {
+          fwRes.data.forEach(fw => {
+            if (fw.weight_kg) calcLimbah += parseFloat(fw.weight_kg);
+          });
+        }
+      } catch(e) { console.error(e); }
+
+      let calcRating = 0;
+      let totalUlasan = 0;
+      try {
+        const revRes = await axios.get('/reviews');
+        if (revRes.data && revRes.data.length > 0) {
+          totalUlasan = revRes.data.length;
+          const sum = revRes.data.reduce((acc, curr) => acc + curr.rating, 0);
+          calcRating = sum / totalUlasan;
+        }
+      } catch(e) { console.error(e); }
+
+      setStats({
+        totalPorsi: calcTotalPorsi,
+        limbahMakanan: Math.round(calcLimbah * 10) / 10,
+        ratingMBG: calcRating,
+        totalUlasan: totalUlasan
+      });
+
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+    }
+  };
+
   useEffect(() => {
     fetchEntities();
+    fetchStats();
   }, []);
 
   const handleSaveEntity = (newEntityData) => {
@@ -71,7 +127,7 @@ const FoodWasteSPPG = () => {
 
     if (newEntityData.id) {
       // Edit existing entity
-      axios.put(`http://localhost:8000/api/entitas/${newEntityData.id}`, payload)
+      axios.put(`/entitas/${newEntityData.id}`, payload)
         .then(response => {
           fetchEntities();
           setShowForm(false);
@@ -84,7 +140,7 @@ const FoodWasteSPPG = () => {
         });
     } else {
       // Create new entity
-      axios.post('http://localhost:8000/api/entitas', payload)
+      axios.post('/entitas', payload)
         .then(response => {
           fetchEntities();
           setShowForm(false);
@@ -110,7 +166,7 @@ const FoodWasteSPPG = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:8000/api/entitas/${id}`);
+          await axios.delete(`/entitas/${id}`);
           Swal.fire('Terhapus!', 'Entitas berhasil dihapus.', 'success');
           fetchEntities(); // Refresh data
         } catch (error) {
@@ -179,7 +235,13 @@ const FoodWasteSPPG = () => {
                   <p>Monitoring real-time status sekolah penerima Makan Bergizi Gratis (MBG) dan pengelolaan food waste.</p>
                 </div>
 
-                <FoodWasteStats />
+                <FoodWasteStats 
+                  totalPorsi={stats.totalPorsi}
+                  sekolahAktif={entities.length}
+                  limbahMakanan={stats.limbahMakanan}
+                  ratingMBG={stats.ratingMBG}
+                  totalUlasan={stats.totalUlasan}
+                />
                 <FoodWasteMap entities={entities} />
                 <ManajemenEntitasTable 
                   entities={entities} 

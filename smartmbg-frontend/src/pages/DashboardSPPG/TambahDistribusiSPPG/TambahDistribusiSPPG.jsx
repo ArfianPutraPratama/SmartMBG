@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
 import SidebarSPPG from '../components/SidebarSPPG';
@@ -7,6 +8,57 @@ import './TambahDistribusiSPPG.css';
 
 const TambahDistribusiSPPG = () => {
   const navigate = useNavigate();
+  
+  const [formData, setFormData] = useState({
+    namaSekolah: '',
+    status: 'inprogress', // default to inprogress
+    tanggal: '',
+    waktu: '',
+    totalPorsi: '',
+    namaKurir: '',
+    catatan: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.namaSekolah || !formData.totalPorsi) {
+      Swal.fire('Error', 'Nama Sekolah dan Total Porsi wajib diisi!', 'error');
+      return;
+    }
+
+    // Convert status to display text
+    let statusDisplay = 'In Progress';
+    if (formData.status === 'delivered') statusDisplay = 'Delivered';
+    if (formData.status === 'delayed') statusDisplay = 'Delayed';
+
+    const newEntry = {
+      id: Date.now(),
+      tanggal: formData.tanggal,
+      namaSekolah: formData.namaSekolah,
+      totalPorsi: `${formData.totalPorsi} Box`,
+      status: statusDisplay,
+      waktu: formData.waktu,
+      kurir: formData.namaKurir,
+      catatan: formData.catatan
+    };
+
+    // Save to localStorage
+    const existingData = JSON.parse(localStorage.getItem('sppg_distribusi_data') || '[]');
+    // Add new entry to the top
+    const updatedData = [newEntry, ...existingData];
+    localStorage.setItem('sppg_distribusi_data', JSON.stringify(updatedData));
+
+    Swal.fire('Berhasil!', 'Laporan distribusi berhasil ditambahkan.', 'success').then(() => {
+      navigate('/dashboard-sppg/riwayat-distribusi');
+    });
+  };
 
   return (
     <div className="dashboard-layout">
@@ -45,7 +97,7 @@ const TambahDistribusiSPPG = () => {
               <p>Silakan lengkapi formulir di bawah ini untuk mencatat distribusi makanan harian.</p>
             </div>
 
-            <form className="sppg-td-form" onSubmit={(e) => e.preventDefault()}>
+            <form className="sppg-td-form" onSubmit={handleSubmit}>
               
               <div className="sppg-td-grid">
                 {/* Nama Sekolah */}
@@ -53,7 +105,7 @@ const TambahDistribusiSPPG = () => {
                   <label>Nama Sekolah</label>
                   <div className="sppg-td-input-wrapper">
                     <svg className="sppg-td-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                    <input type="text" placeholder="Cari atau pilih sekolah..." />
+                    <input type="text" name="namaSekolah" value={formData.namaSekolah} onChange={handleChange} placeholder="Cari atau pilih sekolah..." required />
                   </div>
                 </div>
 
@@ -62,7 +114,7 @@ const TambahDistribusiSPPG = () => {
                   <label>Status Pengiriman</label>
                   <div className="sppg-td-input-wrapper">
                     <svg className="sppg-td-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                    <select defaultValue="inprogress">
+                    <select name="status" value={formData.status} onChange={handleChange}>
                       <option value="delivered">Selesai (Delivered)</option>
                       <option value="inprogress">Dalam Perjalanan (In Progress)</option>
                       <option value="delayed">Terlambat (Delayed)</option>
@@ -75,8 +127,7 @@ const TambahDistribusiSPPG = () => {
                 <div className="sppg-td-form-group">
                   <label>Tanggal Distribusi</label>
                   <div className="sppg-td-input-wrapper">
-                    <svg className="sppg-td-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <input type="text" defaultValue="05/23/2025" />
+                    <input type="date" name="tanggal" value={formData.tanggal} onChange={handleChange} style={{ paddingLeft: '1rem' }} />
                   </div>
                 </div>
 
@@ -84,8 +135,7 @@ const TambahDistribusiSPPG = () => {
                 <div className="sppg-td-form-group">
                   <label>Waktu Pengiriman</label>
                   <div className="sppg-td-input-wrapper">
-                    <svg className="sppg-td-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <input type="text" defaultValue="10:30 AM" />
+                    <input type="time" name="waktu" value={formData.waktu} onChange={handleChange} style={{ paddingLeft: '1rem' }} />
                   </div>
                 </div>
 
@@ -94,8 +144,8 @@ const TambahDistribusiSPPG = () => {
                   <label>Total Porsi</label>
                   <div className="sppg-td-input-wrapper">
                     <svg className="sppg-td-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" y1="16" x2="6.01" y2="16"/><line x1="10" y1="16" x2="10.01" y2="16"/></svg>
-                    <input type="text" placeholder="Contoh: 150" />
-                    <span className="sppg-td-suffix">BOX</span>
+                    <input type="number" name="totalPorsi" value={formData.totalPorsi} onChange={handleChange} placeholder="Contoh: 150" required />
+                    <span className="sppg-td-suffix">KOTAK</span>
                   </div>
                 </div>
 
@@ -104,7 +154,7 @@ const TambahDistribusiSPPG = () => {
                   <label>Nama Kurir / Driver</label>
                   <div className="sppg-td-input-wrapper">
                     <svg className="sppg-td-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    <input type="text" placeholder="Masukkan nama pengemudi..." />
+                    <input type="text" name="namaKurir" value={formData.namaKurir} onChange={handleChange} placeholder="Masukkan nama pengemudi..." />
                   </div>
                 </div>
               </div>
@@ -113,7 +163,7 @@ const TambahDistribusiSPPG = () => {
               <div className="sppg-td-form-group sppg-td-full-width">
                 <label>Catatan Tambahan</label>
                 <div className="sppg-td-input-wrapper textarea-wrapper">
-                  <textarea placeholder="Informasi tambahan mengenai rute, kendala, atau instruksi khusus..."></textarea>
+                  <textarea name="catatan" value={formData.catatan} onChange={handleChange} placeholder="Informasi tambahan mengenai rute, kendala, atau instruksi khusus..."></textarea>
                 </div>
               </div>
 
