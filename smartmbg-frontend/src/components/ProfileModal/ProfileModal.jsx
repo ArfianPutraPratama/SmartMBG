@@ -225,11 +225,12 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
 
             <div className="form-group">
               <label>Alamat Lengkap</label>
-              <textarea 
+              <input 
+                type="text"
                 value={userData.address}
                 onChange={(e) => setUserData({...userData, address: e.target.value})}
                 disabled={isSaving}
-              ></textarea>
+              />
             </div>
           </div>
         </div>

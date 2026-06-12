@@ -61,9 +61,6 @@ const HeroSection = ({ onNavigate }) => {
               <button className="btn-primary" onClick={onNavigate}>
                 Masuk Ke Platform <ArrowRight size={20} />
               </button>
-              <button className="btn-outline" onClick={() => document.getElementById('webgis').scrollIntoView({ behavior: 'smooth' })}>
-                Lihat Demo <PlayCircle size={20} />
-              </button>
             </div>
           </motion.div>
         </div>

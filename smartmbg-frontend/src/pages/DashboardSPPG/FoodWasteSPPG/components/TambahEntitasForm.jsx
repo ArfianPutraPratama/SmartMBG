@@ -23,11 +23,26 @@ const TambahEntitasForm = ({ onCancel, onSave, initialData }) => {
   const handleGetLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          
+          let fetchedAddress = formData.alamat;
+          try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+            const data = await response.json();
+            if (data && data.display_name) {
+              fetchedAddress = data.display_name;
+            }
+          } catch (error) {
+            console.error("Gagal mendapatkan alamat dari koordinat:", error);
+          }
+
           setFormData({
             ...formData,
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lat: lat,
+            lng: lng,
+            alamat: fetchedAddress
           });
         },
         (error) => {

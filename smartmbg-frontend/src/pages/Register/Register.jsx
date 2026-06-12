@@ -11,6 +11,9 @@ const Register = () => {
     name: '',
     email: '',
     phone: '',
+    address: '',
+    lat: null,
+    lng: null,
     username: '',
     password: '',
     password_confirmation: ''
@@ -23,6 +26,41 @@ const Register = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleGetLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          
+          let fetchedAddress = formData.address;
+          try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+            const data = await response.json();
+            if (data && data.display_name) {
+              fetchedAddress = data.display_name;
+            }
+          } catch (error) {
+            console.error("Gagal mendapatkan alamat dari koordinat:", error);
+          }
+
+          setFormData((prev) => ({
+            ...prev,
+            lat: lat,
+            lng: lng,
+            address: fetchedAddress
+          }));
+        },
+        (error) => {
+          console.error(error);
+          alert("Gagal mengambil lokasi. Mohon izinkan akses lokasi (Location Access) di browser Anda.");
+        }
+      );
+    } else {
+      alert("Browser Anda tidak mendukung fitur lokasi (Geolocation).");
+    }
   };
 
   const handleRegister = async (e) => {
@@ -118,6 +156,28 @@ const Register = () => {
               <div className="form-group-half">
                 <label className="form-label">Nomor Telepon</label>
                 <input type="tel" className="form-input" name="phone" placeholder="Contoh: 08123456789" value={formData.phone} onChange={handleChange} required />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Alamat Lengkap</label>
+              <input type="text" className="form-input" name="address" placeholder="Masukkan alamat lengkap" value={formData.address} onChange={handleChange} required />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Koordinat Titik Peta (Otomatis)</label>
+              <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+                <button 
+                  type="button" 
+                  onClick={handleGetLocation} 
+                  style={{padding: '8px 12px', backgroundColor: '#e8f5e9', color: '#1b5e20', border: '1px solid #c8e6c9', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem'}}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                  Gunakan Lokasi Saat Ini
+                </button>
+                <div style={{flex: 1, padding: '8px 12px', backgroundColor: '#f9f9f9', borderRadius: '8px', border: '1px solid #eee', fontSize: '0.8rem', color: '#666'}}>
+                  {formData.lat && formData.lng ? `Lat: ${formData.lat.toFixed(5)}, Lng: ${formData.lng.toFixed(5)}` : 'Titik koordinat belum diatur'}
+                </div>
               </div>
             </div>
 
