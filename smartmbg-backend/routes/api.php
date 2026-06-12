@@ -58,3 +58,8 @@ Route::delete('/entitas/{id}', [EntitasController::class, 'destroy']);
 Route::get('/mitras', function () {
     return App\Models\User::where('role', 'mitra')->get();
 });
+
+// School Routes
+Route::get('/schools', function () {
+    return App\Models\User::where('role', 'guru')->get();
+});

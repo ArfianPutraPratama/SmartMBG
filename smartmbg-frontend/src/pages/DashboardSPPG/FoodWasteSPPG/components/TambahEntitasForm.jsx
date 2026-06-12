@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../../../api/axios';
 import './TambahEntitasForm.css';
 
 const TambahEntitasForm = ({ onCancel, onSave, initialData }) => {
@@ -13,10 +14,40 @@ const TambahEntitasForm = ({ onCancel, onSave, initialData }) => {
     lng: initialData?.lng || null
   });
 
+  const [sekolahList, setSekolahList] = useState([]);
+
+  useEffect(() => {
+    const fetchSekolah = async () => {
+      try {
+        const response = await axiosInstance.get('/schools');
+        setSekolahList(response.data);
+      } catch (error) {
+        console.error("Gagal mengambil data sekolah", error);
+      }
+    };
+    fetchSekolah();
+  }, []);
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    if (name === 'nama') {
+      const selectedSekolah = sekolahList.find(s => s.name === value);
+      if (selectedSekolah) {
+        setFormData({
+          ...formData,
+          nama: value,
+          alamat: selectedSekolah.address || '',
+          lat: selectedSekolah.lat ? parseFloat(selectedSekolah.lat) : null,
+          lng: selectedSekolah.lng ? parseFloat(selectedSekolah.lng) : null
+        });
+        return;
+      }
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
   };
 
@@ -84,13 +115,18 @@ const TambahEntitasForm = ({ onCancel, onSave, initialData }) => {
               <label>Nama Entitas</label>
               <div className="tef-input-wrapper">
                 <svg className="tef-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                <input 
-                  type="text" 
-                  name="nama"
-                  placeholder="Masukkan nama entitas (contoh: SDN Ketintang 1)" 
-                  value={formData.nama}
+                <select 
+                  name="nama" 
+                  value={formData.nama} 
                   onChange={handleChange}
-                />
+                  style={{ width: '100%', padding: '12px 12px 12px 40px', border: '1px solid #ddd', borderRadius: '8px', outline: 'none', appearance: 'none', backgroundColor: '#fff', color: '#333' }}
+                >
+                  <option value="" disabled>Pilih sekolah (Entitas)...</option>
+                  {sekolahList.map((sekolah) => (
+                    <option key={sekolah.id} value={sekolah.name}>{sekolah.name}</option>
+                  ))}
+                </select>
+                <svg style={{position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#666'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
               </div>
             </div>
 
@@ -131,7 +167,7 @@ const TambahEntitasForm = ({ onCancel, onSave, initialData }) => {
                   Gunakan Lokasi Saat Ini
                 </button>
                 <div style={{flex: 1, padding: '10px 16px', backgroundColor: '#f9f9f9', borderRadius: '8px', border: '1px solid #eee', fontSize: '0.9rem', color: '#666'}}>
-                  {formData.lat && formData.lng ? `Lat: ${formData.lat.toFixed(5)}, Lng: ${formData.lng.toFixed(5)}` : 'Titik koordinat belum diatur'}
+                  {formData.lat && formData.lng ? `Lat: ${Number(formData.lat).toFixed(5)}, Lng: ${Number(formData.lng).toFixed(5)}` : 'Titik koordinat belum diatur'}
                 </div>
               </div>
             </div>
@@ -147,11 +183,11 @@ const TambahEntitasForm = ({ onCancel, onSave, initialData }) => {
             </div>
 
             <div className="tef-form-actions">
-              <button type="button" className="tef-btn-cancel" onClick={onCancel}>Batalkan</button>
               <button type="button" className="tef-btn-save" onClick={handleSaveClick}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
                 {isEdit ? 'Simpan Perubahan' : 'Simpan Entitas'}
               </button>
+              <button type="button" className="tef-btn-cancel" onClick={onCancel}>Batalkan</button>
             </div>
           </form>
         </div>

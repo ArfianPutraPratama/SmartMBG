@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import axiosInstance from '../../../api/axios';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
 import SidebarSPPG from '../components/SidebarSPPG';
@@ -18,6 +19,20 @@ const TambahDistribusiSPPG = () => {
     namaKurir: '',
     catatan: ''
   });
+
+  const [sekolahList, setSekolahList] = useState([]);
+
+  useEffect(() => {
+    const fetchSekolah = async () => {
+      try {
+        const response = await axiosInstance.get('/schools');
+        setSekolahList(response.data);
+      } catch (error) {
+        console.error("Gagal mengambil data sekolah", error);
+      }
+    };
+    fetchSekolah();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -105,7 +120,13 @@ const TambahDistribusiSPPG = () => {
                   <label>Nama Sekolah</label>
                   <div className="sppg-td-input-wrapper">
                     <svg className="sppg-td-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                    <input type="text" name="namaSekolah" value={formData.namaSekolah} onChange={handleChange} placeholder="Cari atau pilih sekolah..." required />
+                    <select name="namaSekolah" value={formData.namaSekolah} onChange={handleChange} required>
+                      <option value="" disabled>Pilih sekolah...</option>
+                      {sekolahList.map((sekolah) => (
+                        <option key={sekolah.id} value={sekolah.name}>{sekolah.name}</option>
+                      ))}
+                    </select>
+                    <svg className="sppg-td-select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
                   </div>
                 </div>
 
