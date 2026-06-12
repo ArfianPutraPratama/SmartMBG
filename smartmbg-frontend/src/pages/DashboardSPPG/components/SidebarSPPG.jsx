@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const SidebarSPPG = () => {
   const location = useLocation();
+  const [username, setUsername] = useState('SPPG');
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const userObj = JSON.parse(userStr);
+        if (userObj && userObj.username) {
+          setUsername(userObj.username);
+        } else if (userObj && userObj.name) {
+          setUsername(userObj.name);
+        }
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    }
+  }, []);
 
   const getActiveClass = (path) => {
     return location.pathname === path ? 'nav-item active' : 'nav-item';
@@ -17,7 +34,7 @@ const SidebarSPPG = () => {
           </div>
           <div className="sidebar-title">
             <h2>SmartMBG</h2>
-            <span>SPPG KETINTANG</span>
+            <span style={{ textTransform: 'uppercase' }}>{username}</span>
           </div>
         </div>
         <nav className="sidebar-nav">

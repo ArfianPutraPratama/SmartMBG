@@ -23,7 +23,7 @@ const DashboardMitra = () => {
       <main className="dashboard-main">
         {/* Header */}
         <header className="dashboard-topbar">
-          <div className="topbar-title">WebGIS Monitoring</div>
+          <div className="topbar-title">Dashboard</div>
           <div className="topbar-right">
             <CurrentDate />
             <NotificationBell />

@@ -20,6 +20,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
 
   const [userData, setUserData] = useState({
     name: user?.name || defaultName || 'User',
+    username: user?.username || '',
     email: user?.email || 'email@example.com',
     phone: user?.phone || '0812-3456-7890', // Gunakan dummy jika di DB belum ada tabel telepon
     address: user?.address || 'Jl. Ketintang Baru No.12, Surabaya',
@@ -29,6 +30,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
   useEffect(() => {
     setUserData({
       name: user?.name || defaultName || 'User',
+      username: user?.username || '',
       email: user?.email || 'email@example.com',
       phone: user?.phone || '0812-3456-7890',
       address: user?.address || 'Jl. Ketintang Baru No.12, Surabaya',
@@ -117,6 +119,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
       const formData = new FormData();
       formData.append('_method', 'PUT');
       formData.append('name', userData.name);
+      formData.append('username', userData.username);
       formData.append('email', userData.email);
       formData.append('phone', userData.phone);
       formData.append('address', userData.address);
@@ -204,6 +207,15 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
 
             <div className="form-group-row">
               <div className="form-group">
+                <label>Username</label>
+                <input 
+                  type="text" 
+                  value={userData.username}
+                  onChange={(e) => setUserData({...userData, username: e.target.value})}
+                  disabled={isSaving}
+                />
+              </div>
+              <div className="form-group">
                 <label>Nomor Telepon</label>
                 <input 
                   type="text" 
@@ -212,7 +224,19 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
                   disabled={isSaving}
                 />
               </div>
-              <div className="form-group">
+            </div>
+
+            <div className="form-group-row">
+              <div className="form-group" style={{ flex: 2 }}>
+                <label>Alamat Lengkap</label>
+                <input 
+                  type="text"
+                  value={userData.address}
+                  onChange={(e) => setUserData({...userData, address: e.target.value})}
+                  disabled={isSaving}
+                />
+              </div>
+              <div className="form-group" style={{ flex: 1 }}>
                 <label>Tanggal Bergabung</label>
                 <input 
                   type="text" 
@@ -221,16 +245,6 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
                   className="input-disabled"
                 />
               </div>
-            </div>
-
-            <div className="form-group">
-              <label>Alamat Lengkap</label>
-              <input 
-                type="text"
-                value={userData.address}
-                onChange={(e) => setUserData({...userData, address: e.target.value})}
-                disabled={isSaving}
-              />
             </div>
           </div>
         </div>

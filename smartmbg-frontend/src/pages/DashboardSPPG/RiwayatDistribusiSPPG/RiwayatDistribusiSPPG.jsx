@@ -1,26 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
 import CurrentDate from '../../../components/CurrentDate/CurrentDate';
 import SidebarSPPG from '../components/SidebarSPPG';
+import axios from '../../../api/axios';
 import './RiwayatDistribusiSPPG.css';
 
 const RiwayatDistribusiSPPG = () => {
+  const navigate = useNavigate();
   const [distribusiList, setDistribusiList] = useState([]);
+  const [schools, setSchools] = useState([]);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
+    // Fetch Schools
+    const fetchSchools = async () => {
+      try {
+        const response = await axios.get('/schools');
+        setSchools(response.data);
+      } catch (error) {
+        console.error('Failed to fetch schools:', error);
+      }
+    };
+    fetchSchools();
+
     const saved = localStorage.getItem('sppg_distribusi_data');
     if (saved) {
       setDistribusiList(JSON.parse(saved));
     } else {
       // Default hardcoded data to initialize
       const defaultData = [
-        { id: 1, tanggal: '23 Mei 2025', namaSekolah: 'SDN Ketintang 1 Surabaya', totalPorsi: '450 Box', status: 'Delivered', waktu: '09:15 WIB', detailInfo: '' },
-        { id: 2, tanggal: '23 Mei 2025', namaSekolah: 'SMPN 12 Surabaya', totalPorsi: '820 Box', status: 'In Progress', waktu: 'Estimasi 11:00', detailInfo: '' },
-        { id: 3, tanggal: '22 Mei 2025', namaSekolah: 'SDK Petra 1', totalPorsi: '320 Box', status: 'Delivered', waktu: '08:45 WIB', detailInfo: '' },
-        { id: 4, tanggal: '22 Mei 2025', namaSekolah: 'SMKN 1 Surabaya', totalPorsi: '1,200 Box', status: 'Delayed', waktu: '09:55 WIB (+25m)', detailInfo: '' },
-        { id: 5, tanggal: '21 Mei 2025', namaSekolah: 'TK Pembina Nasional', totalPorsi: '150 Box', status: 'Delivered', waktu: '08:10 WIB', detailInfo: '' }
+        { id: 1, tanggal: '23 Mei 2025', namaSekolah: 'SDN Ketintang 1 Surabaya', totalPorsi: '450 Box', status: 'Delivered', waktu: '09:15 WIB', wilayah: 'Ketintang', kurir: 'Budi Santoso' },
+        { id: 2, tanggal: '23 Mei 2025', namaSekolah: 'SMPN 12 Surabaya', totalPorsi: '820 Box', status: 'In Progress', waktu: 'Estimasi 11:00', wilayah: 'Ngagel', kurir: 'Siti Aminah' },
+        { id: 3, tanggal: '22 Mei 2025', namaSekolah: 'SDK Petra 1', totalPorsi: '320 Box', status: 'Delivered', waktu: '08:45 WIB', wilayah: 'Manyar', kurir: 'Andi Wijaya' },
+        { id: 4, tanggal: '22 Mei 2025', namaSekolah: 'SMKN 1 Surabaya', totalPorsi: '1,200 Box', status: 'Delayed', waktu: '09:55 WIB (+25m)', wilayah: 'Wonokromo', kurir: 'Hendra Saputra' },
+        { id: 5, tanggal: '21 Mei 2025', namaSekolah: 'TK Pembina Nasional', totalPorsi: '150 Box', status: 'Delivered', waktu: '08:10 WIB', wilayah: 'Gubeng', kurir: 'Joko Widodo' }
       ];
       setDistribusiList(defaultData);
       localStorage.setItem('sppg_distribusi_data', JSON.stringify(defaultData));
@@ -33,6 +52,44 @@ const RiwayatDistribusiSPPG = () => {
     return 'inprogress';
   };
 
+  const handleView = (id) => {
+    navigate(`/dashboard-sppg/distribusi/detail/${id}`);
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/dashboard-sppg/edit-distribusi/${id}`);
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Hapus Data?',
+      text: "Data distribusi ini akan dihapus permanen!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e53e3e',
+      cancelButtonColor: '#999',
+      confirmButtonText: 'Ya, Hapus!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updated = distribusiList.filter(item => item.id !== id);
+        setDistribusiList(updated);
+        localStorage.setItem('sppg_distribusi_data', JSON.stringify(updated));
+        
+        // Handle if current page becomes empty
+        const newTotalPages = Math.ceil(updated.length / itemsPerPage);
+        if (currentPage > newTotalPages && newTotalPages > 0) {
+          setCurrentPage(newTotalPages);
+        }
+
+        Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success');
+      }
+    });
+  };
+
+  // Hitung data untuk pagination
+  const totalPages = Math.ceil(distribusiList.length / itemsPerPage);
+  const currentData = distribusiList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div className="dashboard-layout">
       {/* Sidebar */}
@@ -42,7 +99,10 @@ const RiwayatDistribusiSPPG = () => {
       <main className="dashboard-main">
         {/* Header */}
         <header className="dashboard-topbar">
-          <div className="topbar-title">WebGIS Monitoring</div>
+          <div className="topbar-title" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => navigate(-1)} title="Kembali">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Riwayat Distribusi
+          </div>
           <div className="topbar-right">
             <CurrentDate />
             <NotificationBell />
@@ -52,10 +112,6 @@ const RiwayatDistribusiSPPG = () => {
 
         <div className="sppg-rd-container">
           
-          {/* Breadcrumbs */}
-          <div className="sppg-rd-breadcrumbs">
-            <Link to="/sppg/dashboard">Distribusi</Link> &rsaquo; <span>Laporan</span> &rsaquo; <span className="active">Riwayat</span>
-          </div>
 
           {/* Page Header */}
           <div className="sppg-rd-header">
@@ -109,23 +165,48 @@ const RiwayatDistribusiSPPG = () => {
                   <tr>
                     <th>TANGGAL</th>
                     <th>NAMA SEKOLAH</th>
+                    <th>WILAYAH</th>
                     <th>TOTAL PORSI</th>
                     <th>STATUS</th>
+                    <th>KURIR</th>
                     <th>WAKTU TERIMA</th>
                     <th>AKSI</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {distribusiList.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.tanggal}</td>
-                      <td className="sppg-rd-school-name">{item.namaSekolah}</td>
-                      <td>{item.totalPorsi}</td>
-                      <td><span className={`sppg-rd-badge ${getStatusClass(item.status)}`}>{item.status}</span></td>
-                      <td>{item.waktu}</td>
-                      <td><a href="#" onClick={(e) => e.preventDefault()} className="sppg-rd-action-link">Lihat Detail</a></td>
+                  {currentData.length > 0 ? (
+                    currentData.map((item) => {
+                      const schoolData = schools.find(s => s.name === item.namaSekolah);
+                      const wilayahDisplay = schoolData && schoolData.address ? schoolData.address : (item.wilayah || '-');
+
+                      return (
+                        <tr key={item.id}>
+                          <td>{item.tanggal}</td>
+                          <td className="sppg-rd-school-name">{item.namaSekolah}</td>
+                          <td>{wilayahDisplay}</td>
+                          <td>{item.totalPorsi}</td>
+                          <td><span className={`sppg-rd-badge ${getStatusClass(item.status)}`}>{item.status}</span></td>
+                          <td>{item.kurir || '-'}</td>
+                          <td>{item.waktu}</td>
+                          <td style={{ display: 'flex', gap: '6px' }}>
+                            <button onClick={() => handleView(item.id)} style={{ background: '#eaf3ed', color: '#1a5d2c', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer' }} title="View">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                            <button onClick={() => handleEdit(item.id)} style={{ background: '#e1effe', color: '#1e429f', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer' }} title="Edit">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
+                            <button onClick={() => handleDelete(item.id)} style={{ background: '#fde8e8', color: '#e53e3e', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer' }} title="Delete">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="8" style={{ textAlign: 'center', padding: '20px', color: '#666' }}>Belum ada data distribusi.</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
@@ -133,16 +214,34 @@ const RiwayatDistribusiSPPG = () => {
             {/* Pagination */}
             <div className="sppg-rd-pagination">
               <div className="sppg-rd-page-info">
-                Halaman 1 dari 13
+                Halaman {currentPage} dari {totalPages || 1}
               </div>
               <div className="sppg-rd-page-controls">
-                <button className="sppg-rd-page-btn prev" disabled>&lsaquo;</button>
-                <button className="sppg-rd-page-btn active">1</button>
-                <button className="sppg-rd-page-btn">2</button>
-                <button className="sppg-rd-page-btn">3</button>
-                <span className="sppg-rd-page-dots">...</span>
-                <button className="sppg-rd-page-btn">13</button>
-                <button className="sppg-rd-page-btn next">&rsaquo;</button>
+                <button 
+                  className="sppg-rd-page-btn prev" 
+                  disabled={currentPage === 1} 
+                  onClick={() => setCurrentPage(p => p - 1)}
+                >
+                  &lsaquo;
+                </button>
+                
+                {Array.from({ length: totalPages || 1 }, (_, i) => (
+                  <button 
+                    key={i + 1} 
+                    className={`sppg-rd-page-btn ${currentPage === i + 1 ? 'active' : ''}`}
+                    onClick={() => setCurrentPage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button 
+                  className="sppg-rd-page-btn next" 
+                  disabled={currentPage === (totalPages || 1)} 
+                  onClick={() => setCurrentPage(p => p + 1)}
+                >
+                  &rsaquo;
+                </button>
               </div>
             </div>
 

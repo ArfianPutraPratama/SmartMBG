@@ -82,6 +82,7 @@
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
+  text-decoration: none;
 }
 
 .sppg-rd-btn-primary:hover {
@@ -115,6 +116,7 @@
   border-radius: 8px;
   padding: 8px 12px;
   gap: 8px;
+  flex: 1;
 }
 
 .sppg-rd-search input, .sppg-rd-date input {
@@ -126,17 +128,18 @@
 }
 
 .sppg-rd-search input {
-  width: 180px;
+  width: 100%;
 }
 
 .sppg-rd-date input {
-  width: 150px;
+  width: 100%;
 }
 
 .sppg-rd-select-wrapper {
   position: relative;
   display: flex;
   align-items: center;
+  flex: 1;
 }
 
 .sppg-rd-select {
@@ -150,6 +153,7 @@
   outline: none;
   cursor: pointer;
   padding-left: 36px;
+  width: 100%;
 }
 
 .sppg-rd-select-icon {

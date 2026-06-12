@@ -10,6 +10,7 @@ import nasiImg from '../../assets/nasi_putih.png';
 import ayamImg from '../../assets/ayam_kecap.png';
 import sayurImg from '../../assets/sayur_bayam.png';
 import jerukImg from '../../assets/jeruk.png';
+import saladImg from '../../assets/salad_bowl.png';
 
 const getFoodDetails = (name) => {
   const n = (name || '').toLowerCase();
@@ -23,6 +24,7 @@ const getFoodDetails = (name) => {
 const DashboardGuru = () => {
   const navigate = useNavigate();
   const [latestHistory, setLatestHistory] = useState(null);
+  const [latestReviews, setLatestReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState({
     siswaTerlayani: 0,
@@ -61,6 +63,12 @@ const DashboardGuru = () => {
           ? (reviews.reduce((acc, r) => acc + (r.rating || 0), 0) / reviews.length).toFixed(1)
           : 0;
 
+        const sortedReviews = [...reviews].sort((a, b) => {
+          const dateDiff = new Date(b.date) - new Date(a.date);
+          return dateDiff === 0 ? b.id - a.id : dateDiff;
+        });
+        setLatestReviews(sortedReviews.slice(0, 3));
+
         const totalSisa = wastes.reduce((acc, w) => acc + parseFloat(w.berat_sisa || 0), 0).toFixed(1);
         
         // Asumsi tiap entitas punya ~80 siswa jika field jumlah_siswa tidak ada
@@ -86,6 +94,12 @@ const DashboardGuru = () => {
 
   const menuTerdeteksi = latestHistory?.menu_terdeteksi || [];
   const totalMenu = menuTerdeteksi.length;
+
+  const renderStars = (score) => {
+    const filled = '★'.repeat(score);
+    const empty = '☆'.repeat(5 - score);
+    return filled + empty;
+  };
 
   return (
     <div className="dashboard-layout">
@@ -221,6 +235,59 @@ const DashboardGuru = () => {
                 <h4>Rekomendasi Ahli Gizi</h4>
                 <p>{latestHistory?.rekomendasi || 'Belum ada rekomendasi. Unggah foto nampan makanan untuk melihat analisis AI.'}</p>
               </div>
+            </div>
+          </div>
+
+          <div className="section-container">
+            <div className="section-header">
+              <h3 className="guru-section-title">
+                <div className="stat-icon icon-green" style={{display:'inline-flex', verticalAlign:'middle', marginRight:'8px'}}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                Ulasan Terbaru
+              </h3>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('/evaluasi-ulasan'); }} className="link-green">Lihat Semua &gt;</a>
+            </div>
+            
+            <div className="review-list" style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+              {latestReviews.length > 0 ? (
+                latestReviews.map((review) => (
+                  <div key={review.id} style={{ display: 'flex', gap: '16px', padding: '16px', border: '1px solid #eaeaea', borderRadius: '12px', backgroundColor: '#fff' }}>
+                    <img 
+                      src={review.image ? `http://localhost:8000/storage/${review.image}` : saladImg} 
+                      alt="Menu" 
+                      style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                        <h4 style={{ margin: 0, fontSize: '1rem', color: '#111' }}>{review.school_name}</h4>
+                        <span style={{ fontSize: '0.8rem', color: '#888' }}>{new Date(review.date).toLocaleDateString('id-ID', {day: '2-digit', month: 'long', year: 'numeric'})}</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <span style={{ color: '#e8b923', fontSize: '1.1rem', letterSpacing: '2px' }}>{renderStars(review.rating)}</span>
+                        <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#111' }}>{review.rating}.0</span>
+                        <span style={{ 
+                          fontSize: '0.7rem', 
+                          padding: '2px 8px', 
+                          borderRadius: '12px', 
+                          backgroundColor: review.is_match ? '#eaf3ed' : '#fde8e8',
+                          color: review.is_match ? '#1a5d2c' : '#e53e3e',
+                          fontWeight: '600'
+                        }}>
+                          {review.is_match ? 'Cocok' : 'Tidak Cocok'}
+                        </span>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: '#444', fontStyle: 'italic', borderLeft: `3px solid ${review.is_match ? '#1a5d2c' : '#e53e3e'}`, paddingLeft: '8px' }}>
+                        "{review.description || 'Tidak ada deskripsi tambahan.'}"
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p style={{ color: '#999', fontStyle: 'italic', padding: '16px 0', textAlign: 'center' }}>
+                  Belum ada ulasan terbaru.
+                </p>
+              )}
             </div>
           </div>
         </div>

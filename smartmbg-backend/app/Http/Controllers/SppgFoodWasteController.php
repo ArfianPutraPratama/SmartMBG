@@ -31,6 +31,7 @@ class SppgFoodWasteController extends Controller
             'lat' => 'nullable|numeric',
             'lng' => 'nullable|numeric',
             'keterangan' => 'nullable|string',
+            'sppg_username' => 'nullable|string',
             'image' => 'nullable|image|max:2048'
         ]);
 

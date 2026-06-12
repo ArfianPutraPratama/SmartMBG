@@ -68,28 +68,35 @@ const FWMitraMap = () => {
   };
 
   const fetchRoutes = async (diambilItems) => {
-    const newRoutes = [];
-    for (const item of diambilItems) {
-      try {
-        const url = `https://router.project-osrm.org/route/v1/driving/${mitraLocation[1]},${mitraLocation[0]};${item.lng},${item.lat}?overview=full&geometries=geojson`;
-        const res = await fetch(url);
-        const routeData = await res.json();
-        
-        if (routeData.routes && routeData.routes.length > 0) {
-          const routeObj = routeData.routes[0];
-          const coords = routeObj.geometry.coordinates.map(coord => [coord[1], coord[0]]); // Swap to [lat, lng]
-          newRoutes.push({ 
-            itemId: item.id, 
-            coordinates: coords,
-            distance: routeObj.distance, // in meters
-            duration: routeObj.duration // in seconds
-          });
+    try {
+      const routePromises = diambilItems.map(async (item) => {
+        try {
+          const url = `https://router.project-osrm.org/route/v1/driving/${mitraLocation[1]},${mitraLocation[0]};${item.lng},${item.lat}?overview=full&geometries=geojson`;
+          const res = await fetch(url);
+          const routeData = await res.json();
+          
+          if (routeData.routes && routeData.routes.length > 0) {
+            const routeObj = routeData.routes[0];
+            const coords = routeObj.geometry.coordinates.map(coord => [coord[1], coord[0]]); // Swap to [lat, lng]
+            return { 
+              itemId: item.id, 
+              coordinates: coords,
+              distance: routeObj.distance, // in meters
+              duration: routeObj.duration // in seconds
+            };
+          }
+        } catch (e) {
+          console.error('Error fetching route for item', item.id, e);
         }
-      } catch (e) {
-        console.error('Error fetching route for item', item.id, e);
-      }
+        return null;
+      });
+
+      const resolvedRoutes = await Promise.all(routePromises);
+      const newRoutes = resolvedRoutes.filter(route => route !== null);
+      setRoutes(newRoutes);
+    } catch (error) {
+      console.error('Error in fetchRoutes', error);
     }
-    setRoutes(newRoutes);
   };
 
   useEffect(() => {
@@ -99,30 +106,34 @@ const FWMitraMap = () => {
   }, []);
 
   const handleAmbil = async (id) => {
+    // Optimistic UI update
+    setSelectedItem(prev => prev && prev.id === id ? { ...prev, status: 'Diambil' } : prev);
+    
     try {
       const response = await fetch(`http://localhost:8000/api/sppg/food-wastes/${id}/take`, {
         method: 'PUT'
       });
       if (response.ok) {
-        fetchData();
-        setSelectedItem(null);
+        fetchData(); // This will fetch routes in the background
       }
     } catch (error) {
       console.error('Error taking food waste:', error);
+      fetchData(); // Revert on error
     }
   };
 
   const handleSelesai = async (id) => {
+    setSelectedItem(prev => prev && prev.id === id ? { ...prev, status: 'Selesai' } : prev);
     try {
       const response = await fetch(`http://localhost:8000/api/sppg/food-wastes/${id}/complete`, {
         method: 'PUT'
       });
       if (response.ok) {
         fetchData();
-        setSelectedItem(null);
       }
     } catch (error) {
       console.error('Error completing food waste:', error);
+      fetchData(); // Revert on error
     }
   };
 

@@ -140,9 +140,7 @@ const TambahLaporanMitra = () => {
 
       <main className="dashboard-main">
         <header className="dashboard-topbar">
-          <div className="topbar-title">
-            <h1 style={{margin: 0, fontSize: '20px', color: '#1a5d2c'}}>Tambah Laporan Operasional</h1>
-          </div>
+          <div className="topbar-title">Tambah Laporan</div>
           
           <div className="topbar-right">
             <div className="topbar-search">
@@ -264,11 +262,11 @@ const TambahLaporanMitra = () => {
               </div>
 
               <div className="form-actions">
-                <button className="btn-cancel" onClick={() => navigate('/dashboard-mitra/laporan')}>Batal</button>
                 <button className="btn-save" onClick={handleSubmit}>
                   <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                   Simpan Laporan
                 </button>
+                <button className="btn-cancel" onClick={() => navigate('/dashboard-mitra/laporan')}>Batal</button>
               </div>
 
             </div>

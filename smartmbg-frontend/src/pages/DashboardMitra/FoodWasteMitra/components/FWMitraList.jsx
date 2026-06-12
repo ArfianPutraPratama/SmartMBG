@@ -34,34 +34,45 @@ const FWMitraList = () => {
   }, [filterStatus]);
 
   const handleAmbil = async (id) => {
+    // Optimistic Update
+    setListData(prev => prev.map(item => item.id === id ? { ...item, status: 'Diambil' } : item));
+    if (selectedItem?.id === id) {
+      setSelectedItem(prev => ({ ...prev, status: 'Diambil' }));
+    }
+    
     try {
       const response = await fetch(`http://localhost:8000/api/sppg/food-wastes/${id}/take`, {
         method: 'PUT'
       });
       if (response.ok) {
-        // item taken, refresh list
-        fetchData();
-        if (isModalOpen && selectedItem?.id === id) {
-          setIsModalOpen(false);
-        }
+        fetchData(); // Sync with backend silently
+      } else {
+        fetchData(); // Revert
       }
     } catch (error) {
       console.error('Error taking food waste:', error);
+      fetchData(); // Revert
     }
   };
 
   const handleSelesai = async (id) => {
+    setListData(prev => prev.map(item => item.id === id ? { ...item, status: 'Selesai' } : item));
+    if (selectedItem?.id === id) {
+      setSelectedItem(prev => ({ ...prev, status: 'Selesai' }));
+    }
+    
     try {
       const response = await fetch(`http://localhost:8000/api/sppg/food-wastes/${id}/complete`, {
         method: 'PUT'
       });
       if (response.ok) {
         fetchData();
-        setSelectedItem(null);
-        setIsModalOpen(false);
+      } else {
+        fetchData();
       }
     } catch (error) {
       console.error('Error completing food waste:', error);
+      fetchData();
     }
   };
 
@@ -122,7 +133,7 @@ const FWMitraList = () => {
                   <div className="fw-mitra-list-top">
                     <div className="fw-mitra-list-title-area">
                       <span className="badge-new">BARU</span>
-                      <h4 style={{textTransform:'capitalize'}}>{item.lokasi.split(',')[0]}</h4>
+                      <h4 style={{textTransform:'capitalize'}}>{item.sppg_username || item.lokasi.split(',')[0]}</h4>
                     </div>
                     <div className="badge-status">{item.status}</div>
                   </div>
@@ -195,7 +206,7 @@ const FWMitraList = () => {
             </div>
 
             <div style={{marginBottom: '16px'}}>
-              <h4 style={{margin: '0 0 4px 0', color: '#333', fontSize: '1.1rem'}}>{selectedItem.lokasi.split(',')[0]}</h4>
+              <h4 style={{margin: '0 0 4px 0', color: '#333', fontSize: '1.1rem', textTransform: 'capitalize'}}>{selectedItem.sppg_username || selectedItem.lokasi.split(',')[0]}</h4>
               <p style={{margin: 0, color: '#666', fontSize: '0.9rem'}}>{selectedItem.lokasi}</p>
             </div>
 

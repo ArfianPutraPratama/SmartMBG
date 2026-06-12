@@ -24,7 +24,7 @@ const FoodWasteMitra = () => {
       <main className="dashboard-main">
         {/* Header */}
         <header className="dashboard-topbar">
-          <div className="topbar-title">WebGIS Monitoring</div>
+          <div className="topbar-title">Food Waste</div>
           <div className="topbar-right">
             <CurrentDate />
             <NotificationBell />

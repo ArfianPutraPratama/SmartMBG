@@ -40,7 +40,7 @@ const createCustomIcon = (statusColor) => {
   });
 };
 
-const FoodWasteMap = ({ entities }) => {
+const FoodWasteMap = ({ entities, foodWastes }) => {
   // Center of Surabaya
   const surabayaPosition = [-7.275443, 112.630282];
   const [selectedEntity, setSelectedEntity] = React.useState(null);
@@ -104,6 +104,26 @@ const FoodWasteMap = ({ entities }) => {
                       <strong>{ent.nama}</strong><br />
                       Status: {ent.statusMBG}<br />
                       Alamat: {ent.alamat}
+                    </Popup>
+                  </Marker>
+                );
+              }
+              return null;
+            })}
+            {foodWastes && foodWastes.map((fw, idx) => {
+              // Only plot if we have coordinates
+              if (fw.lat && fw.lng) {
+                return (
+                  <Marker 
+                    key={`fw-${fw.id || idx}`} 
+                    position={[fw.lat, fw.lng]}
+                    icon={createCustomIcon('orange')} // Use orange color to indicate food waste
+                  >
+                    <Popup>
+                      <strong>{fw.lokasi}</strong><br />
+                      Jenis: {fw.jenis_makanan}<br />
+                      Berat: {fw.berat} Kg<br />
+                      Status: {fw.status}
                     </Popup>
                   </Marker>
                 );

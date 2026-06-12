@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import axios from '../../../../api/axios';
 
 const UploadForm = () => {
   const [jenisMakanan, setJenisMakanan] = useState('');
   const [berat, setBerat] = useState('');
   const [waktuInput, setWaktuInput] = useState('');
-  const [lokasi, setLokasi] = useState('SDN Ketintang 1, Jl. Ketintang Baru I No. 1, Surabaya');
+  const [lokasi, setLokasi] = useState('Sedang mengambil lokasi...');
+  const [lat, setLat] = useState('');
+  const [lng, setLng] = useState('');
+  const [sppgUsername, setSppgUsername] = useState('');
   const [keterangan, setKeterangan] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -22,6 +26,31 @@ const UploadForm = () => {
     updateTime();
     const interval = setInterval(updateTime, 60000); // Update every minute
     return () => clearInterval(interval);
+  }, []);
+
+  // Fetch user profile for address
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get('/user');
+        if (response.data) {
+          const userAddress = response.data.address || response.data.name || 'Alamat tidak ditemukan';
+          setLokasi(userAddress);
+          if (response.data.lat && response.data.lng) {
+            setLat(response.data.lat);
+            setLng(response.data.lng);
+          }
+          if (response.data.username) {
+            setSppgUsername(response.data.username);
+          } else if (response.data.name) {
+            setSppgUsername(response.data.name);
+          }
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data user:", error);
+      }
+    };
+    fetchProfile();
   }, []);
 
   const handleImageChange = (e) => {
@@ -50,8 +79,10 @@ const UploadForm = () => {
     formData.append('waktu_input', waktuInput);
     formData.append('lokasi', lokasi);
     formData.append('keterangan', keterangan);
-    formData.append('lat', '-7.3110'); // Hardcoded lat for SDN Ketintang 1
-    formData.append('lng', '112.7300'); // Hardcoded lng for SDN Ketintang 1
+    formData.append('sppg_username', sppgUsername);
+    // Use user profile lat/lng if available, otherwise default to a fallback
+    formData.append('lat', lat || '-7.3110'); 
+    formData.append('lng', lng || '112.7300'); 
     
     if (imageFile) {
       formData.append('image', imageFile);
@@ -146,17 +177,18 @@ const UploadForm = () => {
       </div>
 
       <div className="form-group" style={{marginBottom:'16px'}}>
-        <label style={{display:'block', marginBottom:'8px', fontSize:'0.9rem', color:'#555'}}>Lokasi Sisa Makanan</label>
+        <label style={{display:'block', marginBottom:'8px', fontSize:'0.9rem', color:'#555'}}>Lokasi Sisa Makanan (Otomatis dari Profil)</label>
         <div style={{position:'relative'}}>
           <div style={{position:'absolute', left:'12px', top:'50%', transform:'translateY(-50%)', color:'#888'}}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           </div>
-          <select value={lokasi} onChange={e => setLokasi(e.target.value)} className="form-control" style={{width:'100%', padding:'10px 12px 10px 36px', border:'1px solid #ddd', borderRadius:'6px', outline:'none', appearance:'none', backgroundColor:'white', cursor:'pointer'}}>
-            <option value="SDN Ketintang 1, Jl. Ketintang Baru I No. 1, Surabaya">SDN Ketintang 1, Jl. Ketintang Baru I No. 1, Surabaya</option>
-          </select>
-          <div style={{position:'absolute', right:'12px', top:'50%', transform:'translateY(-50%)', color:'#888', pointerEvents:'none'}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
+          <input 
+            type="text" 
+            value={lokasi} 
+            readOnly 
+            className="form-control" 
+            style={{width:'100%', padding:'10px 12px 10px 36px', border:'1px solid #eee', borderRadius:'6px', outline:'none', backgroundColor:'#f9f9f9', color:'#666', cursor:'not-allowed', fontWeight:'500'}} 
+          />
         </div>
       </div>
 

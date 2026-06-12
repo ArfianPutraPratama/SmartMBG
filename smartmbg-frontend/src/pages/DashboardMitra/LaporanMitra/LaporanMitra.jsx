@@ -23,24 +23,61 @@ const LaporanMitra = () => {
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
   const [chartData, setChartData] = useState([]);
+  const [stats, setStats] = useState({ totalMaggot: 0, konversi: 0, batchAktif: 0 });
 
   const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/laporan-mitra');
       const data = response.data;
       
-      const formattedData = data.map(item => ({
-        realId: item.id,
-        id: item.batch_id,
-        tanggal: new Date(item.tanggal_operasional).toLocaleDateString('id-ID', {
-          day: 'numeric', month: 'long', year: 'numeric'
-        }),
-        hasil: item.hasil_olahan,
-        volume: `${item.volume} Kg`,
-        harga: `Rp ${Number(item.harga).toLocaleString('id-ID')}`,
-        status: item.status.toUpperCase()
-      }));
+      let totalMaggotRaw = 0;
+      let batchAktifCount = 0;
+
+      const formattedData = data.map(item => {
+        if (item.hasil_olahan === 'Maggot Kering') {
+          totalMaggotRaw += parseFloat(item.volume) || 0;
+        }
+        if (item.status.toUpperCase() === 'DIPROSES') {
+          batchAktifCount++;
+        }
+        return {
+          realId: item.id,
+          id: item.batch_id,
+          tanggal: new Date(item.tanggal_operasional).toLocaleDateString('id-ID', {
+            day: 'numeric', month: 'long', year: 'numeric'
+          }),
+          hasil: item.hasil_olahan,
+          volume: `${item.volume} Kg`,
+          harga: `Rp ${Number(item.harga).toLocaleString('id-ID')}`,
+          status: item.status.toUpperCase()
+        };
+      });
       setTableData(formattedData);
+
+      // Fetch food wastes to calculate conversion rate
+      let totalFoodWaste = 0;
+      try {
+        const responseFW = await axios.get('http://localhost:8000/api/sppg/food-wastes');
+        totalFoodWaste = responseFW.data.reduce((acc, curr) => {
+          if (curr.status === 'Diambil' || curr.status === 'Selesai') {
+            return acc + (parseFloat(curr.berat) || 0);
+          }
+          return acc;
+        }, 0);
+      } catch (e) {
+        console.error('Error fetching food wastes for konversi:', e);
+      }
+
+      let konversiRate = 0;
+      if (totalFoodWaste > 0) {
+        konversiRate = ((totalMaggotRaw / totalFoodWaste) * 100).toFixed(1);
+      }
+
+      setStats({
+        totalMaggot: totalMaggotRaw,
+        konversi: konversiRate,
+        batchAktif: batchAktifCount
+      });
 
       // Process for chart (Last 7 days)
       const last7Days = [];
@@ -128,12 +165,7 @@ const LaporanMitra = () => {
       <main className="dashboard-main">
         {/* Topbar matching the image structure */}
         <header className="dashboard-topbar">
-          <div className="topbar-title">
-            <div className="laporan-header" style={{margin: 0}}>
-              <h1>Laporan Produktivitas</h1>
-              <p>Monitoring hasil panen dan efisiensi konversi</p>
-            </div>
-          </div>
+          <div className="topbar-title">Laporan</div>
           <div className="topbar-right">
             <CurrentDate />
             <NotificationBell />
@@ -152,7 +184,7 @@ const LaporanMitra = () => {
               <div className="summary-badge">+12% vs bln lalu</div>
               <div className="summary-title">Total Maggot Dihasilkan</div>
               <div className="summary-value">
-                {tableData.reduce((acc, curr) => acc + parseFloat(curr.volume) || 0, 0).toLocaleString('id-ID')} <span className="summary-unit">Kg</span>
+                {stats.totalMaggot.toLocaleString('id-ID')} <span className="summary-unit">Kg</span>
               </div>
             </div>
 
@@ -163,7 +195,7 @@ const LaporanMitra = () => {
               <div className="summary-badge optimal">Optimal</div>
               <div className="summary-title">Rata-rata Konversi</div>
               <div className="summary-value">
-                18.5 <span className="summary-unit">%</span>
+                {stats.konversi} <span className="summary-unit">%</span>
               </div>
             </div>
 
@@ -178,7 +210,7 @@ const LaporanMitra = () => {
               </div>
               <div className="summary-title">Jumlah Batch Aktif</div>
               <div className="summary-value">
-                {tableData.filter(item => item.status === 'DIPROSES').length} <span className="summary-unit">Unit</span>
+                {stats.batchAktif} <span className="summary-unit">Unit</span>
               </div>
             </div>
           </div>

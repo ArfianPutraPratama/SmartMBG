@@ -169,6 +169,7 @@ class AuthController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
@@ -177,6 +178,7 @@ class AuthController extends Controller
 
         $updateData = [
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,

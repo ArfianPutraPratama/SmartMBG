@@ -22,6 +22,7 @@ import LandingPage from './pages/LandingPage/LandingPage';
 import RiwayatSisaMakananPage from './pages/DashboardSPPG/RiwayatSisaMakananPage/RiwayatSisaMakananPage';
 import RiwayatDistribusiSPPG from './pages/DashboardSPPG/RiwayatDistribusiSPPG/RiwayatDistribusiSPPG';
 import TambahDistribusiSPPG from './pages/DashboardSPPG/TambahDistribusiSPPG/TambahDistribusiSPPG';
+import DetailDistribusiSPPG from './pages/DashboardSPPG/DetailDistribusiSPPG/DetailDistribusiSPPG';
 
 import LaporanMitra from './pages/DashboardMitra/LaporanMitra/LaporanMitra';
 import TambahLaporanMitra from './pages/DashboardMitra/TambahLaporanMitra/TambahLaporanMitra';
@@ -50,6 +51,8 @@ function App() {
         <Route path="/dashboard-sppg/riwayat-sisa-makanan" element={<RiwayatSisaMakananPage />} />
         <Route path="/dashboard-sppg/riwayat-distribusi" element={<RiwayatDistribusiSPPG />} />
         <Route path="/dashboard-sppg/tambah-distribusi" element={<TambahDistribusiSPPG />} />
+        <Route path="/dashboard-sppg/edit-distribusi/:id" element={<TambahDistribusiSPPG />} />
+        <Route path="/dashboard-sppg/distribusi/detail/:id" element={<DetailDistribusiSPPG />} />
         <Route path="/dashboard-mitra" element={<DashboardMitra />} />
         <Route path="/dashboard-mitra/food-waste" element={<FoodWasteMitra />} />
         <Route path="/dashboard-mitra/laporan" element={<LaporanMitra />} />

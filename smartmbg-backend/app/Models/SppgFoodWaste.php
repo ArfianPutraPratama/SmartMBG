@@ -16,6 +16,7 @@ class SppgFoodWaste extends Model
         'keterangan',
         'image_path',
         'status',
-        'mitra_id'
+        'mitra_id',
+        'sppg_username'
     ];
 }

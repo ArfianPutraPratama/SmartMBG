@@ -22,6 +22,7 @@ const FoodWasteSPPG = () => {
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [editEntity, setEditEntity] = useState(null);
   const [entities, setEntities] = useState(initialEntities);
+  const [foodWastes, setFoodWastes] = useState([]);
   
   const [stats, setStats] = useState({
     totalPorsi: 0,
@@ -80,8 +81,9 @@ const FoodWasteSPPG = () => {
       try {
         const fwRes = await axios.get('/sppg/food-wastes');
         if (fwRes.data) {
+          setFoodWastes(fwRes.data.slice(0, 4));
           fwRes.data.forEach(fw => {
-            if (fw.weight_kg) calcLimbah += parseFloat(fw.weight_kg);
+            if (fw.berat) calcLimbah += parseFloat(fw.berat);
           });
         }
       } catch(e) { console.error(e); }
@@ -242,7 +244,7 @@ const FoodWasteSPPG = () => {
                   ratingMBG={stats.ratingMBG}
                   totalUlasan={stats.totalUlasan}
                 />
-                <FoodWasteMap entities={entities} />
+                <FoodWasteMap entities={entities} foodWastes={foodWastes} />
                 <ManajemenEntitasTable 
                   entities={entities} 
                   onAddClick={() => setShowForm(true)} 
