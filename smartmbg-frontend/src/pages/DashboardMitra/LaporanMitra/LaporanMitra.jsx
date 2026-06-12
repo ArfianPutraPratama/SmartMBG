@@ -22,11 +22,14 @@ const chartData = [
 const LaporanMitra = () => {
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
+  const [chartData, setChartData] = useState([]);
 
   const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/laporan-mitra');
-      const formattedData = response.data.map(item => ({
+      const data = response.data;
+      
+      const formattedData = data.map(item => ({
         realId: item.id,
         id: item.batch_id,
         tanggal: new Date(item.tanggal_operasional).toLocaleDateString('id-ID', {
@@ -38,6 +41,30 @@ const LaporanMitra = () => {
         status: item.status.toUpperCase()
       }));
       setTableData(formattedData);
+
+      // Process for chart (Last 7 days)
+      const last7Days = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        last7Days.push({
+          dateObj: d,
+          name: d.toLocaleDateString('id-ID', { weekday: 'short' }),
+          dateString: d.toISOString().split('T')[0],
+          produksi: 0
+        });
+      }
+
+      data.forEach(item => {
+        const itemDate = item.tanggal_operasional.split('T')[0];
+        const dayIndex = last7Days.findIndex(day => day.dateString === itemDate);
+        if (dayIndex !== -1 && item.status.toLowerCase() === 'selesai') {
+          last7Days[dayIndex].produksi += parseFloat(item.volume) || 0;
+        }
+      });
+
+      setChartData(last7Days);
+
     } catch (error) {
       console.error('Error fetching laporan:', error);
     }
@@ -125,7 +152,7 @@ const LaporanMitra = () => {
               <div className="summary-badge">+12% vs bln lalu</div>
               <div className="summary-title">Total Maggot Dihasilkan</div>
               <div className="summary-value">
-                1,240 <span className="summary-unit">Kg</span>
+                {tableData.reduce((acc, curr) => acc + parseFloat(curr.volume) || 0, 0).toLocaleString('id-ID')} <span className="summary-unit">Kg</span>
               </div>
             </div>
 
@@ -151,7 +178,7 @@ const LaporanMitra = () => {
               </div>
               <div className="summary-title">Jumlah Batch Aktif</div>
               <div className="summary-value">
-                24 <span className="summary-unit">Unit</span>
+                {tableData.filter(item => item.status === 'DIPROSES').length} <span className="summary-unit">Unit</span>
               </div>
             </div>
           </div>

@@ -134,6 +134,20 @@ const FWMitraList = () => {
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18v12H3z"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                       {item.jenis_makanan}
                     </div>
+                    <div className="detail-item distance">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      {(() => {
+                        const mitraLat = -7.3115;
+                        const mitraLng = 112.7275;
+                        if (!item.lat || !item.lng) return "N/A";
+                        const R = 6371;
+                        const dLat = (item.lat - mitraLat) * Math.PI / 180;
+                        const dLon = (item.lng - mitraLng) * Math.PI / 180;
+                        const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(mitraLat * Math.PI / 180) * Math.cos(item.lat * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+                        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                        return (R * c).toFixed(1) + ' km';
+                      })()}
+                    </div>
                     <div className="detail-item weight">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                       {item.berat} Kg
