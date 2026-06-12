@@ -39,6 +39,36 @@ class EntitasController extends Controller
         return response()->json($entitas, 201);
     }
 
+    public function update(Request $request, $id)
+    {
+        $entitas = Entitas::find($id);
+        if (!$entitas) {
+            return response()->json(['message' => 'Entitas not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'nama' => 'required|string',
+            'tipe' => 'nullable|string',
+            'status_mbg' => 'required|string',
+            'alamat' => 'required|string',
+            'catatan' => 'nullable|string',
+            'lat' => 'nullable|numeric',
+            'lng' => 'nullable|numeric',
+        ]);
+
+        $entitas->update([
+            'nama' => $validated['nama'],
+            'tipe' => $validated['tipe'] ?? $entitas->tipe,
+            'status_mbg' => $validated['status_mbg'],
+            'alamat' => $validated['alamat'],
+            'catatan' => $validated['catatan'] ?? $entitas->catatan,
+            'lat' => $validated['lat'] ?? $entitas->lat,
+            'lng' => $validated['lng'] ?? $entitas->lng,
+        ]);
+
+        return response()->json($entitas);
+    }
+
     public function destroy($id)
     {
         $entitas = Entitas::find($id);

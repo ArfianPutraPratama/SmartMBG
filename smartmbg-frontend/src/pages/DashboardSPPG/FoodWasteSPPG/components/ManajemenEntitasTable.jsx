@@ -3,15 +3,25 @@ import './ManajemenEntitasTable.css';
 
 
 
-const ManajemenEntitasTable = ({ entities, onAddClick, onDeleteClick }) => {
+const ManajemenEntitasTable = ({ entities, onAddClick, onDeleteClick, onViewClick, onEditClick }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState('Semua Status');
   const itemsPerPage = 5;
-  const totalItems = entities.length;
+
+  const filteredEntities = entities.filter(item => {
+    if (statusFilter === 'Semua Status') return true;
+    if (statusFilter === 'Sudah Mendapat MBG') return item.statusColor === 'green';
+    if (statusFilter === 'Belum Mendapat MBG') return item.statusColor === '#ffeb3b';
+    if (statusFilter === 'Ada Limbah Makanan') return item.statusColor === 'orange';
+    return true;
+  });
+
+  const totalItems = filteredEntities.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentEntities = entities.slice(startIndex, endIndex);
+  const currentEntities = filteredEntities.slice(startIndex, endIndex);
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -40,20 +50,20 @@ const ManajemenEntitasTable = ({ entities, onAddClick, onDeleteClick }) => {
 
       <div className="me-controls">
         <div className="me-filters">
+
           <div className="me-filter-wrapper">
-            <select className="me-filter-select">
-              <option>Semua Tipe</option>
-              <option>Sekolah</option>
-              <option>SPPG</option>
-              <option>Mitra</option>
-            </select>
-          </div>
-          <div className="me-filter-wrapper">
-            <select className="me-filter-select">
+            <select 
+              className="me-filter-select"
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1); // Reset to page 1 on filter change
+              }}
+            >
               <option>Semua Status</option>
               <option>Sudah Mendapat MBG</option>
               <option>Belum Mendapat MBG</option>
-              <option>Dalam Peninjauan</option>
+              <option>Ada Limbah Makanan</option>
             </select>
           </div>
         </div>
@@ -100,10 +110,10 @@ const ManajemenEntitasTable = ({ entities, onAddClick, onDeleteClick }) => {
                 <td>{item.tanggal}</td>
                 <td>
                   <div className="me-actions">
-                    <button className="me-action-btn">
+                    <button className="me-action-btn" onClick={() => onEditClick && onEditClick(item)}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     </button>
-                    <button className="me-action-btn">
+                    <button className="me-action-btn" onClick={() => onViewClick && onViewClick(item)}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </button>
                     <button className="me-action-btn" onClick={() => onDeleteClick(item.id)}>

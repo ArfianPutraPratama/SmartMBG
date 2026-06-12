@@ -11,6 +11,7 @@ import FoodWasteStats from './components/FoodWasteStats';
 import FoodWasteMap from './components/FoodWasteMap';
 import ManajemenEntitasTable from './components/ManajemenEntitasTable';
 import TambahEntitasForm from './components/TambahEntitasForm';
+import DetailEntitasView from './components/DetailEntitasView';
 import SidebarSPPG from '../components/SidebarSPPG';
 
 const initialEntities = [];
@@ -18,6 +19,8 @@ const initialEntities = [];
 const FoodWasteSPPG = () => {
   const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
+  const [selectedEntity, setSelectedEntity] = useState(null);
+  const [editEntity, setEditEntity] = useState(null);
   const [entities, setEntities] = useState(initialEntities);
 
   const fetchEntities = () => {
@@ -40,7 +43,8 @@ const FoodWasteSPPG = () => {
             tanggal: formattedDate,
             statusColor: color,
             lat: item.lat,
-            lng: item.lng
+            lng: item.lng,
+            catatan: item.catatan || ''
           };
         });
         setEntities(fetchedEntities);
@@ -55,26 +59,42 @@ const FoodWasteSPPG = () => {
   }, []);
 
   const handleSaveEntity = (newEntityData) => {
-    // Post to backend
     const payload = {
       nama: newEntityData.nama,
       status_mbg: newEntityData.statusMBG,
       alamat: newEntityData.alamat,
       tipe: "Sekolah",
-      catatan: null,
-      lat: newEntityData.lat || (-7.35 + Math.random() * 0.15), // Use real location if provided, else fallback random
+      catatan: newEntityData.catatan || null,
+      lat: newEntityData.lat || (-7.35 + Math.random() * 0.15),
       lng: newEntityData.lng || (112.6 + Math.random() * 0.2)
     };
 
-    axios.post('http://localhost:8000/api/entitas', payload)
-      .then(response => {
-        fetchEntities();
-        setShowForm(false);
-      })
-      .catch(error => {
-        console.error("Error saving entity:", error);
-        alert("Gagal menyimpan entitas. Silakan coba lagi.");
-      });
+    if (newEntityData.id) {
+      // Edit existing entity
+      axios.put(`http://localhost:8000/api/entitas/${newEntityData.id}`, payload)
+        .then(response => {
+          fetchEntities();
+          setShowForm(false);
+          setEditEntity(null);
+          Swal.fire('Berhasil!', 'Entitas berhasil diupdate.', 'success');
+        })
+        .catch(error => {
+          console.error("Error updating entity:", error);
+          Swal.fire('Error', 'Gagal mengupdate entitas. Silakan coba lagi.', 'error');
+        });
+    } else {
+      // Create new entity
+      axios.post('http://localhost:8000/api/entitas', payload)
+        .then(response => {
+          fetchEntities();
+          setShowForm(false);
+          Swal.fire('Berhasil!', 'Entitas berhasil ditambahkan.', 'success');
+        })
+        .catch(error => {
+          console.error("Error saving entity:", error);
+          Swal.fire('Error', 'Gagal menyimpan entitas. Silakan coba lagi.', 'error');
+        });
+    }
   };
 
   const handleDeleteEntity = (id) => {
@@ -101,6 +121,16 @@ const FoodWasteSPPG = () => {
     });
   };
 
+  const handleViewEntity = (entity) => {
+    setSelectedEntity(entity);
+  };
+
+  const handleEditEntity = (entity) => {
+    setEditEntity(entity);
+    setShowForm(false);
+    setSelectedEntity(null);
+  };
+
   return (
     <div className="dashboard-layout">
       <SidebarSPPG />
@@ -120,7 +150,15 @@ const FoodWasteSPPG = () => {
         <div className="dashboard-content" style={{padding: 0}}>
           <div className="fw-container" style={{backgroundColor: '#f9f9f9', minHeight: '100%', padding: '32px'}}>
             
-            {!showForm ? (
+            {selectedEntity ? (
+              <DetailEntitasView entity={selectedEntity} onBack={() => setSelectedEntity(null)} />
+            ) : editEntity ? (
+              <TambahEntitasForm 
+                initialData={editEntity} 
+                onCancel={() => setEditEntity(null)} 
+                onSave={handleSaveEntity} 
+              />
+            ) : !showForm ? (
               <>
                 {/* Page Header with Filters */}
                 <div className="fw-header">
@@ -143,7 +181,13 @@ const FoodWasteSPPG = () => {
 
                 <FoodWasteStats />
                 <FoodWasteMap entities={entities} />
-                <ManajemenEntitasTable entities={entities} onAddClick={() => setShowForm(true)} onDeleteClick={handleDeleteEntity} />
+                <ManajemenEntitasTable 
+                  entities={entities} 
+                  onAddClick={() => setShowForm(true)} 
+                  onDeleteClick={handleDeleteEntity} 
+                  onViewClick={handleViewEntity} 
+                  onEditClick={handleEditEntity}
+                />
               </>
             ) : (
               <TambahEntitasForm onCancel={() => setShowForm(false)} onSave={handleSaveEntity} />

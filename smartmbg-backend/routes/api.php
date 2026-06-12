@@ -31,14 +31,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user/profile', [AuthController::class, 'updateProfile']);
     Route::put('/user/change-password', [AuthController::class, 'changePassword']);
     
-    // AI Integration Route
-    Route::post('/analyze-food', [AIController::class, 'analyzeFood']);
-    Route::get('/nutrition-histories', [AIController::class, 'getNutritionHistory']);
-
     // Review Routes
     Route::get('/reviews', [ReviewController::class, 'index']);
     Route::post('/reviews', [ReviewController::class, 'store']);
 });
+
+// AI Integration Route
+Route::post('/analyze-food', [AIController::class, 'analyzeFood']);
+Route::get('/nutrition-histories', [AIController::class, 'getNutritionHistory']);
 // SPPG Food Waste Routes
 use App\Http\Controllers\SppgFoodWasteController;
 Route::get('/sppg/food-wastes', [SppgFoodWasteController::class, 'index']);
@@ -51,6 +51,7 @@ use App\Http\Controllers\EntitasController;
 // Entitas Routes
 Route::get('/entitas', [EntitasController::class, 'index']);
 Route::post('/entitas', [EntitasController::class, 'store']);
+Route::put('/entitas/{id}', [EntitasController::class, 'update']);
 Route::delete('/entitas/{id}', [EntitasController::class, 'destroy']);
 
 // Mitra Routes

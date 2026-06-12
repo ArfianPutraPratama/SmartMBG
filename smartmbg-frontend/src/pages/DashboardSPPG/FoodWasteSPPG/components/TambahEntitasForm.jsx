@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import './TambahEntitasForm.css';
 
-const TambahEntitasForm = ({ onCancel, onSave }) => {
+const TambahEntitasForm = ({ onCancel, onSave, initialData }) => {
+  const isEdit = !!initialData;
   const [formData, setFormData] = useState({
-    nama: '',
-    statusMBG: 'Sudah menerima MBG',
-    alamat: '',
-    catatan: '',
-    lat: null,
-    lng: null
+    id: initialData?.id || null,
+    nama: initialData?.nama || '',
+    statusMBG: initialData?.statusMBG || 'Sudah menerima MBG',
+    alamat: initialData?.alamat || '',
+    catatan: initialData?.catatan || '',
+    lat: initialData?.lat || null,
+    lng: initialData?.lng || null
   });
 
   const handleChange = (e) => {
@@ -51,15 +53,15 @@ const TambahEntitasForm = ({ onCancel, onSave }) => {
       <div className="tef-header">
         <button className="tef-back-btn" onClick={onCancel}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Tambah Entitas Baru
+          {isEdit ? 'Edit Entitas' : 'Tambah Entitas Baru'}
         </button>
       </div>
       
       <div className="tef-content">
         <div className="tef-form-card">
           <div className="tef-card-header">
-            <h3>Detail Entitas Baru</h3>
-            <p>Lengkapi data informasi untuk menambahkan entitas baru ke dalam sistem WebGIS.</p>
+            <h3>{isEdit ? 'Edit Data Entitas' : 'Detail Entitas Baru'}</h3>
+            <p>{isEdit ? 'Ubah informasi entitas yang sudah ada di dalam sistem WebGIS.' : 'Lengkapi data informasi untuk menambahkan entitas baru ke dalam sistem WebGIS.'}</p>
           </div>
           
           <form className="tef-form">
@@ -133,7 +135,7 @@ const TambahEntitasForm = ({ onCancel, onSave }) => {
               <button type="button" className="tef-btn-cancel" onClick={onCancel}>Batalkan</button>
               <button type="button" className="tef-btn-save" onClick={handleSaveClick}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                Simpan Entitas
+                {isEdit ? 'Simpan Perubahan' : 'Simpan Entitas'}
               </button>
             </div>
           </form>
