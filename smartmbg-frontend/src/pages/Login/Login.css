@@ -213,6 +213,10 @@
   margin-bottom: 1.5rem;
 }
 
+.login-container .btn-primary {
+  width: 100% !important;
+}
+
 .btn-primary:hover {
   background-color: #166534;
   transform: translateY(-2px);
