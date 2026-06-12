@@ -1,0 +1,322 @@
+/* FoodWasteSPPG.css */
+
+.fw-container {
+  padding: 30px;
+}
+
+.fw-header {
+  margin-bottom: 24px;
+}
+
+.fw-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.fw-header h1 {
+  font-size: 1.5rem;
+  color: #111;
+  margin: 0;
+}
+
+.fw-filters {
+  display: flex;
+  gap: 12px;
+}
+
+.fw-filter-select {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background-color: white;
+  color: #555;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  padding-right: 32px;
+}
+
+.fw-header p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Stats Cards */
+.fw-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.fw-stat-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+}
+
+.fw-stat-title {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.fw-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.fw-stat-value.green { color: #2e7d32; }
+.fw-stat-value.red { color: #c62828; }
+
+.fw-stat-footer {
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fw-stat-footer.positive { color: #2e7d32; }
+.fw-stat-footer.warning { color: #c62828; }
+.fw-stat-footer.neutral { color: #888; font-weight: 500; }
+
+.star-icon {
+  color: #fbc02d;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* Map Section */
+.fw-map-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.fw-map-wrapper {
+  flex: 2;
+  background-color: #e0e0e0; /* Placeholder for map */
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+.fw-map-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fw-map-controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.fw-map-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: white;
+  font-size: 1.2rem;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fw-map-btn:first-child {
+  border-bottom: 1px solid #eee;
+}
+
+/* Info Panel */
+.fw-info-panel {
+  flex: 1;
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+}
+
+.fw-info-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+.fw-info-school {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1b5e20;
+  margin: 0 0 16px 0;
+}
+
+.fw-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 0;
+  margin-bottom: 20px;
+}
+
+.fw-info-label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.fw-info-val {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  text-align: right;
+}
+
+.fw-info-val.green { color: #2e7d32; }
+.fw-info-val.red { color: #c62828; }
+
+.fw-info-menu {
+  margin-bottom: 24px;
+}
+
+.fw-info-menu p {
+  margin: 4px 0 0 0;
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.fw-legend h4 {
+  font-size: 0.85rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 12px 0;
+}
+
+.fw-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.fw-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.fw-dot.green { background-color: #2e7d32; }
+.fw-dot.yellow { background-color: #fbc02d; }
+.fw-dot.orange { background-color: #f57c00; }
+.fw-dot.red { background-color: #c62828; }
+
+/* Table */
+.fw-table-section {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+
+.fw-table-header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.fw-table-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.fw-table-link {
+  color: #2e7d32;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.fw-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fw-table th {
+  background-color: #1a5d2c;
+  color: white;
+  text-align: left;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.fw-table td {
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.fw-table tr:last-child td {
+  border-bottom: none;
+}
+
+.fw-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.fw-badge.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.fw-badge.process {
+  background-color: #388e3c;
+  color: white;
+}
+
+.fw-text-red {
+  color: #c62828;
+  font-weight: 600;
+}
+
+.fw-text-bold {
+  font-weight: 600;
+}

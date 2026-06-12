@@ -1,0 +1,87 @@
+/* EvaluasiMenuSPPG.css */
+.eval-menu-dashboard {
+  padding: 30px;
+  background-color: #f9f9f9;
+  min-height: 100%;
+}
+
+.card-box {
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.eval-stat-card {
+  border-radius: 8px;
+}
+
+.eval-filter-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.filter-pills-minimal {
+  display: flex;
+  gap: 10px;
+}
+
+.pill-btn {
+  padding: 8px 24px;
+  background-color: #f9f9f9;
+  color: #666;
+  border: 1px solid #eee;
+  border-radius: 24px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pill-btn:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.pill-btn.active {
+  background-color: #1a5d2c;
+  color: white;
+  border-color: #1a5d2c;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(26, 93, 44, 0.15);
+}
+
+.filter-sort-minimal {
+  position: relative;
+}
+
+.sort-select {
+  padding: 10px 40px 10px 16px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  outline: none;
+  appearance: none;
+  background-color: white;
+  font-size: 0.9rem;
+  color: #444;
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: all 0.2s ease;
+}
+
+.sort-select:hover, .sort-select:focus {
+  border-color: #ccc;
+}
+
+.sort-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #666;
+}

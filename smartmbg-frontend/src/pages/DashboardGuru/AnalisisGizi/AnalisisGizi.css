@@ -1,0 +1,568 @@
+/* AnalisisGizi.css */
+.analisis-layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Sidebar and Header reuse styles from DashboardGuru */
+/* But we will copy them here to ensure isolation or we can just rely on the existing classes if they are global, 
+   but it's safer to scope or just copy the structural CSS. Since we use the same class names, they will inherit if we import DashboardGuru.css, 
+   but let's define specific ones for the new layout. */
+
+.analisis-content {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 24px;
+}
+
+/* LEFT COLUMN */
+.analisis-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.upload-card, .menu-list-card {
+  background: white;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+.upload-area {
+  border: 2px dashed #b2d4c0;
+  background-color: #f6fbf8;
+  border-radius: 8px;
+  padding: 32px 16px;
+  text-align: center;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-area:hover {
+  background-color: #eaf3ed;
+}
+
+.upload-icon {
+  color: #1a5d2c;
+  margin-bottom: 12px;
+}
+
+.upload-text {
+  color: #1a5d2c;
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin: 0 0 4px 0;
+}
+
+.upload-subtext {
+  color: #888;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.uploaded-file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid #eaeaea;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.file-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.file-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-size {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 0;
+}
+
+.file-status {
+  color: #1a5d2c;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.delete-btn {
+  color: #888;
+  cursor: pointer;
+}
+.delete-btn:hover { color: #e53e3e; }
+
+.upload-success-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.uploaded-file-card {
+  background-color: #f9f9f9;
+  border: 1px solid #eaeaea;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.menu-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background-color: #fcfcfc;
+}
+
+.menu-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-item-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.menu-item-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.check-icon {
+  color: #1a5d2c;
+  width: 18px;
+  height: 18px;
+}
+
+.check-icon-filled {
+  color: #1a5d2c;
+  width: 20px;
+  height: 20px;
+}
+
+.btn-outline-green {
+  width: 100%;
+  padding: 12px;
+  background-color: #eaf3ed;
+  color: #1a5d2c;
+  border: 1px solid #b2d4c0;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-outline-green:hover {
+  background-color: #dcede2;
+}
+
+/* RIGHT COLUMN */
+.analisis-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.analysis-result-card {
+  background: white;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.analysis-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.analysis-title-group h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0 0 4px 0;
+}
+
+.analysis-title-group p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.ai-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #eaf3ed;
+  color: #1a5d2c;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.toggle-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.toggle-btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #eaeaea;
+  background: white;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.toggle-btn.active {
+  background-color: #1a5d2c;
+  color: white;
+  border-color: #1a5d2c;
+}
+
+/* Nutrients Grid */
+.nutrients-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.nutrient-box {
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  min-height: 120px;
+}
+
+.nutrient-value-group {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.nut-big-val {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.nut-unit {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.nut-name {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.nut-icon-bottom {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+}
+
+.nut-img-bg {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  object-fit: cover;
+}
+
+/* Specific Colors for Nutrients */
+.c-kalori { color: #e53e3e; }
+.c-protein { color: #3182ce; }
+.c-lemak { color: #d69e2e; }
+.c-karbo { color: #1a5d2c; }
+.c-serat { color: #805ad5; }
+.c-vit { color: #00b5d8; }
+
+/* AI Recommendation Alert */
+.ai-recommendation {
+  background-color: #f6fbf8;
+  border: 1px solid #b2d4c0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.ai-icon-large {
+  width: 48px;
+  height: 48px;
+  background-color: #b2d4c0;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #1a5d2c;
+  flex-shrink: 0;
+}
+
+.ai-rec-content {
+  flex: 1;
+}
+
+.ai-rec-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ai-rec-header h4 {
+  margin: 0;
+  color: #1a5d2c;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.status-badge-green {
+  background-color: #1a5d2c;
+  color: white;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.ai-rec-content p {
+  margin: 0;
+  color: #444;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* History Table */
+.history-card {
+  background: white;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.history-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.history-table th {
+  text-align: left;
+  padding: 12px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+  border-bottom: 1px solid #eaeaea;
+  text-transform: uppercase;
+}
+
+.history-table td {
+  padding: 16px 8px;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 0.9rem;
+  color: #333;
+  vertical-align: middle;
+}
+
+.date-col {
+  font-weight: 500;
+  color: #1a5d2c;
+  max-width: 80px;
+}
+
+.menu-stack {
+  display: flex;
+  align-items: center;
+}
+
+.menu-stack img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid white;
+  object-fit: cover;
+  margin-right: -10px;
+}
+
+.menu-stack-count {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: 2px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+  z-index: 10;
+}
+
+.badge-porsi {
+  background-color: #eaf3ed;
+  color: #1a5d2c;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.val-bold { font-weight: 600; }
+.val-muted { color: #666; }
+
+.action-eye {
+  color: #1a5d2c;
+  cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .analisis-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modal Lihat Semua */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.modal-body .history-table {
+  margin: 0;
+}

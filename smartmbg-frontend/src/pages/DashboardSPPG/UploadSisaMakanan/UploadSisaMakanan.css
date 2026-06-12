@@ -1,0 +1,41 @@
+/* UploadSisaMakanan.css */
+.upload-sisa-dashboard {
+  padding: 30px;
+  background-color: #f9f9f9;
+  min-height: 100%;
+}
+
+.upload-sisa-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+}
+
+.upload-sisa-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Card Box is shared */
+.card-box {
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.form-control:focus {
+  border-color: #2e7d32 !important;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.1);
+}
+
+.upload-dropzone:hover {
+  background-color: #f0f8f1 !important;
+  border-color: #2e7d32 !important;
+}
+
+.btn-simpan:hover {
+  background-color: #154d24 !important;
+}
