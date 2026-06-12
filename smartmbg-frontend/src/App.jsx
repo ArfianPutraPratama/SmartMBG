@@ -19,6 +19,8 @@ import FoodWasteMitra from './pages/DashboardMitra/FoodWasteMitra/FoodWasteMitra
 import LandingPage from './pages/LandingPage/LandingPage';
 
 import RiwayatSisaMakananPage from './pages/DashboardSPPG/RiwayatSisaMakananPage/RiwayatSisaMakananPage';
+import RiwayatDistribusiSPPG from './pages/DashboardSPPG/RiwayatDistribusiSPPG/RiwayatDistribusiSPPG';
+import TambahDistribusiSPPG from './pages/DashboardSPPG/TambahDistribusiSPPG/TambahDistribusiSPPG';
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
         <Route path="/dashboard-sppg/food-waste" element={<FoodWasteSPPG />} />
         <Route path="/dashboard-sppg/upload-sisa-makanan" element={<UploadSisaMakanan />} />
         <Route path="/dashboard-sppg/riwayat-sisa-makanan" element={<RiwayatSisaMakananPage />} />
+        <Route path="/dashboard-sppg/riwayat-distribusi" element={<RiwayatDistribusiSPPG />} />
+        <Route path="/dashboard-sppg/tambah-distribusi" element={<TambahDistribusiSPPG />} />
         <Route path="/dashboard-mitra" element={<DashboardMitra />} />
         <Route path="/dashboard-mitra/food-waste" element={<FoodWasteMitra />} />
       </Routes>

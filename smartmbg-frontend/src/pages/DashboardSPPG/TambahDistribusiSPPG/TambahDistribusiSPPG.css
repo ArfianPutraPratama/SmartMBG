@@ -1,0 +1,234 @@
+/* TambahDistribusiSPPG.css */
+
+.sppg-td-container {
+  padding: 24px;
+  background-color: #f5f7f9;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Topbar for this page */
+.sppg-td-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Clean bottom border for topbar */
+.sppg-td-topbar {
+  border-bottom: 1px solid #f0f0f0; 
+}
+
+.sppg-td-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.sppg-td-topbar-left svg {
+  color: #333; /* Dark arrow */
+}
+
+.sppg-td-topbar-left:hover {
+  opacity: 0.8;
+}
+
+.sppg-td-topbar-left h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a5d2c;
+}
+
+.sppg-td-topbar-right-custom {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.sppg-td-date-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.sppg-td-divider {
+  width: 1px;
+  height: 32px;
+  background-color: #eee;
+}
+
+.sppg-td-date {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.sppg-td-day {
+  font-size: 0.7rem;
+  color: #666;
+  letter-spacing: 0.5px;
+}
+
+/* Card */
+.sppg-td-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+  padding: 32px;
+  border-top: 8px solid #1a5d2c; /* Green top border */
+}
+
+.sppg-td-card-header {
+  margin-bottom: 32px;
+}
+
+.sppg-td-card-header h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  color: #222;
+}
+
+.sppg-td-card-header p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Form Grid */
+.sppg-td-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+  margin-bottom: 24px;
+}
+
+.sppg-td-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sppg-td-full-width {
+  grid-column: 1 / -1;
+  margin-bottom: 40px;
+}
+
+.sppg-td-form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.sppg-td-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sppg-td-input-wrapper input,
+.sppg-td-input-wrapper select,
+.sppg-td-input-wrapper textarea {
+  width: 100%;
+  padding: 12px 16px 12px 42px; /* padding-left for icon */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+  background-color: white;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sppg-td-input-wrapper select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.sppg-td-input-wrapper input:focus,
+.sppg-td-input-wrapper select:focus,
+.sppg-td-input-wrapper textarea:focus {
+  border-color: #1a5d2c;
+}
+
+.sppg-td-icon {
+  position: absolute;
+  left: 14px;
+  color: #666;
+  pointer-events: none;
+}
+
+.sppg-td-select-arrow {
+  position: absolute;
+  right: 14px;
+  color: #666;
+  pointer-events: none;
+}
+
+.sppg-td-suffix {
+  position: absolute;
+  right: 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #666;
+  pointer-events: none;
+}
+
+/* Textarea doesn't need left padding for icon */
+.sppg-td-input-wrapper.textarea-wrapper textarea {
+  padding: 16px;
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Actions */
+.sppg-td-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+}
+
+.sppg-td-btn-cancel {
+  background-color: white;
+  border: 1px solid #1a5d2c;
+  color: #1a5d2c;
+  padding: 10px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sppg-td-btn-cancel:hover {
+  background-color: #f0fdf4;
+}
+
+.sppg-td-btn-save {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1a5d2c;
+  border: 1px solid #1a5d2c;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sppg-td-btn-save:hover {
+  background-color: #144922;
+}
+
+/* Remove default current date styles for this topbar since we customized it */
+.sppg-td-topbar .current-date {
+  display: none;
+}

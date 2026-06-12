@@ -1,288 +1,510 @@
-.sppg-stats-grid {
+/* DashboardSPPG.css */
+
+.sppg-dashboard-container {
+  padding: 24px;
+  background-color: #f9f9f9;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Overview Header */
+.sppg-overview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.sppg-overview-title h2 {
+  font-size: 1.5rem;
+  color: #111;
+  margin: 0 0 4px 0;
+}
+
+.sppg-overview-title p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.sppg-btn-outline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #1a5d2c;
+  color: #1a5d2c;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sppg-btn-outline:hover {
+  background-color: #f0fdf4;
+}
+
+/* 3 Top Stat Cards */
+.sppg-stats-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 24px;
 }
 
-.sppg-stat-card {
+.sppg-stat-card-new {
   background-color: white;
+  border: 1px solid #eee;
   border-radius: 12px;
   padding: 20px;
   display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  border: 1px solid #eee;
-}
-
-.sppg-stat-header {
-  display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 }
 
-.sppg-stat-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+.sppg-stat-info {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 
-.sppg-stat-icon.green { background-color: #e8f5e9; color: #2e7d32; }
-.sppg-stat-icon.red { background-color: #ffebee; color: #c62828; }
-
-.sppg-stat-badge {
+.sppg-stat-label {
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.sppg-stat-badge.positive { color: #2e7d32; }
-.sppg-stat-badge.warning { color: #c62828; }
-
-.sppg-stat-title {
-  font-size: 0.85rem;
-  color: #666;
-  margin-bottom: 4px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
 }
 
 .sppg-stat-value {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: 700;
-  color: #333;
+  color: #111;
   display: flex;
   align-items: baseline;
   gap: 4px;
+  margin-bottom: 8px;
 }
 
 .sppg-stat-unit {
   font-size: 0.9rem;
   font-weight: 500;
-  color: #888;
+  color: #666;
 }
 
-/* Toggle Switch */
-.sppg-toggle-switch {
-  width: 36px;
-  height: 20px;
-  background-color: #a5d6a7;
-  border-radius: 10px;
-  position: relative;
-  display: inline-block;
+.sppg-stat-trend {
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.sppg-toggle-switch::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 16px;
-  height: 16px;
-  background-color: white;
+.sppg-stat-trend.positive { color: #2e7d32; }
+.sppg-stat-trend.negative { color: #d32f2f; }
+.sppg-stat-trend.neutral { color: #666; }
+
+.sppg-stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* List Distribusi */
-.sppg-list-card {
+.sppg-stat-icon-wrapper.green {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.sppg-stat-icon-wrapper.red {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+/* Sections */
+.sppg-section-card {
   background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
   border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
   margin-bottom: 24px;
+  overflow: hidden;
 }
 
-.sppg-list-header {
-  padding: 20px;
+.sppg-section-header {
+  padding: 16px 20px;
   border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.sppg-list-header h3 {
-  margin: 0 0 4px 0;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.sppg-list-header p {
+.sppg-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #222;
   margin: 0;
-  font-size: 0.85rem;
-  color: #666;
 }
 
-.sppg-list-link {
+.sppg-section-title svg {
   color: #2e7d32;
+}
+
+.sppg-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sppg-select {
+  padding: 6px 30px 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #555;
+  background-color: white;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+  cursor: pointer;
+}
+
+.sppg-link-action {
+  color: #1a5d2c;
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
 }
 
-.sppg-list-item {
-  display: flex;
-  align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid #eee;
-  gap: 15px;
+.sppg-link-action:hover {
+  text-decoration: underline;
 }
 
-.sppg-list-item:last-child {
+/* Table Riwayat Distribusi */
+.sppg-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sppg-table th {
+  background-color: #f9f9f9;
+  text-align: left;
+  padding: 12px 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 1px solid #eee;
+}
+
+.sppg-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+  color: #333;
+  vertical-align: middle;
+}
+
+.sppg-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.sppg-item-icon {
-  width: 40px;
-  height: 40px;
-  background-color: #f5f5f5;
+.sppg-table-school {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  color: #222;
+}
+
+.sppg-school-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #e8f5e9;
+  color: #2e7d32;
   border-radius: 8px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  color: #2e7d32;
-}
-
-.sppg-item-details {
-  flex: 1;
-}
-
-.sppg-item-name {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 4px;
-}
-
-.sppg-item-addr {
-  font-size: 0.85rem;
-  color: #666;
-}
-
-.sppg-status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: flex;
   align-items: center;
-  gap: 6px;
 }
 
-.sppg-status-badge.success {
+.sppg-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.sppg-badge.delivered {
   background-color: #e8f5e9;
   color: #2e7d32;
 }
 
-.sppg-status-badge.process {
-  background-color: #a5d6a7;
-  color: #1b5e20;
+.sppg-badge.inprogress {
+  background-color: #e0f2f1;
+  color: #00796b;
 }
 
-.sppg-item-arrow {
-  color: #ccc;
-  margin-left: 10px;
-}
-
-/* Bottom Grid */
-.sppg-bottom-grid {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 20px;
-}
-
-.sppg-action-card {
-  background-color: #1b5e20;
-  border-radius: 12px;
-  padding: 30px;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.sppg-action-card h3 {
-  margin: 0 0 10px 0;
-  font-size: 1.25rem;
-}
-
-.sppg-action-card p {
-  margin: 0 0 20px 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
-  line-height: 1.5;
-}
-
-.sppg-btn-white {
-  background-color: white;
-  color: #1b5e20;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 600;
+.sppg-table-arrow {
+  color: #999;
+  font-size: 1.2rem;
   cursor: pointer;
-  align-self: flex-start;
 }
 
-.sppg-map-card {
-  background-color: white;
+/* Ulasan Terbaru */
+.sppg-reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.sppg-review-card {
+  background-color: #f9f9f9;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
   border: 1px solid #eee;
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+}
+
+.sppg-review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.sppg-review-user {
+  display: flex;
   align-items: center;
+  gap: 12px;
 }
 
-.sppg-map-info {
-  flex: 1;
-}
-
-.sppg-map-info h3 {
-  margin: 0 0 8px 0;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.sppg-map-info p {
-  margin: 0 0 16px 0;
+.sppg-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #a5d6a7;
+  color: #1b5e20;
+  font-weight: 700;
   font-size: 0.9rem;
-  color: #666;
-}
-
-.sppg-map-status {
-  display: flex;
-  gap: 15px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #666;
-}
-
-.sppg-map-status span {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-.dot-active {
-  width: 8px;
-  height: 8px;
+  justify-content: center;
   border-radius: 50%;
-  background-color: #2e7d32;
 }
 
-.dot-standby {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #9e9e9e;
+.sppg-user-info h4 {
+  margin: 0 0 2px 0;
+  font-size: 0.9rem;
+  color: #1a5d2c;
 }
 
-.sppg-map-img {
-  width: 180px;
-  height: 100px;
-  object-fit: cover;
+.sppg-user-info span {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.sppg-stars {
+  color: #1a5d2c;
+  display: flex;
+  gap: 2px;
+}
+
+.sppg-stars svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.sppg-stars svg.empty {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.sppg-review-text {
+  font-size: 0.9rem;
+  color: #555;
+  font-style: italic;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.sppg-review-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sppg-review-status {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sppg-review-status.verified {
+  color: #888;
+}
+
+.sppg-review-status.attention {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.sppg-btn-balas {
+  background: none;
+  border: none;
+  color: #1a5d2c;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sppg-btn-balas:hover {
+  text-decoration: underline;
+}
+
+/* Riwayat Food Waste */
+.sppg-fw-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 20px;
+  gap: 40px;
+}
+
+.sppg-fw-chart-col h4, .sppg-fw-list-col h4 {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 0 0 20px 0;
+  font-weight: 500;
+}
+
+.sppg-mock-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 180px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+}
+
+.sppg-chart-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 12%;
+  gap: 8px;
+  position: relative;
+}
+
+.sppg-chart-bar {
+  width: 100%;
+  background-color: #c8e6c9;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s;
+}
+
+.sppg-chart-bar.active {
+  background-color: #1a5d2c;
+}
+
+.sppg-chart-label {
+  position: absolute;
+  bottom: -24px;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.sppg-fw-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.sppg-fw-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.sppg-fw-item:first-child {
+  padding-top: 0;
+}
+
+.sppg-fw-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sppg-fw-item-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sppg-fw-icon {
+  width: 36px;
+  height: 36px;
+  background-color: #ffebee;
+  color: #d32f2f;
   border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sppg-fw-info h5 {
+  margin: 0 0 4px 0;
+  font-size: 0.95rem;
+  color: #222;
+}
+
+.sppg-fw-info p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.sppg-fw-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.sppg-fw-weight {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #d32f2f;
+}
+
+.sppg-fw-weight span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+}
+
+.sppg-fw-detail {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #1a5d2c;
+  text-decoration: none;
+}
+
+.sppg-fw-detail:hover {
+  text-decoration: underline;
 }

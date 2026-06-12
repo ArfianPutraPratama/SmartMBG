@@ -1,0 +1,346 @@
+/* RiwayatDistribusiSPPG.css */
+
+.sppg-rd-container {
+  padding: 24px;
+  background-color: #f5f7f9; /* Slightly different gray from dashboard maybe, or same */
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Breadcrumbs */
+.sppg-rd-breadcrumbs {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 24px;
+}
+
+.sppg-rd-breadcrumbs a {
+  color: #666;
+  text-decoration: none;
+}
+
+.sppg-rd-breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.sppg-rd-breadcrumbs .active {
+  color: #1a5d2c;
+  font-weight: 500;
+}
+
+/* Page Header */
+.sppg-rd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.sppg-rd-header h2 {
+  font-size: 1.5rem;
+  color: #111;
+  margin: 0;
+  font-weight: 700;
+}
+
+.sppg-rd-header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.sppg-rd-btn-export {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #ddd;
+  color: #555;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sppg-rd-btn-export:hover {
+  background-color: #f9f9f9;
+}
+
+.sppg-rd-btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1a5d2c;
+  border: 1px solid #1a5d2c;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sppg-rd-btn-primary:hover {
+  background-color: #144922;
+}
+
+/* Main Card */
+.sppg-rd-card {
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Filters */
+.sppg-rd-filters {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.sppg-rd-search, .sppg-rd-date {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 8px 12px;
+  gap: 8px;
+}
+
+.sppg-rd-search input, .sppg-rd-date input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.sppg-rd-search input {
+  width: 180px;
+}
+
+.sppg-rd-date input {
+  width: 150px;
+}
+
+.sppg-rd-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sppg-rd-select {
+  appearance: none;
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 8px 36px 8px 36px; /* Space for both left and right icon if needed, here just right */
+  font-size: 0.85rem;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+  padding-left: 36px;
+}
+
+.sppg-rd-select-icon {
+  position: absolute;
+  left: 12px;
+  pointer-events: none;
+}
+
+.sppg-rd-reset {
+  background: none;
+  border: none;
+  color: #1a5d2c;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.sppg-rd-reset:hover {
+  text-decoration: underline;
+}
+
+/* Table Header Section */
+.sppg-rd-table-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 16px 24px;
+}
+
+.sppg-rd-table-top h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #222;
+  font-weight: 700;
+}
+
+.sppg-rd-table-top span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+/* Table */
+.sppg-rd-table-container {
+  overflow-x: auto;
+}
+
+.sppg-rd-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sppg-rd-table th {
+  text-align: left;
+  padding: 12px 24px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.sppg-rd-table td {
+  padding: 16px 24px;
+  font-size: 0.85rem;
+  color: #444;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.sppg-rd-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+.sppg-rd-school-name {
+  font-weight: 700;
+  color: #222;
+}
+
+/* Badges */
+.sppg-rd-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.sppg-rd-badge.delivered {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.sppg-rd-badge.inprogress {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.sppg-rd-badge.delayed {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.sppg-rd-estimate {
+  font-style: italic;
+  color: #666;
+}
+
+.sppg-rd-delay-time {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.sppg-rd-action-link {
+  color: #1a5d2c;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.sppg-rd-action-link:hover {
+  text-decoration: underline;
+}
+
+/* Pagination */
+.sppg-rd-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-top: 1px solid #eee;
+}
+
+.sppg-rd-page-info {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.sppg-rd-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sppg-rd-page-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: #555;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.sppg-rd-page-btn:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.sppg-rd-page-btn.active {
+  background-color: #1a5d2c;
+  color: white;
+  border-color: #1a5d2c;
+}
+
+.sppg-rd-page-btn.prev, .sppg-rd-page-btn.next {
+  font-size: 1.2rem;
+}
+
+.sppg-rd-page-btn:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.sppg-rd-page-dots {
+  color: #888;
+  padding: 0 4px;
+}
+
+/* Footer */
+.sppg-rd-footer {
+  text-align: center;
+  padding: 32px 0 16px 0;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: auto;
+}

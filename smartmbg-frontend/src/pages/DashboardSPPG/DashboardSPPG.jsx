@@ -1,11 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import TopbarProfile from '../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../components/NotificationBell/NotificationBell';
 import CurrentDate from '../../components/CurrentDate/CurrentDate';
 import './DashboardSPPG.css';
 import '../DashboardGuru/DashboardGuru.css'; // Reuse sidebar/header styles
 import SidebarSPPG from './components/SidebarSPPG';
-import mapImg from '../../assets/map_placeholder.png'; // Make sure this exists from previous step
 
 const DashboardSPPG = () => {
   return (
@@ -25,130 +25,330 @@ const DashboardSPPG = () => {
           </div>
         </header>
 
-        <div className="dashboard-content">
+        <div className="sppg-dashboard-container">
           
+          {/* Overview Header */}
+          <div className="sppg-overview-header">
+            <div className="sppg-overview-title">
+              <h2>Dashboard Overview</h2>
+              <p>Monitoring SPPG daily performance and logistics sustainability.</p>
+            </div>
+            <button className="sppg-btn-outline">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Cetak Laporan
+            </button>
+          </div>
+
           {/* Top Stats Grid */}
-          <div className="sppg-stats-grid">
-            <div className="sppg-stat-card">
-              <div className="sppg-stat-header">
-                <div className="sppg-stat-icon green">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 21H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h5l2 3h9a2 2 0 0 1 2 2v2M19 15v6M16 18h6"/></svg>
+          <div className="sppg-stats-row">
+            {/* Stat 1: Total Distribusi */}
+            <div className="sppg-stat-card-new">
+              <div className="sppg-stat-info">
+                <span className="sppg-stat-label">TOTAL DISTRIBUSI</span>
+                <div className="sppg-stat-value">12,450</div>
+                <div className="sppg-stat-trend positive">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                  +5.2% dari kemarin
                 </div>
-                <div className="sppg-stat-badge positive">+12% vs bln lalu</div>
               </div>
-              <div className="sppg-stat-title">Total Produksi</div>
-              <div className="sppg-stat-value">1.250 <span className="sppg-stat-unit">Porsi</span></div>
-            </div>
-            
-            <div className="sppg-stat-card">
-              <div className="sppg-stat-header">
-                <div className="sppg-stat-icon green">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                </div>
-                <div className="sppg-stat-badge positive">94% Selesai</div>
+              <div className="sppg-stat-icon-wrapper green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 21H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h5l2 3h9a2 2 0 0 1 2 2v2M19 15v6M16 18h6"/></svg>
               </div>
-              <div className="sppg-stat-title">Distribusi</div>
-              <div className="sppg-stat-value">1.180 <span className="sppg-stat-unit">Porsi</span></div>
             </div>
-            
-            <div className="sppg-stat-card">
-              <div className="sppg-stat-header">
-                <div className="sppg-stat-icon red">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-                </div>
-                <div className="sppg-stat-badge warning">Perlu Review</div>
-              </div>
-              <div className="sppg-stat-title">Sisa Makanan</div>
-              <div className="sppg-stat-value">20 <span className="sppg-stat-unit">Kg</span></div>
-            </div>
-            
-            <div className="sppg-stat-card">
-              <div className="sppg-stat-header">
-                <div className="sppg-stat-icon green">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                </div>
-                <div className="sppg-toggle-switch"></div>
-              </div>
-              <div className="sppg-stat-title">Rating Rata-rata</div>
-              <div className="sppg-stat-value">4.7 <span className="sppg-stat-unit">/ 5.0</span></div>
-            </div>
-          </div>
 
-          {/* List Distribusi */}
-          <div className="sppg-list-card">
-            <div className="sppg-list-header">
-              <div>
-                <h3>Distribusi Hari Ini</h3>
-                <p>Status pengiriman ke sekolah-sekolah terdaftar</p>
+            {/* Stat 2: Rata-rata Rating */}
+            <div className="sppg-stat-card-new">
+              <div className="sppg-stat-info">
+                <span className="sppg-stat-label">RATA-RATA RATING</span>
+                <div className="sppg-stat-value">
+                  4.8
+                  <span className="sppg-stars">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg className="empty" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  </span>
+                </div>
+                <div className="sppg-stat-trend neutral">
+                  Berdasarkan 850 ulasan
+                </div>
               </div>
-              <a href="#" className="sppg-list-link">Lihat Semua &rsaquo;</a>
+              <div className="sppg-stat-icon-wrapper green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><polygon points="12 6 13.54 9.12 17 9.62 14.5 12.06 15.09 15.5 12 13.88 8.91 15.5 9.5 12.06 7 9.62 10.46 9.12 12 6"/></svg>
+              </div>
             </div>
-            <div className="sppg-list-content">
-              <div className="sppg-list-item">
-                <div className="sppg-item-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                </div>
-                <div className="sppg-item-details">
-                  <div className="sppg-item-name">SDN Ketintang 1</div>
-                  <div className="sppg-item-addr">Jl. Ketintang Baru No. 12 &bull; 320 Porsi</div>
-                </div>
-                <div className="sppg-status-badge success">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
-                  Terkirim
-                </div>
-                <div className="sppg-item-arrow">&rsaquo;</div>
-              </div>
 
-              <div className="sppg-list-item">
-                <div className="sppg-item-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            {/* Stat 3: Total Food Waste */}
+            <div className="sppg-stat-card-new">
+              <div className="sppg-stat-info">
+                <span className="sppg-stat-label">TOTAL FOOD WASTE</span>
+                <div className="sppg-stat-value">42.5 <span className="sppg-stat-unit">Kg</span></div>
+                <div className="sppg-stat-trend negative">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+                  -2.1% (Eco Target)
                 </div>
-                <div className="sppg-item-details">
-                  <div className="sppg-item-name">SDN Wonokromo 2</div>
-                  <div className="sppg-item-addr">Jl. Wonokromo No. 45 &bull; 280 Porsi</div>
-                </div>
-                <div className="sppg-status-badge success">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
-                  Terkirim
-                </div>
-                <div className="sppg-item-arrow">&rsaquo;</div>
               </div>
-
-              <div className="sppg-list-item">
-                <div className="sppg-item-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                </div>
-                <div className="sppg-item-details">
-                  <div className="sppg-item-name">SDN Jemur Wonosari 1</div>
-                  <div className="sppg-item-addr">Jl. Jemur No. 8 &bull; 300 Porsi</div>
-                </div>
-                <div className="sppg-status-badge process">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-8.2l-5.67-5.67"/></svg>
-                  Dalam Proses
-                </div>
-                <div className="sppg-item-arrow">&rsaquo;</div>
+              <div className="sppg-stat-icon-wrapper red">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
               </div>
             </div>
           </div>
 
-          {/* Bottom Grid */}
-          <div className="sppg-bottom-grid">
-            <div className="sppg-action-card">
-              <h3>Mulai Produksi Baru?</h3>
-              <p>Update ketersediaan bahan baku dan jumlah porsi harian untuk mulai masak.</p>
-              <button className="sppg-btn-white">Input Produksi</button>
+          {/* Riwayat Distribusi */}
+          <div className="sppg-section-card">
+            <div className="sppg-section-header">
+              <h3 className="sppg-section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                Riwayat Distribusi
+              </h3>
+              <div className="sppg-section-actions">
+                <select className="sppg-select">
+                  <option>Semua Wilayah</option>
+                  <option>Jakarta Pusat</option>
+                  <option>Jakarta Selatan</option>
+                </select>
+                <Link to="/dashboard-sppg/riwayat-distribusi" className="sppg-link-action">Lihat Semua</Link>
+              </div>
             </div>
             
-            <div className="sppg-map-card">
-              <div className="sppg-map-info">
-                <h3>Lokasi Kurir Real-time</h3>
-                <p>3 Armada pengiriman sedang aktif di wilayah Surabaya Selatan.</p>
-                <div className="sppg-map-status">
-                  <span><div className="dot-active"></div> AKTIF</span>
-                  <span><div className="dot-standby"></div> STANDBY</span>
+            <table className="sppg-table">
+              <thead>
+                <tr>
+                  <th>School Name</th>
+                  <th>Wilayah</th>
+                  <th>Status</th>
+                  <th>Kurir</th>
+                  <th>Time</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div className="sppg-table-school">
+                      <div className="sppg-school-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                      </div>
+                      SDN 01 Merdeka
+                    </div>
+                  </td>
+                  <td>Menteng, Jakpus</td>
+                  <td><span className="sppg-badge delivered">DELIVERED</span></td>
+                  <td>Budi Santoso</td>
+                  <td>07:30 WIB</td>
+                  <td className="sppg-table-arrow">&rsaquo;</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className="sppg-table-school">
+                      <div className="sppg-school-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                      </div>
+                      SMPN 04 Nusantara
+                    </div>
+                  </td>
+                  <td>Gambir, Jakpus</td>
+                  <td><span className="sppg-badge inprogress">IN PROGRESS</span></td>
+                  <td>Siti Aminah</td>
+                  <td>08:15 WIB</td>
+                  <td className="sppg-table-arrow">&rsaquo;</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className="sppg-table-school">
+                      <div className="sppg-school-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                      </div>
+                      SMKN 12 Bina Bangsa
+                    </div>
+                  </td>
+                  <td>Tebet, Jaksel</td>
+                  <td><span className="sppg-badge delivered">DELIVERED</span></td>
+                  <td>Andi Wijaya</td>
+                  <td>06:45 WIB</td>
+                  <td className="sppg-table-arrow">&rsaquo;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Ulasan Terbaru */}
+          <div className="sppg-section-card">
+            <div className="sppg-section-header">
+              <h3 className="sppg-section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Ulasan Terbaru
+              </h3>
+              <a href="#" className="sppg-link-action">Lihat Semua Review</a>
+            </div>
+            
+            <div className="sppg-reviews-grid">
+              {/* Review 1 */}
+              <div className="sppg-review-card">
+                <div className="sppg-review-header">
+                  <div className="sppg-review-user">
+                    <div className="sppg-avatar">SM</div>
+                    <div className="sppg-user-info">
+                      <h4>SDN 01 Merdeka</h4>
+                      <span>Dikirim pukul 07:30 • Kemarin</span>
+                    </div>
+                  </div>
+                  <div className="sppg-stars">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  </div>
+                </div>
+                <div className="sppg-review-text">
+                  "Menu ayam bumbu kuning sangat disukai murid-murid. Distribusi tepat waktu dan packaging sangat rapi. Terima kasih SmartMBG!"
+                </div>
+                <div className="sppg-review-footer">
+                  <div className="sppg-review-status verified">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Verified Feedback
+                  </div>
+                  <button className="sppg-btn-balas">Balas</button>
                 </div>
               </div>
-              <img src={mapImg} alt="Map" className="sppg-map-img" />
+
+              {/* Review 2 */}
+              <div className="sppg-review-card">
+                <div className="sppg-review-header">
+                  <div className="sppg-review-user">
+                    <div className="sppg-avatar">SN</div>
+                    <div className="sppg-user-info">
+                      <h4>SMPN 04 Nusantara</h4>
+                      <span>Dikirim pukul 08:15 • Hari ini</span>
+                    </div>
+                  </div>
+                  <div className="sppg-stars">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg className="empty" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg className="empty" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  </div>
+                </div>
+                <div className="sppg-review-text">
+                  "Porsi nasi sedikit kurang dari biasanya untuk beberapa kelas. Mohon evaluasi takarannya agar seragam ke semua murid."
+                </div>
+                <div className="sppg-review-footer">
+                  <div className="sppg-review-status attention">
+                    ! Needs Attention
+                  </div>
+                  <button className="sppg-btn-balas">Balas</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Riwayat Food Waste */}
+          <div className="sppg-section-card">
+            <div className="sppg-section-header">
+              <h3 className="sppg-section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Riwayat Food Waste
+              </h3>
+              <div className="sppg-section-actions">
+                <select className="sppg-select">
+                  <option>7 Hari Terakhir</option>
+                  <option>30 Hari Terakhir</option>
+                </select>
+              </div>
+            </div>
+            
+            <div className="sppg-fw-split">
+              {/* Chart Side */}
+              <div className="sppg-fw-chart-col">
+                <h4>Volume Tren (Kg)</h4>
+                <div className="sppg-mock-chart">
+                  <div className="sppg-chart-bar-wrapper">
+                    <div className="sppg-chart-bar" style={{height: '40%'}}></div>
+                    <span className="sppg-chart-label">Sen</span>
+                  </div>
+                  <div className="sppg-chart-bar-wrapper">
+                    <div className="sppg-chart-bar" style={{height: '75%'}}></div>
+                    <span className="sppg-chart-label">Sel</span>
+                  </div>
+                  <div className="sppg-chart-bar-wrapper">
+                    <div className="sppg-chart-bar" style={{height: '30%'}}></div>
+                    <span className="sppg-chart-label">Rab</span>
+                  </div>
+                  <div className="sppg-chart-bar-wrapper">
+                    <div className="sppg-chart-bar" style={{height: '90%'}}></div>
+                    <span className="sppg-chart-label">Kam</span>
+                  </div>
+                  <div className="sppg-chart-bar-wrapper">
+                    <div className="sppg-chart-bar" style={{height: '55%'}}></div>
+                    <span className="sppg-chart-label">Jum</span>
+                  </div>
+                  <div className="sppg-chart-bar-wrapper">
+                    <div className="sppg-chart-bar" style={{height: '45%'}}></div>
+                    <span className="sppg-chart-label">Sab</span>
+                  </div>
+                  <div className="sppg-chart-bar-wrapper">
+                    <div className="sppg-chart-bar active" style={{height: '80%'}}></div>
+                    <span className="sppg-chart-label">Min</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* List Side */}
+              <div className="sppg-fw-list-col">
+                <h4>Input Terbaru</h4>
+                <div className="sppg-fw-list">
+                  <div className="sppg-fw-item">
+                    <div className="sppg-fw-item-left">
+                      <div className="sppg-fw-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      </div>
+                      <div className="sppg-fw-info">
+                        <h5>SDN 01 Merdeka</h5>
+                        <p>Nasi, Sayur Mayur • 2 Jam yang lalu</p>
+                      </div>
+                    </div>
+                    <div className="sppg-fw-item-right">
+                      <div className="sppg-fw-weight">2.4 <span>Kg</span></div>
+                      <a href="#" className="sppg-fw-detail">DETAIL</a>
+                    </div>
+                  </div>
+
+                  <div className="sppg-fw-item">
+                    <div className="sppg-fw-item-left">
+                      <div className="sppg-fw-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      </div>
+                      <div className="sppg-fw-info">
+                        <h5>SMPN 04 Nusantara</h5>
+                        <p>Sisa Lauk Pauk • 5 Jam yang lalu</p>
+                      </div>
+                    </div>
+                    <div className="sppg-fw-item-right">
+                      <div className="sppg-fw-weight">1.8 <span>Kg</span></div>
+                      <a href="#" className="sppg-fw-detail">DETAIL</a>
+                    </div>
+                  </div>
+
+                  <div className="sppg-fw-item">
+                    <div className="sppg-fw-item-left">
+                      <div className="sppg-fw-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      </div>
+                      <div className="sppg-fw-info">
+                        <h5>SMKN 12 Bina Bangsa</h5>
+                        <p>Nasi & Sisa Buah • Tadi Pagi</p>
+                      </div>
+                    </div>
+                    <div className="sppg-fw-item-right">
+                      <div className="sppg-fw-weight">3.1 <span>Kg</span></div>
+                      <a href="#" className="sppg-fw-detail">DETAIL</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
