@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const PermintaanTerdekat = () => {
   const [requests, setRequests] = useState([]);
@@ -51,7 +52,7 @@ const PermintaanTerdekat = () => {
           <h3 className="mitra-section-title">Permintaan Terdekat</h3>
           <p className="mitra-section-subtitle">Daftar sisa pangan yang tersedia</p>
         </div>
-        <a href="#" className="mitra-link">Lihat Semua</a>
+        <Link to="/dashboard-mitra/food-waste" className="mitra-link">Lihat Semua</Link>
       </div>
 
       <div className="mitra-req-list">
