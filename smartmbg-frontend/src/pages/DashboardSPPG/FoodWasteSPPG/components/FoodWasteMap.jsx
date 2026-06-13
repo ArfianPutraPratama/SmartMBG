@@ -163,10 +163,7 @@ const FoodWasteMap = ({ entities, foodWastes }) => {
           </div>
         </div>
 
-        <div className="fw-info-menu">
-          <div className="fw-info-label">Menu Hari Ini:</div>
-          <p>{selectedEntity ? (latestMenu || 'Nasi, Ayam Kecap, Capcay, Jeruk') : '-'}</p>
-        </div>
+
 
         <div className="fw-legend">
           <h4>LEGENDA</h4>

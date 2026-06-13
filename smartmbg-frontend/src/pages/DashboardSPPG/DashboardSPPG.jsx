@@ -4,6 +4,7 @@ import TopbarProfile from '../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../components/NotificationBell/NotificationBell';
 import CurrentDate from '../../components/CurrentDate/CurrentDate';
 import axios from '../../api/axios';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './DashboardSPPG.css';
 import '../DashboardGuru/DashboardGuru.css'; // Reuse sidebar/header styles
 import SidebarSPPG from './components/SidebarSPPG';
@@ -12,6 +13,40 @@ const DashboardSPPG = () => {
   const [latestReviews, setLatestReviews] = useState([]);
   const [distribusiList, setDistribusiList] = useState([]);
   const [schools, setSchools] = useState([]);
+  const [stats, setStats] = useState({
+    totalDistribusi: 0,
+    rataRating: 0,
+    totalUlasan: 0,
+    totalFoodWaste: 0
+  });
+  const [fwRawData, setFwRawData] = useState([]);
+  const [fwFilterDays, setFwFilterDays] = useState(7);
+  const [fwChartData, setFwChartData] = useState([]);
+
+  const generateFwChartData = (data, days) => {
+    const pastDays = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      pastDays.push({
+        dateObj: d,
+        name: days === 7 ? d.toLocaleDateString('id-ID', { weekday: 'short' }) : d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }),
+        dateString: d.toISOString().split('T')[0],
+        volume: 0
+      });
+    }
+
+    data.forEach(item => {
+      const itemDateObj = new Date(item.updated_at || item.created_at);
+      const itemDate = itemDateObj.toISOString().split('T')[0];
+      const dayIndex = pastDays.findIndex(day => day.dateString === itemDate);
+      if (dayIndex !== -1) {
+        pastDays[dayIndex].volume += parseFloat(item.berat) || 0;
+      }
+    });
+
+    setFwChartData(pastDays);
+  };
 
   useEffect(() => {
     // Fetch Latest Reviews
@@ -49,9 +84,45 @@ const DashboardSPPG = () => {
         { id: 3, tanggal: '22 Mei 2025', namaSekolah: 'SDK Petra 1', totalPorsi: '320 Box', status: 'Delivered', waktu: '08:45 WIB', wilayah: 'Manyar', kurir: 'Andi Wijaya' }
       ];
       setDistribusiList(defaultData);
+      setDistribusiList(defaultData);
       localStorage.setItem('sppg_distribusi_data', JSON.stringify(defaultData));
     }
+
+    // Fetch Reviews for Stats
+    axios.get('/reviews').then(res => {
+      const data = res.data;
+      if (data && data.length > 0) {
+        const sum = data.reduce((acc, curr) => acc + (parseFloat(curr.rating) || 0), 0);
+        setStats(prev => ({ 
+           ...prev, 
+           rataRating: (sum / data.length).toFixed(1),
+           totalUlasan: data.length
+        }));
+      }
+    }).catch(() => {});
+
+    // Fetch Food Wastes for Total Food Waste Stat and Chart
+    axios.get('http://localhost:8000/api/sppg/food-wastes')
+      .then(res => {
+        const data = res.data || [];
+        setFwRawData(data);
+        const totalFW = data.reduce((acc, curr) => acc + (parseFloat(curr.berat) || 0), 0);
+        setStats(prev => ({ ...prev, totalFoodWaste: totalFW }));
+        generateFwChartData(data, 7);
+      })
+      .catch(() => {});
   }, []);
+
+  // Update total distribusi when distribusiList changes
+  useEffect(() => {
+    const totalDist = distribusiList.reduce((acc, curr) => {
+      const num = parseInt(String(curr.totalPorsi).replace(/\D/g, ''), 10) || 0;
+      return acc + num;
+    }, 0);
+    if (totalDist > 0) {
+      setStats(prev => ({ ...prev, totalDistribusi: totalDist }));
+    }
+  }, [distribusiList]);
   return (
     <div className="dashboard-layout">
       {/* Sidebar */}
@@ -89,7 +160,7 @@ const DashboardSPPG = () => {
             <div className="sppg-stat-card-new">
               <div className="sppg-stat-info">
                 <span className="sppg-stat-label">TOTAL DISTRIBUSI</span>
-                <div className="sppg-stat-value">12,450</div>
+                <div className="sppg-stat-value">{stats.totalDistribusi > 0 ? stats.totalDistribusi.toLocaleString('id-ID') : '12.450'}</div>
                 <div className="sppg-stat-trend positive">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                   +5.2% dari kemarin
@@ -105,17 +176,17 @@ const DashboardSPPG = () => {
               <div className="sppg-stat-info">
                 <span className="sppg-stat-label">RATA-RATA RATING</span>
                 <div className="sppg-stat-value">
-                  4.8
+                  {stats.rataRating > 0 ? stats.rataRating : '4.8'}
                   <span className="sppg-stars">
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg className="empty" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg className={stats.rataRating && stats.rataRating < 5 ? "empty" : (stats.rataRating ? "" : "empty")} viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                   </span>
                 </div>
                 <div className="sppg-stat-trend neutral">
-                  Berdasarkan 850 ulasan
+                  Berdasarkan {stats.totalUlasan > 0 ? stats.totalUlasan : '850'} ulasan
                 </div>
               </div>
               <div className="sppg-stat-icon-wrapper green">
@@ -127,7 +198,7 @@ const DashboardSPPG = () => {
             <div className="sppg-stat-card-new">
               <div className="sppg-stat-info">
                 <span className="sppg-stat-label">TOTAL FOOD WASTE</span>
-                <div className="sppg-stat-value">42.5 <span className="sppg-stat-unit">Kg</span></div>
+                <div className="sppg-stat-value">{stats.totalFoodWaste > 0 ? stats.totalFoodWaste.toFixed(1).replace('.', ',') : '42,5'} <span className="sppg-stat-unit">Kg</span></div>
                 <div className="sppg-stat-trend negative">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
                   -2.1% (Eco Target)
@@ -147,11 +218,7 @@ const DashboardSPPG = () => {
                 Riwayat Distribusi
               </h3>
               <div className="sppg-section-actions">
-                <select className="sppg-select">
-                  <option>Semua Wilayah</option>
-                  <option>Jakarta Pusat</option>
-                  <option>Jakarta Selatan</option>
-                </select>
+
                 <Link to="/dashboard-sppg/riwayat-distribusi" className="sppg-link-action">Lihat Semua</Link>
               </div>
             </div>
@@ -270,10 +337,18 @@ const DashboardSPPG = () => {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 Riwayat Food Waste
               </h3>
-              <div className="sppg-section-actions">
-                <select className="sppg-select">
-                  <option>7 Hari Terakhir</option>
-                  <option>30 Hari Terakhir</option>
+            <div className="sppg-section-actions">
+                <select 
+                  className="sppg-select"
+                  value={fwFilterDays}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10);
+                    setFwFilterDays(val);
+                    generateFwChartData(fwRawData, val);
+                  }}
+                >
+                  <option value={7}>7 Hari Terakhir</option>
+                  <option value={30}>30 Hari Terakhir</option>
                 </select>
               </div>
             </div>
@@ -282,89 +357,61 @@ const DashboardSPPG = () => {
               {/* Chart Side */}
               <div className="sppg-fw-chart-col">
                 <h4>Volume Tren (Kg)</h4>
-                <div className="sppg-mock-chart">
-                  <div className="sppg-chart-bar-wrapper">
-                    <div className="sppg-chart-bar" style={{height: '40%'}}></div>
-                    <span className="sppg-chart-label">Sen</span>
-                  </div>
-                  <div className="sppg-chart-bar-wrapper">
-                    <div className="sppg-chart-bar" style={{height: '75%'}}></div>
-                    <span className="sppg-chart-label">Sel</span>
-                  </div>
-                  <div className="sppg-chart-bar-wrapper">
-                    <div className="sppg-chart-bar" style={{height: '30%'}}></div>
-                    <span className="sppg-chart-label">Rab</span>
-                  </div>
-                  <div className="sppg-chart-bar-wrapper">
-                    <div className="sppg-chart-bar" style={{height: '90%'}}></div>
-                    <span className="sppg-chart-label">Kam</span>
-                  </div>
-                  <div className="sppg-chart-bar-wrapper">
-                    <div className="sppg-chart-bar" style={{height: '55%'}}></div>
-                    <span className="sppg-chart-label">Jum</span>
-                  </div>
-                  <div className="sppg-chart-bar-wrapper">
-                    <div className="sppg-chart-bar" style={{height: '45%'}}></div>
-                    <span className="sppg-chart-label">Sab</span>
-                  </div>
-                  <div className="sppg-chart-bar-wrapper">
-                    <div className="sppg-chart-bar active" style={{height: '80%'}}></div>
-                    <span className="sppg-chart-label">Min</span>
-                  </div>
+                <div style={{ width: '100%', height: 200, marginTop: '20px' }}>
+                  <ResponsiveContainer>
+                    <AreaChart data={fwChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorFw" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#d32f2f" stopOpacity={0.1}/>
+                          <stop offset="95%" stopColor="#d32f2f" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} />
+                      <YAxis axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} tickFormatter={(val) => `${val}kg`} />
+                      <Tooltip />
+                      <Area type="monotone" dataKey="volume" stroke="#d32f2f" strokeWidth={2} fillOpacity={1} fill="url(#colorFw)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
 
               {/* List Side */}
               <div className="sppg-fw-list-col">
-                <h4>Input Terbaru</h4>
+                <h4>Masukan Terbaru</h4>
                 <div className="sppg-fw-list">
-                  <div className="sppg-fw-item">
-                    <div className="sppg-fw-item-left">
-                      <div className="sppg-fw-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  {fwRawData.slice().sort((a,b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at)).slice(0, 3).map((item, idx) => {
+                     const dateObj = new Date(item.updated_at || item.created_at);
+                     const now = new Date();
+                     let timeStr = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                     if (now.toDateString() !== dateObj.toDateString()) {
+                         timeStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                     } else {
+                         const hoursDiff = Math.floor((now - dateObj) / (1000 * 60 * 60));
+                         if (hoursDiff > 0 && hoursDiff < 24) timeStr = `${hoursDiff} Jam yang lalu`;
+                         else timeStr = 'Baru saja';
+                     }
+                     return (
+                      <div className="sppg-fw-item" key={idx}>
+                        <div className="sppg-fw-item-left">
+                          <div className="sppg-fw-icon" style={{color: '#d32f2f', backgroundColor: '#ffebee'}}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                          </div>
+                          <div className="sppg-fw-info">
+                            <h5>{item.lokasi}</h5>
+                            <p>{item.jenis_sisa || 'Sisa Makanan'} • {timeStr}</p>
+                          </div>
+                        </div>
+                        <div className="sppg-fw-item-right">
+                          <div className="sppg-fw-weight">{item.berat} <span>Kg</span></div>
+                          <Link to="/dashboard-sppg/food-waste" className="sppg-fw-detail">DETAIL</Link>
+                        </div>
                       </div>
-                      <div className="sppg-fw-info">
-                        <h5>SDN 01 Merdeka</h5>
-                        <p>Nasi, Sayur Mayur • 2 Jam yang lalu</p>
-                      </div>
-                    </div>
-                    <div className="sppg-fw-item-right">
-                      <div className="sppg-fw-weight">2.4 <span>Kg</span></div>
-                      <a href="#" className="sppg-fw-detail">DETAIL</a>
-                    </div>
-                  </div>
-
-                  <div className="sppg-fw-item">
-                    <div className="sppg-fw-item-left">
-                      <div className="sppg-fw-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                      </div>
-                      <div className="sppg-fw-info">
-                        <h5>SMPN 04 Nusantara</h5>
-                        <p>Sisa Lauk Pauk • 5 Jam yang lalu</p>
-                      </div>
-                    </div>
-                    <div className="sppg-fw-item-right">
-                      <div className="sppg-fw-weight">1.8 <span>Kg</span></div>
-                      <a href="#" className="sppg-fw-detail">DETAIL</a>
-                    </div>
-                  </div>
-
-                  <div className="sppg-fw-item">
-                    <div className="sppg-fw-item-left">
-                      <div className="sppg-fw-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                      </div>
-                      <div className="sppg-fw-info">
-                        <h5>SMKN 12 Bina Bangsa</h5>
-                        <p>Nasi & Sisa Buah • Tadi Pagi</p>
-                      </div>
-                    </div>
-                    <div className="sppg-fw-item-right">
-                      <div className="sppg-fw-weight">3.1 <span>Kg</span></div>
-                      <a href="#" className="sppg-fw-detail">DETAIL</a>
-                    </div>
-                  </div>
+                     );
+                  })}
+                  {fwRawData.length === 0 && (
+                     <div style={{color: '#888', fontSize: '0.9rem', marginTop: '20px'}}>Belum ada riwayat food waste.</div>
+                  )}
                 </div>
               </div>
             </div>
