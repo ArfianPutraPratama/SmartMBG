@@ -24,6 +24,9 @@ const LaporanMitra = () => {
   const [tableData, setTableData] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [stats, setStats] = useState({ totalMaggot: 0, konversi: 0, batchAktif: 0 });
+  const [isExportDropdownOpen, setIsExportDropdownOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const fetchData = async () => {
     try {
@@ -135,28 +138,6 @@ const LaporanMitra = () => {
     });
   };
 
-  const handleExport = () => {
-    Swal.fire({
-      title: 'Pilih Format Ekspor',
-      text: 'Silakan pilih format laporan yang ingin Anda unduh:',
-      icon: 'question',
-      showCancelButton: true,
-      showDenyButton: true,
-      confirmButtonText: 'Excel',
-      confirmButtonColor: '#217346',
-      denyButtonText: 'PDF',
-      denyButtonColor: '#d32f2f',
-      cancelButtonText: 'Batal'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire('Mengunduh!', 'Laporan sedang diunduh dalam format Excel...', 'success');
-        // TODO: Implement Excel download logic
-      } else if (result.isDenied) {
-        Swal.fire('Mengunduh!', 'Laporan sedang diunduh dalam format PDF...', 'success');
-        // TODO: Implement PDF download logic
-      }
-    });
-  };
 
   return (
     <div className="dashboard-layout">
@@ -263,10 +244,36 @@ const LaporanMitra = () => {
             <div className="table-header">
               <h2>Riwayat Harvesting / Panen</h2>
               <div className="table-actions">
-                <button className="btn-export" onClick={handleExport}>
-                  Ekspor Laporan
-                  <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                </button>
+                <div className="export-dropdown-container" style={{ position: 'relative' }}>
+                  <button className="btn-export" onClick={() => setIsExportDropdownOpen(!isExportDropdownOpen)}>
+                    Ekspor Laporan
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </button>
+                  {isExportDropdownOpen && (
+                    <div className="export-dropdown-menu">
+                      <button 
+                        className="export-dropdown-item excel"
+                        onClick={() => {
+                          setIsExportDropdownOpen(false);
+                          Swal.fire('Mengunduh!', 'Laporan sedang diunduh dalam format Excel...', 'success');
+                          // TODO: Implement Excel download logic
+                        }}
+                      >
+                        <span>Excel</span> (.xlsx)
+                      </button>
+                      <button 
+                        className="export-dropdown-item pdf"
+                        onClick={() => {
+                          setIsExportDropdownOpen(false);
+                          Swal.fire('Mengunduh!', 'Laporan sedang diunduh dalam format PDF...', 'success');
+                          // TODO: Implement PDF download logic
+                        }}
+                      >
+                        <span>PDF</span> (.pdf)
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <button className="btn-add-laporan" onClick={() => window.location.href = '/dashboard-mitra/tambah-laporan'}>
                   + Tambah Laporan
                 </button>
@@ -286,7 +293,7 @@ const LaporanMitra = () => {
                 </tr>
               </thead>
               <tbody>
-                {tableData.map((row, index) => (
+                {tableData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((row, index) => (
                   <tr key={index}>
                     <td className="table-id-batch">{row.id}</td>
                     <td>{row.tanggal}</td>
@@ -310,9 +317,55 @@ const LaporanMitra = () => {
               </tbody>
             </table>
 
-            <div className="load-more">
-              Muat Lebih Banyak Riwayat
-            </div>
+            {tableData.length > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '20px', padding: '10px' }}>
+                <button 
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  style={{
+                    width: '32px', height: '32px', display: 'flex', justifyContent: 'center', alignItems: 'center',
+                    borderRadius: '6px', border: '1px solid #ddd',
+                    backgroundColor: currentPage === 1 ? '#f9f9f9' : '#fff',
+                    color: currentPage === 1 ? '#ccc' : '#333',
+                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                
+                {Array.from({ length: Math.ceil(tableData.length / itemsPerPage) }, (_, i) => i + 1).map(num => (
+                  <button
+                    key={num}
+                    onClick={() => setCurrentPage(num)}
+                    style={{
+                      width: '32px', height: '32px', display: 'flex', justifyContent: 'center', alignItems: 'center',
+                      borderRadius: '6px', 
+                      border: currentPage === num ? '1px solid #1a5d2c' : '1px solid #eee',
+                      backgroundColor: currentPage === num ? '#1a5d2c' : '#fff',
+                      color: currentPage === num ? '#fff' : '#333',
+                      cursor: 'pointer', fontSize: '0.85rem',
+                      fontWeight: currentPage === num ? '600' : '400'
+                    }}
+                  >
+                    {num}
+                  </button>
+                ))}
+
+                <button 
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(tableData.length / itemsPerPage)))}
+                  disabled={currentPage === Math.ceil(tableData.length / itemsPerPage)}
+                  style={{
+                    width: '32px', height: '32px', display: 'flex', justifyContent: 'center', alignItems: 'center',
+                    borderRadius: '6px', border: '1px solid #ddd',
+                    backgroundColor: currentPage === Math.ceil(tableData.length / itemsPerPage) ? '#f9f9f9' : '#fff',
+                    color: currentPage === Math.ceil(tableData.length / itemsPerPage) ? '#ccc' : '#333',
+                    cursor: currentPage === Math.ceil(tableData.length / itemsPerPage) ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
+            )}
           </div>
 
         </div>

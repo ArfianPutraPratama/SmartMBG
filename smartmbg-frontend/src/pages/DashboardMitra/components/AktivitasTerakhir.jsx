@@ -1,30 +1,86 @@
-import React from 'react';
-
-const activities = [
-  {
-    id: 1,
-    title: 'Pickup Berhasil: SDN Gayungan 2',
-    desc: '32 Kg sisa makanan telah diterima dan diproses.',
-    time: '10:45 AM',
-    iconType: 'truck'
-  },
-  {
-    id: 2,
-    title: 'Panen Maggot: Batch A-12',
-    desc: 'Total 45 Kg pupuk organik dan 12 Kg maggot kering.',
-    time: '08:20 AM',
-    iconType: 'box'
-  },
-  {
-    id: 3,
-    title: 'Pendaftaran Mitra Baru',
-    desc: 'EcoMaggot Sidoarjo bergabung ke jaringan.',
-    time: 'Kemarin, 16:30 PM',
-    iconType: 'user'
-  }
-];
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AktivitasTerakhir = () => {
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [fwRes, lapRes] = await Promise.all([
+        axios.get('http://localhost:8000/api/sppg/food-wastes'),
+        axios.get('http://localhost:8000/api/laporan-mitra')
+      ]);
+
+      const fwData = fwRes.data || [];
+      const lapData = Array.isArray(lapRes.data.data) ? lapRes.data.data : (Array.isArray(lapRes.data) ? lapRes.data : []);
+
+      const combined = [];
+
+      fwData.forEach(item => {
+        let title = '';
+        let desc = '';
+        let iconType = 'truck';
+        
+        if (item.status === 'Selesai') {
+          title = `Pickup Berhasil: ${item.lokasi}`;
+          desc = `${item.berat} Kg sisa makanan telah diterima dan diproses.`;
+          iconType = 'truck';
+        } else if (item.status === 'Belum Diambil') {
+          title = `Permintaan Baru: ${item.lokasi}`;
+          desc = `${item.berat} Kg sisa makanan baru saja diunggah.`;
+          iconType = 'user';
+        } else if (item.status === 'Diambil') {
+          title = `Pickup Diproses: ${item.lokasi}`;
+          desc = `Sedang mengambil ${item.berat} Kg sisa makanan.`;
+          iconType = 'truck';
+        }
+
+        combined.push({
+          id: `fw-${item.id}`,
+          title,
+          desc,
+          timeStr: item.updated_at || item.created_at,
+          dateObj: new Date(item.updated_at || item.created_at),
+          iconType
+        });
+      });
+
+      lapData.forEach(item => {
+        combined.push({
+          id: `lap-${item.id}`,
+          title: `Panen Maggot: Batch ${item.batch_id || item.id}`,
+          desc: `Total ${item.volume} Kg ${item.hasil_olahan}.`,
+          timeStr: item.created_at || item.tanggal_operasional,
+          dateObj: new Date(item.created_at || item.tanggal_operasional),
+          iconType: 'box'
+        });
+      });
+
+      combined.sort((a, b) => b.dateObj - a.dateObj);
+      
+      const top3 = combined.slice(0, 3).map(act => {
+        // Format time
+        const date = act.dateObj;
+        const now = new Date();
+        const isToday = date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+        const timeFormatted = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        
+        return {
+          ...act,
+          time: isToday ? timeFormatted : `${date.toLocaleDateString('id-ID')} ${timeFormatted}`
+        };
+      });
+
+      setActivities(top3);
+    } catch (error) {
+      console.error('Error fetching activities:', error);
+    }
+  };
+
   return (
     <div className="mitra-section-card" style={{marginBottom: 0}}>
       <h3 className="mitra-section-title" style={{marginBottom: '20px'}}>Aktivitas Terakhir</h3>
@@ -45,6 +101,9 @@ const AktivitasTerakhir = () => {
             </div>
           </div>
         ))}
+        {activities.length === 0 && (
+          <div style={{ textAlign: 'center', color: '#666', padding: '20px 0' }}>Belum ada aktivitas.</div>
+        )}
       </div>
     </div>
   );

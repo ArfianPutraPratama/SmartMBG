@@ -16,6 +16,7 @@ import FoodWasteSPPG from './pages/DashboardSPPG/FoodWasteSPPG/FoodWasteSPPG';
 import UploadSisaMakanan from './pages/DashboardSPPG/UploadSisaMakanan/UploadSisaMakanan';
 import DashboardMitra from './pages/DashboardMitra/DashboardMitra';
 import FoodWasteMitra from './pages/DashboardMitra/FoodWasteMitra/FoodWasteMitra';
+import FoodWasteMitraSemua from './pages/DashboardMitra/FoodWasteMitra/FoodWasteMitraSemua';
 
 import LandingPage from './pages/LandingPage/LandingPage';
 
@@ -55,6 +56,7 @@ function App() {
         <Route path="/dashboard-sppg/distribusi/detail/:id" element={<DetailDistribusiSPPG />} />
         <Route path="/dashboard-mitra" element={<DashboardMitra />} />
         <Route path="/dashboard-mitra/food-waste" element={<FoodWasteMitra />} />
+        <Route path="/dashboard-mitra/food-waste-semua" element={<FoodWasteMitraSemua />} />
         <Route path="/dashboard-mitra/laporan" element={<LaporanMitra />} />
         <Route path="/dashboard-mitra/tambah-laporan" element={<TambahLaporanMitra />} />
         <Route path="/dashboard-mitra/edit-laporan/:id" element={<EditLaporanMitra />} />

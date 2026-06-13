@@ -35,12 +35,11 @@ const MitraInfo = () => {
 
   return (
     <div className="card-box">
-      <div className="upload-sisa-section-header" style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'16px'}}>
+      <div className="upload-sisa-section-header" style={{display:'flex', justifyContent:'flex-start', alignItems:'flex-start', marginBottom:'16px'}}>
         <div>
           <h3 style={{margin:'0 0 4px 0', fontSize:'1.05rem', color:'#111'}}>Informasi Mitra Pengambil</h3>
           <p style={{margin:0, fontSize:'0.8rem', color:'#888'}}>Mitra pakan maggot / pupuk kompos di wilayah Anda</p>
         </div>
-        <a href="#" style={{color:'#2e7d32', textDecoration:'none', fontSize:'0.85rem', fontWeight:'600'}}>Lihat Semua</a>
       </div>
 
       <div className="mitra-list" style={{display:'flex', flexDirection:'column', gap:'12px'}}>

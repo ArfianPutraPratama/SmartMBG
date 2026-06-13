@@ -145,7 +145,6 @@ const FWMitraMap = () => {
       <div className="card-box mb-4">
         <div className="fw-mitra-section-header">
           <h3 className="section-title">Peta Sisa Pangan & Rute Penjemputan</h3>
-          <a href="#" className="btn-text-green" style={{fontSize:'0.85rem'}}>Lihat Semua</a>
         </div>
         
         <div className="fw-map-container" style={{height: '350px', borderRadius:'8px', overflow:'hidden', position:'relative', zIndex: 1}}>

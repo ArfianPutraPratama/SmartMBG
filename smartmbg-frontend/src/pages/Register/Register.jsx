@@ -121,7 +121,7 @@ const Register = () => {
 
           {error && <div className="error-message" style={{ color: 'red', marginBottom: '15px' }}>{error}</div>}
 
-          <form onSubmit={handleRegister}>
+          <form onSubmit={handleRegister} autoComplete="off">
             <div className="form-group">
               <label className="form-label">Peran</label>
               <select className="form-select" name="role" value={formData.role} onChange={handleChange} required>
@@ -151,7 +151,7 @@ const Register = () => {
             <div className="form-row">
               <div className="form-group-half">
                 <label className="form-label">Username</label>
-                <input type="text" className="form-input" name="username" placeholder="Buat username" value={formData.username} onChange={handleChange} required />
+                <input type="text" className="form-input" name="username" placeholder="Buat username" value={formData.username} onChange={handleChange} required autoComplete="off" />
               </div>
               <div className="form-group-half">
                 <label className="form-label">Nomor Telepon</label>
@@ -184,7 +184,7 @@ const Register = () => {
             <div className="form-row">
               <div className="form-group-half">
                 <label className="form-label">Kata Sandi</label>
-                <input type={showPassword ? "text" : "password"} className="form-input" name="password" placeholder="Kata sandi" value={formData.password} onChange={handleChange} required minLength="8" />
+                <input type={showPassword ? "text" : "password"} className="form-input" name="password" placeholder="Kata sandi" value={formData.password} onChange={handleChange} required minLength="8" autoComplete="new-password" />
                 <div className="password-eye" onClick={() => setShowPassword(!showPassword)} style={{cursor: 'pointer'}}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     {showPassword ? (
@@ -203,7 +203,7 @@ const Register = () => {
               </div>
               <div className="form-group-half">
                 <label className="form-label">Konfirmasi</label>
-                <input type={showConfirmPassword ? "text" : "password"} className="form-input" name="password_confirmation" placeholder="Ulangi" value={formData.password_confirmation} onChange={handleChange} required minLength="8" />
+                <input type={showConfirmPassword ? "text" : "password"} className="form-input" name="password_confirmation" placeholder="Ulangi" value={formData.password_confirmation} onChange={handleChange} required minLength="8" autoComplete="new-password" />
                 <div className="password-eye" onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={{cursor: 'pointer'}}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     {showConfirmPassword ? (

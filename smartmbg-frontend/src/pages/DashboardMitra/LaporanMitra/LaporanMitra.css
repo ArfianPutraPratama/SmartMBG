@@ -207,14 +207,76 @@
 
 .btn-export {
   color: #1a5d2c;
-  background: transparent;
-  border: none;
+  background: #ffffff;
+  border: 1px solid #c8e6c9;
+  border-radius: 8px;
+  padding: 10px 16px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.btn-export:hover {
+  background: #f1f8f3;
+  border-color: #1a5d2c;
+}
+
+.btn-export:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(26, 93, 44, 0.2);
+}
+
+.export-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 10;
+  min-width: 160px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.export-dropdown-item {
+  padding: 10px 14px;
+  text-align: left;
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.export-dropdown-item:hover {
+  border-color: #c8e6c9;
+  background-color: #f9fdfa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.export-dropdown-item.excel span {
+  color: #217346;
+  font-weight: 600;
+}
+
+.export-dropdown-item.pdf span {
+  color: #d32f2f;
+  font-weight: 600;
 }
 
 .btn-add-laporan {

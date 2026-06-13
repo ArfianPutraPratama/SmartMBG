@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import bentoImg from '../../../../assets/bento_box.png';
 
-const FWMitraList = () => {
+const FWMitraList = ({ isFullView = false }) => {
+  const navigate = useNavigate();
   const [listData, setListData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState('Semua Status');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -32,6 +36,17 @@ const FWMitraList = () => {
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
   }, [filterStatus]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterStatus]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = listData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(listData.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleAmbil = async (id) => {
     // Optimistic Update
@@ -88,10 +103,9 @@ const FWMitraList = () => {
 
   return (
     <div className="fw-mitra-section card-box">
-      <div className="fw-mitra-section-header">
-        <div>
-          <h3 className="section-title">Sisa Pangan Tersedia untuk Diambil</h3>
-          <p className="section-subtitle">List terbaru dari sekolah dan institusi sekitar</p>
+      <div className="fw-mitra-section-header" style={isFullView ? { marginBottom: '32px' } : {}}>
+        <div style={{ textAlign: 'left' }}>
+          <h3 className="section-title" style={isFullView ? { fontSize: '1.5rem', marginBottom: '8px', color: '#111', fontWeight: '700' } : {}}>Sisa Pangan Tersedia untuk Diambil</h3>
         </div>
         <div className="section-actions">
           <select 
@@ -104,20 +118,21 @@ const FWMitraList = () => {
             <option value="Diambil">Diambil</option>
             <option value="Selesai">Selesai</option>
           </select>
-          <button className="btn-filter-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-            Lihat Semua
-          </button>
+          {!isFullView && (
+            <button className="btn-filter-icon" onClick={() => navigate('/dashboard-mitra/food-waste-semua')}>
+              Lihat Semua
+            </button>
+          )}
         </div>
       </div>
 
       <div className="fw-mitra-list">
         {isLoading && listData.length === 0 ? (
           <div style={{padding:'20px', textAlign:'center', color:'#888'}}>Memuat data...</div>
-        ) : listData.length === 0 ? (
+        ) : currentItems.length === 0 ? (
           <div style={{padding:'20px', textAlign:'center', color:'#888'}}>Tidak ada sisa makanan tersedia.</div>
         ) : (
-          listData.map((item) => {
+          currentItems.map((item) => {
             const dateObj = new Date(item.created_at);
             const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             // Use item.image_path if exists, else default bento
@@ -125,9 +140,7 @@ const FWMitraList = () => {
             
             return (
               <div className="fw-mitra-list-item" key={item.id}>
-                <div className="fw-mitra-list-img-wrapper">
-                  <img src={imgSrc} alt={item.jenis_makanan} className="fw-mitra-list-img" style={{objectFit:'cover'}} />
-                </div>
+                {/* Gambar dihilangkan sesuai permintaan */}
                 
                 <div className="fw-mitra-list-content">
                   <div className="fw-mitra-list-top">
@@ -169,16 +182,16 @@ const FWMitraList = () => {
                     </div>
                   </div>
 
-                  <div className="fw-mitra-list-actions">
-                    <button className="btn-detail" onClick={() => openDetail(item)}>Detail</button>
+                  <div className="fw-mitra-list-actions" style={isFullView ? { justifyContent: 'flex-start', gap: '16px', marginTop: '12px' } : {}}>
+                    <button className="btn-detail" onClick={() => openDetail(item)} style={isFullView ? { flex: 'none', minWidth: '150px' } : {}}>Detail</button>
                     {item.status === 'Belum Diambil' && (
-                      <button className="btn-ambil" onClick={() => handleAmbil(item.id)}>Ambil</button>
+                      <button className="btn-ambil" onClick={() => handleAmbil(item.id)} style={isFullView ? { flex: 'none', minWidth: '150px' } : {}}>Ambil</button>
                     )}
                     {item.status === 'Diambil' && (
-                      <button className="btn-ambil" onClick={() => handleSelesai(item.id)} style={{backgroundColor: '#1976d2'}}>Selesaikan</button>
+                      <button className="btn-ambil" onClick={() => handleSelesai(item.id)} style={isFullView ? { backgroundColor: '#1976d2', flex: 'none', minWidth: '150px' } : { backgroundColor: '#1976d2' }}>Selesaikan</button>
                     )}
                     {item.status === 'Selesai' && (
-                      <button className="btn-ambil" style={{backgroundColor: '#e8f5e9', color: '#2e7d32', border: '1px solid #c8e6c9', cursor: 'not-allowed'}} disabled>Selesai</button>
+                      <button className="btn-ambil" style={isFullView ? { backgroundColor: '#e8f5e9', color: '#2e7d32', border: '1px solid #c8e6c9', cursor: 'not-allowed', flex: 'none', minWidth: '150px' } : { backgroundColor: '#e8f5e9', color: '#2e7d32', border: '1px solid #c8e6c9', cursor: 'not-allowed' }} disabled>Selesai</button>
                     )}
                   </div>
                 </div>
@@ -187,10 +200,50 @@ const FWMitraList = () => {
           })
         )}
       </div>
+
+      {totalPages > 0 && (
+        <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px', marginTop: '24px'}}>
+          <button 
+            onClick={() => paginate(currentPage - 1)} 
+            disabled={currentPage === 1}
+            style={{padding: '8px 12px', border: '1px solid #ddd', background: currentPage === 1 ? '#f5f5f5' : 'white', borderRadius: '6px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer'}}
+          >
+            &laquo; Prev
+          </button>
+          
+          {[...Array(totalPages)].map((_, i) => (
+            <button 
+              key={i+1} 
+              onClick={() => paginate(i+1)}
+              style={{
+                padding: '8px 14px', 
+                border: currentPage === i+1 ? '1px solid #1a5d2c' : '1px solid #ddd', 
+                background: currentPage === i+1 ? '#1a5d2c' : 'white', 
+                color: currentPage === i+1 ? 'white' : '#333',
+                borderRadius: '6px', 
+                cursor: 'pointer',
+                fontWeight: currentPage === i+1 ? 'bold' : 'normal'
+              }}
+            >
+              {i+1}
+            </button>
+          ))}
+
+          <button 
+            onClick={() => paginate(currentPage + 1)} 
+            disabled={currentPage === totalPages}
+            style={{padding: '8px 12px', border: '1px solid #ddd', background: currentPage === totalPages ? '#f5f5f5' : 'white', borderRadius: '6px', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'}}
+          >
+            Next &raquo;
+          </button>
+        </div>
+      )}
       
-      <div className="fw-mitra-list-footer">
-        <button className="btn-text-green">Lihat Semua Permintaan</button>
-      </div>
+      {!isFullView && (
+        <div className="fw-mitra-list-footer" style={{marginTop: '24px'}}>
+          <button className="btn-text-green" onClick={() => navigate('/dashboard-mitra/food-waste-semua')}>Lihat Semua Permintaan</button>
+        </div>
+      )}
 
       {/* Detail Modal */}
       {isModalOpen && selectedItem && (

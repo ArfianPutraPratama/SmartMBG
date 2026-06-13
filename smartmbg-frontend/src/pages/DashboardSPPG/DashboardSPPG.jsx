@@ -362,15 +362,15 @@ const DashboardSPPG = () => {
                     <AreaChart data={fwChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                       <defs>
                         <linearGradient id="colorFw" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#d32f2f" stopOpacity={0.1}/>
-                          <stop offset="95%" stopColor="#d32f2f" stopOpacity={0}/>
+                          <stop offset="5%" stopColor="#2e7d32" stopOpacity={0.1}/>
+                          <stop offset="95%" stopColor="#2e7d32" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
                       <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} />
                       <YAxis axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} tickFormatter={(val) => `${val}kg`} />
                       <Tooltip />
-                      <Area type="monotone" dataKey="volume" stroke="#d32f2f" strokeWidth={2} fillOpacity={1} fill="url(#colorFw)" />
+                      <Area type="monotone" dataKey="volume" stroke="#2e7d32" strokeWidth={2} fillOpacity={1} fill="url(#colorFw)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -394,7 +394,7 @@ const DashboardSPPG = () => {
                      return (
                       <div className="sppg-fw-item" key={idx}>
                         <div className="sppg-fw-item-left">
-                          <div className="sppg-fw-icon" style={{color: '#d32f2f', backgroundColor: '#ffebee'}}>
+                          <div className="sppg-fw-icon" style={{color: '#2e7d32', backgroundColor: '#e8f5e9'}}>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                           </div>
                           <div className="sppg-fw-info">

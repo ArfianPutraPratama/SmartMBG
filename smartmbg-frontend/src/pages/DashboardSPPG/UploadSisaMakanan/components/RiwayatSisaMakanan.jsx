@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 const RiwayatSisaMakanan = () => {
   const [historyData, setHistoryData] = useState([]);
@@ -25,12 +24,11 @@ const RiwayatSisaMakanan = () => {
 
   return (
     <div className="card-box" style={{marginBottom: '20px', minHeight: '150px', display: 'flex', flexDirection: 'column'}}>
-      <div className="history-header" style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'16px'}}>
+      <div className="history-header" style={{display:'flex', alignItems:'center', justifyContent:'flex-start', marginBottom:'16px'}}>
         <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           <h3 style={{margin:0, fontSize:'1.1rem', color:'#111'}}>Riwayat Sisa Makanan</h3>
         </div>
-        <Link to="/dashboard-sppg/riwayat-sisa-makanan" style={{color:'#2e7d32', fontSize:'0.85rem', fontWeight:'600', textDecoration:'none'}}>Lihat Semua</Link>
       </div>
 
       <div style={{flexGrow: 1, display: 'flex', flexDirection: 'column'}}>

@@ -28,16 +28,15 @@ const FWMitraSchedule = () => {
 
   return (
     <div className="card-box" style={{height: '100%'}}>
-      <div className="fw-mitra-section-header" style={{marginBottom: '20px'}}>
+      <div className="fw-mitra-section-header" style={{marginBottom: '20px', justifyContent: 'center'}}>
         <h3 className="section-title">Jadwal Pengambilan Hari Ini</h3>
-        <a href="#" className="btn-text-green" style={{fontSize:'0.85rem'}}>Lihat Semua</a>
       </div>
 
       <div className="fw-mitra-schedule-container" style={{display:'flex', alignItems:'center', gap:'16px', overflowX:'auto', paddingBottom:'8px'}}>
         {isLoading && scheduleData.length === 0 ? (
           <div style={{color:'#888', fontSize:'0.9rem'}}>Memuat jadwal...</div>
         ) : scheduleData.length === 0 ? (
-          <div style={{color:'#888', fontSize:'0.9rem'}}>Belum ada jadwal pengambilan hari ini. Silakan "Ambil" sisa makanan yang tersedia.</div>
+          <div style={{color:'#888', fontSize:'0.9rem', width: '100%', textAlign: 'center'}}>Belum ada jadwal pengambilan hari ini. Silakan "Ambil" sisa makanan yang tersedia.</div>
         ) : (
           scheduleData.map((item, index) => (
             <React.Fragment key={item.id}>

@@ -459,8 +459,8 @@
 .sppg-fw-icon {
   width: 36px;
   height: 36px;
-  background-color: #ffebee;
-  color: #d32f2f;
+  background-color: #e8f5e9;
+  color: #2e7d32;
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -489,7 +489,7 @@
 .sppg-fw-weight {
   font-size: 1rem;
   font-weight: 700;
-  color: #d32f2f;
+  color: #2e7d32;
 }
 
 .sppg-fw-weight span {

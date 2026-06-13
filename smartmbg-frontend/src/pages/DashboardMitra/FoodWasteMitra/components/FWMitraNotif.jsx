@@ -37,9 +37,8 @@ const FWMitraNotif = () => {
 
   return (
     <div className="card-box" style={{height: '100%'}}>
-      <div className="fw-mitra-section-header" style={{marginBottom: '20px'}}>
+      <div className="fw-mitra-section-header" style={{marginBottom: '20px', justifyContent: 'center'}}>
         <h3 className="section-title">Notifikasi Terbaru</h3>
-        <a href="#" className="btn-text-green" style={{fontSize:'0.85rem'}}>Lihat Semua</a>
       </div>
 
       <div className="notif-list" style={{display:'flex', flexDirection:'column', gap:'16px', maxHeight: '350px', overflowY: 'auto'}}>
