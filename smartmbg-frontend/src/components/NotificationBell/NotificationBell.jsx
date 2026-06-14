@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './NotificationBell.css';
 
 const DUMMY_NOTIFICATIONS = [
@@ -30,22 +31,134 @@ const DUMMY_NOTIFICATIONS = [
 
 const NotificationBell = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState(DUMMY_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState([]);
   const dropdownRef = useRef(null);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
+  const location = useLocation();
+
   useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const notifs = [];
+        let idCounter = 1;
+
+        const path = location.pathname;
+        const isMitra = path.includes('/dashboard-mitra');
+        const isSppg = path.includes('/dashboard-sppg');
+        const isGuru = path.includes('/dashboard-guru');
+
+        // Fetch Food Wastes
+        if (isMitra || isSppg) {
+          const fwRes = await fetch('http://localhost:8000/api/sppg/food-wastes');
+          if (fwRes.ok) {
+            const fwData = await fwRes.json();
+            
+            if (isMitra) {
+              // Mitra only cares about "Belum Diambil"
+              const recentFw = fwData.filter(fw => fw.status === 'Belum Diambil').slice(0, 3);
+              recentFw.forEach(fw => {
+                notifs.push({
+                  id: idCounter++,
+                  title: 'Sisa Makanan Baru (Pickup)',
+                  message: `Terdapat sisa makanan (${fw.berat} Kg) dari ${fw.sppg_username || fw.lokasi.split(',')[0]} siap diambil.`,
+                  time: fw.waktu_input || 'Baru saja',
+                  isRead: false,
+                  type: 'warning'
+                });
+              });
+            } else if (isSppg) {
+              // SPPG wants to know if Mitra has picked it up
+              const pickedFw = fwData.filter(fw => fw.status === 'Diambil' || fw.status === 'Selesai').slice(0, 2);
+              pickedFw.forEach(fw => {
+                notifs.push({
+                  id: idCounter++,
+                  title: 'Update Sisa Makanan',
+                  message: `Limbah pangan dari ${fw.sppg_username || 'sekolah'} (${fw.berat} Kg) telah ${fw.status.toLowerCase()} oleh Mitra.`,
+                  time: fw.waktu_input || 'Baru saja',
+                  isRead: false,
+                  type: 'success'
+                });
+              });
+            }
+          }
+        }
+
+        // Fetch Reviews (Evaluasi)
+        if (isSppg || isGuru) {
+          const rvRes = await fetch('http://localhost:8000/api/reviews');
+          if (rvRes.ok) {
+            const rvData = await rvRes.json();
+            const recentRv = rvData.slice(0, 2);
+            recentRv.forEach(rv => {
+              notifs.push({
+                id: idCounter++,
+                title: 'Ulasan Baru',
+                message: `Ulasan baru (${rv.rating} Bintang) masuk untuk menu ${rv.menu_name}.`,
+                time: 'Baru saja',
+                isRead: false,
+                type: 'info'
+              });
+            });
+          }
+        }
+
+        // Fetch Distributions (for Guru)
+        if (isGuru) {
+          try {
+            const distRes = await fetch('http://localhost:8000/api/sppg/distribusi');
+            if (distRes.ok) {
+              const distData = await distRes.json();
+              const recentDist = distData.filter(d => d.status === 'In Progress').slice(0, 2);
+              recentDist.forEach(dist => {
+                notifs.push({
+                  id: idCounter++,
+                  title: 'Distribusi Sedang Berjalan',
+                  message: `Pengiriman makanan ke sekolah sedang dalam perjalanan (${dist.kurir}).`,
+                  time: dist.estimasi_waktu || 'Baru saja',
+                  isRead: false,
+                  type: 'info'
+                });
+              });
+            }
+          } catch(e) {
+            console.error('Failed to fetch distribusi for guru', e);
+          }
+        }
+
+        if (notifs.length > 0) {
+          setNotifications(notifs);
+        } else {
+          setNotifications([{
+            id: 99,
+            title: 'Sistem Terhubung',
+            message: 'Tidak ada aktivitas baru untuk peran Anda saat ini.',
+            time: 'Sekarang',
+            isRead: true,
+            type: 'success'
+          }]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch notifications', err);
+      }
+    };
+
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 30000); // 30 sec refresh
+
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
+    
     return () => {
+      clearInterval(interval);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [location.pathname]);
 
   const markAllAsRead = () => {
     setNotifications(notifications.map(n => ({ ...n, isRead: true })));

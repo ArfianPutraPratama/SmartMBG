@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../../api/axios';
+import { useGoogleLogin } from '@react-oauth/google';
 import './Register.css';
 
 const Register = () => {
+  const location = useLocation();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -16,8 +18,23 @@ const Register = () => {
     lng: null,
     username: '',
     password: '',
-    password_confirmation: ''
+    password_confirmation: '',
+    google_id: ''
   });
+
+  React.useEffect(() => {
+    if (location.state?.googleData) {
+      const data = location.state.googleData;
+      setFormData(prev => ({
+        ...prev,
+        name: data.name || '',
+        email: data.email || '',
+        google_id: data.google_id || ''
+      }));
+      // Optional: beri alert ke user
+      // alert('Mohon lengkapi data registrasi Anda untuk menyelesaikan pendaftaran dengan Google.');
+    }
+  }, [location.state]);
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -63,6 +80,51 @@ const Register = () => {
     }
   };
 
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        setLoading(true);
+        const res = await axios.post('/auth/google', {
+          access_token: tokenResponse.access_token,
+        });
+
+        // Jika sudah punya akun, langsung login
+        const { token, user } = res.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+
+        if (user.role === 'sppg') {
+          navigate('/dashboard-sppg');
+        } else if (user.role === 'mitra') {
+          navigate('/dashboard-mitra');
+        } else {
+          navigate('/dashboard-guru');
+        }
+      } catch (err) {
+        if (err.response?.status === 404 && err.response?.data?.status === 'not_registered') {
+          // Pre-fill the form with Google data since they are not registered
+          const data = err.response.data.google_data;
+          setFormData(prev => ({
+            ...prev,
+            name: data.name || '',
+            email: data.email || '',
+            google_id: data.google_id || ''
+          }));
+          // Focus the role select or just let them know
+        } else {
+          setError('Gagal menghubungkan dengan Google. Silakan coba lagi.');
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+    onError: error => setError('Gagal menghubungkan dengan Google.')
+  });
+
+  const handleSocialLogin = (provider) => {
+    alert(`Fitur daftar dengan ${provider} (SSO) masih dalam tahap pengembangan dan memerlukan pengaturan API Key.`);
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setError(null);
@@ -74,10 +136,25 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await axios.post('/register', formData);
+      const res = await axios.post('/register', formData);
       
-      // Arahkan ke halaman verifikasi OTP dengan membawa state email
-      navigate('/verify-otp', { state: { email: formData.email } });
+      if (res.data.is_google) {
+        // Jika login dengan Google, langsung masuk
+        localStorage.setItem('token', res.data.access_token);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+
+        const userRole = res.data.user.role;
+        if (userRole === 'sppg') {
+          navigate('/dashboard-sppg');
+        } else if (userRole === 'mitra') {
+          navigate('/dashboard-mitra');
+        } else {
+          navigate('/dashboard-guru');
+        }
+      } else {
+        // Arahkan ke halaman verifikasi OTP dengan membawa state email
+        navigate('/verify-otp', { state: { email: formData.email } });
+      }
     } catch (err) {
       if (err.response && err.response.data && err.response.data.errors) {
         // Tampilkan error pertama dari validasi backend
@@ -240,7 +317,7 @@ const Register = () => {
             </div>
 
             <div className="social-buttons">
-              <button type="button" className="btn-social">
+              <button type="button" className="btn-social" onClick={() => loginWithGoogle()}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -248,15 +325,6 @@ const Register = () => {
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                 </svg>
                 Google
-              </button>
-              <button type="button" className="btn-social">
-                <svg width="18" height="18" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10 0H0v10h10V0z" fill="#f25022"/>
-                  <path d="M21 0H11v10h10V0z" fill="#7fba00"/>
-                  <path d="M10 11H0v10h10V11z" fill="#00a4ef"/>
-                  <path d="M21 11H11v10h10V11z" fill="#ffb900"/>
-                </svg>
-                Microsoft
               </button>
             </div>
 

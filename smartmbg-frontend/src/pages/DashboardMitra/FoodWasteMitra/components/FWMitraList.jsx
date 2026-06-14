@@ -105,7 +105,7 @@ const FWMitraList = ({ isFullView = false }) => {
     <div className="fw-mitra-section card-box">
       <div className="fw-mitra-section-header" style={isFullView ? { marginBottom: '32px' } : {}}>
         <div style={{ textAlign: 'left' }}>
-          <h3 className="section-title" style={isFullView ? { fontSize: '1.5rem', marginBottom: '8px', color: '#111', fontWeight: '700' } : {}}>Sisa Pangan Tersedia untuk Diambil</h3>
+          <h3 style={{ fontSize: isFullView ? '1.5rem' : '1.15rem', marginBottom: isFullView ? '8px' : '0', color: '#111', fontWeight: '700', marginTop: 0 }}>Sisa Pangan Tersedia untuk Diambil</h3>
         </div>
         <div className="section-actions">
           <select 
@@ -139,9 +139,11 @@ const FWMitraList = ({ isFullView = false }) => {
             const imgSrc = item.image_path ? `http://localhost:8000/${item.image_path}` : bentoImg;
             
             return (
-              <div className="fw-mitra-list-item" key={item.id}>
-                {/* Gambar dihilangkan sesuai permintaan */}
-                
+              <div className="fw-mitra-list-item" key={item.id} style={{ display: 'flex', gap: '16px' }}>
+                <div style={{width:'100px', height:'100px', borderRadius:'8px', overflow:'hidden', backgroundColor:'#f5f5f5', flexShrink:0}}>
+                  <img src={imgSrc} alt="Sisa Makanan" style={{width:'100%', height:'100%', objectFit:'cover'}} />
+                </div>
+
                 <div className="fw-mitra-list-content">
                   <div className="fw-mitra-list-top">
                     <div className="fw-mitra-list-title-area">

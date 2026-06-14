@@ -24,6 +24,7 @@ class AuthController extends Controller
             'lng' => 'nullable|numeric',
             'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'google_id' => 'nullable|string'
         ]);
 
         $otp = sprintf("%06d", mt_rand(1, 999999));
@@ -38,16 +39,36 @@ class AuthController extends Controller
             'lng' => $request->lng,
             'username' => $request->username,
             'password' => Hash::make($request->password),
+            'google_id' => $request->google_id,
             'otp' => Hash::make($otp),
             'otp_expires_at' => now()->addMinutes(10)
         ]);
+
+        // Jika user daftar pakai Google, anggap email sudah terverifikasi otomatis
+        if ($request->has('google_id') && !empty($request->google_id)) {
+            $user->email_verified_at = now();
+            $user->otp = null;
+            $user->otp_expires_at = null;
+            $user->save();
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Registrasi berhasil.',
+                'user' => $user,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'is_google' => true
+            ], 201);
+        }
 
         // Kirim email OTP
         Mail::to($user->email)->send(new OtpMail($otp));
 
         return response()->json([
             'message' => 'Registrasi berhasil. Silakan cek email Anda untuk kode OTP.',
-            'user' => $user
+            'user' => $user,
+            'is_google' => false
         ], 201);
     }
 

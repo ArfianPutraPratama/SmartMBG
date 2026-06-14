@@ -29,10 +29,8 @@ const SidebarGuru = () => {
     <>
       <aside className="dashboard-sidebar">
         <div className="sidebar-header">
-          <div className="sidebar-logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17 8C17 8 17 14 12 18C7 14 7 8 7 8C7 8 12 2 17 8Z"/>
-            </svg>
+          <div className="sidebar-logo" style={{ padding: 0, overflow: 'hidden', background: 'transparent' }}>
+            <img src="/logo.png" alt="SmartMBG Logo" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
           </div>
           <div className="sidebar-title">
             <h2>SmartMBG</h2>
