@@ -29,11 +29,14 @@ import TambahLaporanMitra from './pages/DashboardMitra/TambahLaporanMitra/Tambah
 import EditLaporanMitra from './pages/DashboardMitra/TambahLaporanMitra/EditLaporanMitra';
 import WebGISMitra from './pages/DashboardMitra/WebGISMitra/WebGISMitra';
 
+import GoogleCallback from './pages/Auth/GoogleCallback';
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
         <Route path="/role-selection" element={<RoleSelection />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
