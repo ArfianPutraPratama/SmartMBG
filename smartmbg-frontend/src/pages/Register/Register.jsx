@@ -74,7 +74,21 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await axios.post('/register', formData);
+      // Kirim sebagai form-urlencoded agar Laravel bisa membaca body request
+      const params = new URLSearchParams();
+      params.append('role', formData.role);
+      params.append('name', formData.name);
+      params.append('email', formData.email);
+      params.append('phone', formData.phone);
+      params.append('address', formData.address);
+      params.append('username', formData.username);
+      params.append('password', formData.password);
+      if (formData.lat) params.append('lat', formData.lat);
+      if (formData.lng) params.append('lng', formData.lng);
+
+      await axios.post('/register', params, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      });
       
       // Arahkan ke halaman verifikasi OTP dengan membawa state email
       navigate('/verify-otp', { state: { email: formData.email } });
@@ -83,6 +97,8 @@ const Register = () => {
         // Tampilkan error pertama dari validasi backend
         const firstError = Object.values(err.response.data.errors)[0][0];
         setError(firstError);
+      } else if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
       } else {
         setError('Terjadi kesalahan saat mendaftar. Silakan coba lagi.');
       }
