@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api/axios';
 import { Link } from 'react-router-dom';
 
 const PermintaanTerdekat = () => {
@@ -24,7 +24,7 @@ const PermintaanTerdekat = () => {
       return d.toFixed(1);
     };
 
-    axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes')
+    axios.get('/sppg/food-wastes')
       .then(response => {
         const mappedData = response.data.map(item => ({
           id: item.id,

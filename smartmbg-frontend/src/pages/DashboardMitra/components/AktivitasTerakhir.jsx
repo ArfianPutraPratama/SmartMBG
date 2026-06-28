@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api/axios';
 
 const AktivitasTerakhir = () => {
   const [activities, setActivities] = useState([]);
@@ -8,8 +8,8 @@ const AktivitasTerakhir = () => {
     const fetchActivities = async () => {
       try {
         const [fwRes, laporanRes] = await Promise.all([
-          axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes').catch(() => ({ data: [] })),
-          axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/laporan-mitra').catch(() => ({ data: [] }))
+          axios.get('/sppg/food-wastes').catch(() => ({ data: [] })),
+          axios.get('/laporan-mitra').catch(() => ({ data: [] }))
         ]);
 
         let allActivities = [];

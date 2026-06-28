@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api/axios';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
 import CurrentDate from '../../../components/CurrentDate/CurrentDate';
@@ -14,7 +14,7 @@ const WebGISMitra = () => {
 
   useEffect(() => {
     // Fetch initial data from backend
-    axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/entitas')
+    axios.get('/entitas')
       .then(response => {
         // Map database response to frontend state format if needed
         const fetchedEntities = response.data.map(item => {

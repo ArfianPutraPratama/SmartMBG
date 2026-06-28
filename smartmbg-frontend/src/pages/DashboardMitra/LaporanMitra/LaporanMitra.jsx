@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../../api/axios';
 import Swal from 'sweetalert2';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
@@ -54,7 +54,7 @@ const LaporanMitra = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/laporan-mitra');
+      const response = await axios.get('/laporan-mitra');
       const data = response.data;
       
       let totalMaggotRaw = 0;
@@ -85,7 +85,7 @@ const LaporanMitra = () => {
       // Fetch food wastes to calculate conversion rate
       let totalFoodWaste = 0;
       try {
-        const responseFW = await axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
+        const responseFW = await axios.get('/sppg/food-wastes');
         totalFoodWaste = responseFW.data.reduce((acc, curr) => {
           if (curr.status === 'Diambil' || curr.status === 'Selesai') {
             return acc + (parseFloat(curr.berat) || 0);
@@ -132,7 +132,7 @@ const LaporanMitra = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`https://8fb6-182-8-68-206.ngrok-free.app/api/laporan-mitra/${id}`);
+          await axios.delete(`/laporan-mitra/${id}`);
           Swal.fire('Terhapus!', 'Laporan berhasil dihapus.', 'success');
           fetchData(); // Refresh table data
         } catch (error) {
