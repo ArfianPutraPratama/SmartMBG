@@ -47,7 +47,7 @@ const FWMitraMap = () => {
   const fetchData = async () => {
     try {
       // Fetch all food wastes (both Tersedia and Diambil)
-      const response = await fetch('http://localhost:8000/api/sppg/food-wastes');
+      const response = await fetch('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/sppg/food-wastes');
       if (response.ok) {
         const data = await response.json();
         setListData(data);
@@ -110,7 +110,7 @@ const FWMitraMap = () => {
     setSelectedItem(prev => prev && prev.id === id ? { ...prev, status: 'Diambil' } : prev);
     
     try {
-      const response = await fetch(`http://localhost:8000/api/sppg/food-wastes/${id}/take`, {
+      const response = await fetch(`https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/sppg/food-wastes/${id}/take`, {
         method: 'PUT'
       });
       if (response.ok) {
@@ -125,7 +125,7 @@ const FWMitraMap = () => {
   const handleSelesai = async (id) => {
     setSelectedItem(prev => prev && prev.id === id ? { ...prev, status: 'Selesai' } : prev);
     try {
-      const response = await fetch(`http://localhost:8000/api/sppg/food-wastes/${id}/complete`, {
+      const response = await fetch(`https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/sppg/food-wastes/${id}/complete`, {
         method: 'PUT'
       });
       if (response.ok) {
@@ -209,7 +209,7 @@ const FWMitraMap = () => {
         {selectedItem ? (
           <>
             <div className="detail-school-info" style={{display:'flex', gap:'12px', marginBottom:'20px'}}>
-              <img src={selectedItem.image_path ? `http://localhost:8000/${selectedItem.image_path}` : bentoImg} alt={selectedItem.lokasi} style={{width:'60px', height:'60px', borderRadius:'8px', objectFit:'cover'}} />
+              <img src={selectedItem.image_path ? `https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/${selectedItem.image_path}` : bentoImg} alt={selectedItem.lokasi} style={{width:'60px', height:'60px', borderRadius:'8px', objectFit:'cover'}} />
               <div>
                 <h4 style={{margin:'0 0 4px 0', fontSize:'1.1rem', color:'#111', textTransform:'capitalize'}}>{selectedItem.lokasi.split(',')[0]}</h4>
                 <p style={{margin:0, fontSize:'0.85rem', color:'#666'}}>{selectedItem.lokasi}</p>

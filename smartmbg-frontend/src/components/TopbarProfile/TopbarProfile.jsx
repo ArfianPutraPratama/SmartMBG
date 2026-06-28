@@ -71,7 +71,7 @@ const TopbarProfile = ({ name: defaultName = 'User Name', role: defaultRole = 'R
           </div>
           <div className="profile-avatar" style={user?.avatar ? { overflow: 'hidden' } : {}}>
             {user?.avatar ? (
-              <img src={`http://localhost:8000/storage/${user.avatar}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+              <img src={`https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/storage/${user.avatar}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
             ) : (
               avatarText
             )}

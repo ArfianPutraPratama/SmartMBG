@@ -254,7 +254,7 @@ const DashboardGuru = () => {
                 latestReviews.map((review) => (
                   <div key={review.id} style={{ display: 'flex', gap: '16px', padding: '16px', border: '1px solid #eaeaea', borderRadius: '12px', backgroundColor: '#fff' }}>
                     <img 
-                      src={review.image ? `http://localhost:8000/storage/${review.image}` : saladImg} 
+                      src={review.image ? `https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/storage/${review.image}` : saladImg} 
                       alt="Menu" 
                       style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
                     />

@@ -52,7 +52,7 @@ const EvaluasiList = ({ reviews = [] }) => {
             
             <div className="eval-item-img" style={{width:'300px', flexShrink:0}}>
               <img 
-                src={item.image ? `http://localhost:8000/storage/${item.image}` : saladImg} 
+                src={item.image ? `https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/storage/${item.image}` : saladImg} 
                 alt={item.school_name} 
                 style={{width:'100%', height:'100%', objectFit:'cover'}} 
               />

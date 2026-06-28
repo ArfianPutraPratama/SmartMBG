@@ -102,7 +102,7 @@ const DashboardSPPG = () => {
     }).catch(() => {});
 
     // Fetch Food Wastes for Total Food Waste Stat and Chart
-    axios.get('http://localhost:8000/api/sppg/food-wastes')
+    axios.get('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/sppg/food-wastes')
       .then(res => {
         const data = res.data || [];
         setFwRawData(data);

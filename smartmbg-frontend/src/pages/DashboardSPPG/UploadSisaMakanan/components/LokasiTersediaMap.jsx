@@ -41,7 +41,7 @@ const LokasiTersediaMap = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/sppg/food-wastes');
+      const response = await fetch('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/sppg/food-wastes');
       if (response.ok) {
         const data = await response.json();
         setHistoryData(data);
