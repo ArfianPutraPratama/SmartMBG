@@ -5,14 +5,20 @@ import App from './App.jsx'
 
 // Global fetch override to inject ngrok-skip-browser-warning header
 const originalFetch = window.fetch;
-window.fetch = async function () {
-  let [resource, config] = arguments;
-  
+window.fetch = async function (resource, config) {
   if (typeof resource === 'string' && resource.includes('ngrok-free.app')) {
     config = config || {};
-    config.headers = config.headers || {};
-    config.headers['ngrok-skip-browser-warning'] = '69420';
-    arguments[1] = config;
+    
+    if (config.headers instanceof Headers) {
+      config.headers.set('ngrok-skip-browser-warning', '69420');
+    } else {
+      config.headers = {
+        ...config.headers,
+        'ngrok-skip-browser-warning': '69420'
+      };
+    }
+    
+    return originalFetch(resource, config);
   }
   
   return originalFetch.apply(this, arguments);
