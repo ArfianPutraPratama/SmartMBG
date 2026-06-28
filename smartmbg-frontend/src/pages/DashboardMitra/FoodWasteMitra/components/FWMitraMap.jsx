@@ -54,6 +54,7 @@ const FWMitraMap = () => {
   const [routes, setRoutes] = useState([]);
   // Default center of Surabaya as fallback
   const [mitraLocation, setMitraLocation] = useState([-7.2754, 112.6380]);
+  const [locationLoaded, setLocationLoaded] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -116,12 +117,17 @@ const FWMitraMap = () => {
       if (res.data && res.data.lat && res.data.lng) {
         setMitraLocation([parseFloat(res.data.lat), parseFloat(res.data.lng)]);
       }
-    }).catch(() => {});
+    }).catch(() => {}).finally(() => {
+      setLocationLoaded(true);
+    });
+  }, []);
 
+  useEffect(() => {
+    if (!locationLoaded) return;
     fetchData();
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [locationLoaded, mitraLocation]);
 
   const handleAmbil = async (id) => {
     // Optimistic UI update
