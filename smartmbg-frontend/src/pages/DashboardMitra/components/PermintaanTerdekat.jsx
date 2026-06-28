@@ -33,7 +33,7 @@ const PermintaanTerdekat = () => {
           distance: calculateDistance(mitraLat, mitraLng, item.lat, item.lng) + ' km',
           qty: item.berat,
           status: item.status.toUpperCase(),
-          image: item.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/${item.image_path}` : null
+          image: item.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/api/file/${item.image_path.replace('storage/', '')}` : null
         }));
         
         // Sort by shortest distance
