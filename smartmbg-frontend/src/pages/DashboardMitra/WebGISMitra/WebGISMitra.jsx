@@ -14,7 +14,7 @@ const WebGISMitra = () => {
 
   useEffect(() => {
     // Fetch initial data from backend
-    axios.get('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/entitas')
+    axios.get('http://localhost:8000/api/entitas')
       .then(response => {
         // Map database response to frontend state format if needed
         const fetchedEntities = response.data.map(item => {

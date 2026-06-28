@@ -54,7 +54,7 @@ const LaporanMitra = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/laporan-mitra');
+      const response = await axios.get('http://localhost:8000/api/laporan-mitra');
       const data = response.data;
       
       let totalMaggotRaw = 0;
@@ -85,7 +85,7 @@ const LaporanMitra = () => {
       // Fetch food wastes to calculate conversion rate
       let totalFoodWaste = 0;
       try {
-        const responseFW = await axios.get('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/sppg/food-wastes');
+        const responseFW = await axios.get('http://localhost:8000/api/sppg/food-wastes');
         totalFoodWaste = responseFW.data.reduce((acc, curr) => {
           if (curr.status === 'Diambil' || curr.status === 'Selesai') {
             return acc + (parseFloat(curr.berat) || 0);
@@ -132,7 +132,7 @@ const LaporanMitra = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/laporan-mitra/${id}`);
+          await axios.delete(`http://localhost:8000/api/laporan-mitra/${id}`);
           Swal.fire('Terhapus!', 'Laporan berhasil dihapus.', 'success');
           fetchData(); // Refresh table data
         } catch (error) {

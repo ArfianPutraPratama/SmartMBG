@@ -54,7 +54,7 @@ const FoodWasteMap = ({ entities, foodWastes }) => {
 
   React.useEffect(() => {
     // Fetch latest AI menu globally
-    fetch('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/nutrition-histories')
+    fetch('http://localhost:8000/api/nutrition-histories')
       .then(res => res.json())
       .then(data => {
         if (data && data.status === 'success' && data.data && data.data.length > 0) {

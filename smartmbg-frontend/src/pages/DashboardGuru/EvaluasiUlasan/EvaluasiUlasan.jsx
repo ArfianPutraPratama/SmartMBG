@@ -212,7 +212,7 @@ const EvaluasiUlasan = () => {
                 <div className="review-card" key={review.id}>
                   <div className="review-img-box">
                     <img 
-                      src={review.image ? `https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/storage/${review.image}` : saladImg} 
+                      src={review.image ? `http://localhost:8000/storage/${review.image}` : saladImg} 
                       alt="Menu" 
                       className="review-img" 
                     />

@@ -28,7 +28,7 @@ const EditLaporanMitra = () => {
     // Fetch Existing Report
     const fetchReport = async () => {
       try {
-        const response = await axios.get(`https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/laporan-mitra/${id}`);
+        const response = await axios.get(`http://localhost:8000/api/laporan-mitra/${id}`);
         const data = response.data;
         setBatchId(data.batch_id);
         setTanggal(data.tanggal_operasional);
@@ -48,7 +48,7 @@ const EditLaporanMitra = () => {
     // Fetch Gudang capacity
     const fetchGudang = async () => {
       try {
-        const response = await axios.get('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/gudang-mitra');
+        const response = await axios.get('http://localhost:8000/api/gudang-mitra');
         setBaseFilledTon(parseFloat(response.data.terisi) || 0);
         setMaxCapacity(parseFloat(response.data.kapasitas_maksimal) || 10);
       } catch (error) {
@@ -86,7 +86,7 @@ const EditLaporanMitra = () => {
         status: status
       };
 
-      const response = await axios.put(`https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/laporan-mitra/${id}`, payload);
+      const response = await axios.put(`http://localhost:8000/api/laporan-mitra/${id}`, payload);
       if (response.status === 200) {
         Swal.fire({
           icon: 'success',
@@ -112,7 +112,7 @@ const EditLaporanMitra = () => {
     setMaxCapacity(newMax);
     setIsEditingMax(false);
     try {
-      await axios.post('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/gudang-mitra/capacity', {
+      await axios.post('http://localhost:8000/api/gudang-mitra/capacity', {
         kapasitas_maksimal: newMax
       });
     } catch (error) {
@@ -133,7 +133,7 @@ const EditLaporanMitra = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.post('https://smartmbg-backend-git-main-fians-projects-ae029f5d.vercel.app/api/gudang-mitra/reset');
+          await axios.post('http://localhost:8000/api/gudang-mitra/reset');
           setBaseFilledTon(0);
           Swal.fire({
             icon: 'success',
