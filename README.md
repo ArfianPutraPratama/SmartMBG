@@ -14,7 +14,7 @@ Platform Monitoring Program Makan Bergizi Gratis (MBG) berbasis **Artificial Int
 
 SmartMBG dapat diakses melalui deployment berikut.
 
-> **🔗 [https://your-domain.vercel.app](https://smartmbg-frontend.vercel.app/]**
+> **🔗 [https://smartmbg-frontend-5y5slkyst-fians-projects-ae029f5d.vercel.app/]**
 
 ---
 
