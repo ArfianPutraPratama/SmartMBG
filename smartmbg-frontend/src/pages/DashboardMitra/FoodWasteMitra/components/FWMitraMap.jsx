@@ -52,22 +52,8 @@ const FWMitraMap = () => {
   const [listData, setListData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [routes, setRoutes] = useState([]);
-
-  // Default Mitra location in Surabaya (around Tunjungan Plaza area)
-  let mitraLocation = [-7.2614, 112.7397];
-  
-  // Try to get real location from logged-in user data
-  try {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      if (user.lat && user.lng) {
-        mitraLocation = [parseFloat(user.lat), parseFloat(user.lng)];
-      }
-    }
-  } catch (e) {
-    console.error('Error parsing user data from localStorage', e);
-  }
+  // Default center of Surabaya as fallback
+  const [mitraLocation, setMitraLocation] = useState([-7.2754, 112.6380]);
 
   const fetchData = async () => {
     try {
@@ -125,6 +111,13 @@ const FWMitraMap = () => {
   };
 
   useEffect(() => {
+    // Fetch mitra's real location from profile
+    axios.get('/user').then(res => {
+      if (res.data && res.data.lat && res.data.lng) {
+        setMitraLocation([parseFloat(res.data.lat), parseFloat(res.data.lng)]);
+      }
+    }).catch(() => {});
+
     fetchData();
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);

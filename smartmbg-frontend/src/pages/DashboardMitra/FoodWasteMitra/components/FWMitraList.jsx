@@ -9,6 +9,7 @@ const FWMitraList = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState('Semua Status');
+  const [mitraCoords, setMitraCoords] = useState({ lat: null, lng: null });
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -28,6 +29,13 @@ const FWMitraList = () => {
   };
 
   useEffect(() => {
+    // Fetch mitra's real location from profile
+    axios.get('/user').then(res => {
+      if (res.data && res.data.lat && res.data.lng) {
+        setMitraCoords({ lat: parseFloat(res.data.lat), lng: parseFloat(res.data.lng) });
+      }
+    }).catch(() => {});
+
     fetchData();
     // auto refresh every 30 seconds
     const interval = setInterval(fetchData, 30000);
@@ -145,20 +153,9 @@ const FWMitraList = () => {
                     <div className="detail-item distance">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                       {(() => {
-                        let mitraLat = -7.3115;
-                        let mitraLng = 112.7275;
-                        try {
-                          const userStr = localStorage.getItem('user');
-                          if (userStr) {
-                            const user = JSON.parse(userStr);
-                            if (user.lat && user.lng) {
-                              mitraLat = parseFloat(user.lat);
-                              mitraLng = parseFloat(user.lng);
-                            }
-                          }
-                        } catch(e) {}
-                        
-                        if (!item.lat || !item.lng) return "N/A";
+                        const mitraLat = mitraCoords.lat;
+                        const mitraLng = mitraCoords.lng;
+                        if (!item.lat || !item.lng || !mitraLat || !mitraLng) return "N/A";
                         const R = 6371;
                         const dLat = (item.lat - mitraLat) * Math.PI / 180;
                         const dLon = (item.lng - mitraLng) * Math.PI / 180;
