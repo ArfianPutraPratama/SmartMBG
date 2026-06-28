@@ -53,8 +53,21 @@ const FWMitraMap = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [routes, setRoutes] = useState([]);
 
-  // Dummy Mitra location in Surabaya (around Tunjungan Plaza area)
-  const mitraLocation = [-7.2614, 112.7397];
+  // Default Mitra location in Surabaya (around Tunjungan Plaza area)
+  let mitraLocation = [-7.2614, 112.7397];
+  
+  // Try to get real location from logged-in user data
+  try {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      if (user.lat && user.lng) {
+        mitraLocation = [parseFloat(user.lat), parseFloat(user.lng)];
+      }
+    }
+  } catch (e) {
+    console.error('Error parsing user data from localStorage', e);
+  }
 
   const fetchData = async () => {
     try {

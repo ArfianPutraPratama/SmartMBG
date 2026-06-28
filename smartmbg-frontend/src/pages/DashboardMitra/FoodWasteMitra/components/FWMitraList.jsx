@@ -145,8 +145,19 @@ const FWMitraList = () => {
                     <div className="detail-item distance">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                       {(() => {
-                        const mitraLat = -7.3115;
-                        const mitraLng = 112.7275;
+                        let mitraLat = -7.3115;
+                        let mitraLng = 112.7275;
+                        try {
+                          const userStr = localStorage.getItem('user');
+                          if (userStr) {
+                            const user = JSON.parse(userStr);
+                            if (user.lat && user.lng) {
+                              mitraLat = parseFloat(user.lat);
+                              mitraLng = parseFloat(user.lng);
+                            }
+                          }
+                        } catch(e) {}
+                        
                         if (!item.lat || !item.lng) return "N/A";
                         const R = 6371;
                         const dLat = (item.lat - mitraLat) * Math.PI / 180;
