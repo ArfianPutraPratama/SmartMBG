@@ -81,7 +81,12 @@ const FoodWasteSPPG = () => {
       try {
         const fwRes = await axios.get('/sppg/food-wastes');
         if (fwRes.data) {
-          setFoodWastes(fwRes.data.slice(0, 4));
+          const parsedFW = fwRes.data.map(fw => ({
+            ...fw,
+            lat: parseFloat(fw.lat),
+            lng: parseFloat(fw.lng)
+          }));
+          setFoodWastes(parsedFW);
           fwRes.data.forEach(fw => {
             if (fw.berat) calcLimbah += parseFloat(fw.berat);
           });

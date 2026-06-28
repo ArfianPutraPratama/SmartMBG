@@ -11,6 +11,7 @@ const initialEntities = [];
 
 const WebGISMitra = () => {
   const [entities, setEntities] = useState(initialEntities);
+  const [foodWastes, setFoodWastes] = useState([]);
 
   useEffect(() => {
     // Fetch initial data from backend
@@ -42,6 +43,23 @@ const WebGISMitra = () => {
       .catch(error => {
         console.error("Error fetching entities:", error);
       });
+
+    // Fetch food wastes for the map
+    axios.get('/sppg/food-wastes')
+      .then(response => {
+        if (response.data) {
+          // Parse lat and lng as floats for the map
+          const parsedFW = response.data.map(fw => ({
+            ...fw,
+            lat: parseFloat(fw.lat),
+            lng: parseFloat(fw.lng)
+          }));
+          setFoodWastes(parsedFW);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching food wastes:", error);
+      });
   }, []);
 
   return (
@@ -71,7 +89,7 @@ const WebGISMitra = () => {
               <p>Monitoring real-time status sekolah penerima Makan Bergizi Gratis (MBG) dan pengelolaan food waste.</p>
             </div>
 
-            <FoodWasteMap entities={entities} foodWastes={[]} />
+            <FoodWasteMap entities={entities} foodWastes={foodWastes} />
 
           </div>
         </div>
