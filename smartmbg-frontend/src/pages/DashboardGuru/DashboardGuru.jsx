@@ -254,7 +254,7 @@ const DashboardGuru = () => {
                 latestReviews.map((review) => (
                   <div key={review.id} style={{ display: 'flex', gap: '16px', padding: '16px', border: '1px solid #eaeaea', borderRadius: '12px', backgroundColor: '#fff' }}>
                     <img 
-                      src={review.image ? `https://a5a1-182-8-68-206.ngrok-free.app/storage/${review.image}` : saladImg} 
+                      src={review.image ? `https://8fb6-182-8-68-206.ngrok-free.app/storage/${review.image}` : saladImg} 
                       alt="Menu" 
                       style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
                     />

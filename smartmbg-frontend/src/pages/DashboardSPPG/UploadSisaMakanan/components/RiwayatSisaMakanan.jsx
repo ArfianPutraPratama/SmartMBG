@@ -11,7 +11,7 @@ const RiwayatSisaMakanan = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('https://a5a1-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
+      const response = await fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
       if (response.ok) {
         const data = await response.json();
         setHistoryData(data);
@@ -44,7 +44,7 @@ const RiwayatSisaMakanan = () => {
               <div key={item.id} style={{display:'flex', gap:'12px', padding:'12px', border:'1px solid #eee', borderRadius:'8px', backgroundColor:'#fff'}}>
                 <div style={{width:'60px', height:'60px', borderRadius:'6px', overflow:'hidden', backgroundColor:'#f5f5f5', flexShrink:0}}>
                   {item.image_path ? (
-                    <img src={`https://a5a1-182-8-68-206.ngrok-free.app/${item.image_path}`} alt="Food Waste" style={{width:'100%', height:'100%', objectFit:'cover'}} />
+                    <img src={`https://8fb6-182-8-68-206.ngrok-free.app/${item.image_path}`} alt="Food Waste" style={{width:'100%', height:'100%', objectFit:'cover'}} />
                   ) : (
                     <div style={{width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', color:'#ccc'}}>
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>

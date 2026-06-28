@@ -71,7 +71,7 @@ const TopbarProfile = ({ name: defaultName = 'User Name', role: defaultRole = 'R
           </div>
           <div className="profile-avatar" style={user?.avatar ? { overflow: 'hidden' } : {}}>
             {user?.avatar ? (
-              <img src={`https://a5a1-182-8-68-206.ngrok-free.app/storage/${user.avatar}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+              <img src={`https://8fb6-182-8-68-206.ngrok-free.app/storage/${user.avatar}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
             ) : (
               avatarText
             )}

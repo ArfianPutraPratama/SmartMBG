@@ -12,8 +12,8 @@ const FWMitraList = () => {
     setIsLoading(true);
     try {
       const url = filterStatus === 'Semua Status' 
-        ? 'https://a5a1-182-8-68-206.ngrok-free.app/api/sppg/food-wastes'
-        : `https://a5a1-182-8-68-206.ngrok-free.app/api/sppg/food-wastes?status=${filterStatus}`;
+        ? 'https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes'
+        : `https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes?status=${filterStatus}`;
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
@@ -41,7 +41,7 @@ const FWMitraList = () => {
     }
     
     try {
-      const response = await fetch(`https://a5a1-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/take`, {
+      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/take`, {
         method: 'PUT'
       });
       if (response.ok) {
@@ -62,7 +62,7 @@ const FWMitraList = () => {
     }
     
     try {
-      const response = await fetch(`https://a5a1-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/complete`, {
+      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/complete`, {
         method: 'PUT'
       });
       if (response.ok) {
@@ -121,7 +121,7 @@ const FWMitraList = () => {
             const dateObj = new Date(item.created_at);
             const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             // Use item.image_path if exists, else default bento
-            const imgSrc = item.image_path ? `https://a5a1-182-8-68-206.ngrok-free.app/${item.image_path}` : bentoImg;
+            const imgSrc = item.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/${item.image_path}` : bentoImg;
             
             return (
               <div className="fw-mitra-list-item" key={item.id}>
@@ -202,7 +202,7 @@ const FWMitraList = () => {
             </div>
             
             <div style={{marginBottom: '16px'}}>
-              <img src={selectedItem.image_path ? `https://a5a1-182-8-68-206.ngrok-free.app/${selectedItem.image_path}` : bentoImg} alt={selectedItem.jenis_makanan} style={{width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px'}} />
+              <img src={selectedItem.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/${selectedItem.image_path}` : bentoImg} alt={selectedItem.jenis_makanan} style={{width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px'}} />
             </div>
 
             <div style={{marginBottom: '16px'}}>

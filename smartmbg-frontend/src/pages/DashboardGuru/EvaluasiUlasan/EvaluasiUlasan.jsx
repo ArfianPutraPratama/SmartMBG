@@ -212,7 +212,7 @@ const EvaluasiUlasan = () => {
                 <div className="review-card" key={review.id}>
                   <div className="review-img-box">
                     <img 
-                      src={review.image ? `https://a5a1-182-8-68-206.ngrok-free.app/storage/${review.image}` : saladImg} 
+                      src={review.image ? `https://8fb6-182-8-68-206.ngrok-free.app/storage/${review.image}` : saladImg} 
                       alt="Menu" 
                       className="review-img" 
                     />

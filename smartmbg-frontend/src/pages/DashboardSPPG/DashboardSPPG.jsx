@@ -102,7 +102,7 @@ const DashboardSPPG = () => {
     }).catch(() => {});
 
     // Fetch Food Wastes for Total Food Waste Stat and Chart
-    axios.get('https://a5a1-182-8-68-206.ngrok-free.app/api/sppg/food-wastes')
+    axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes')
       .then(res => {
         const data = res.data || [];
         setFwRawData(data);
