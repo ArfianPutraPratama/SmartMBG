@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from '../../../../api/axios';
 import bentoImg from '../../../../assets/bento_box.png';
 import NgrokImage from '../../../../components/NgrokImage/NgrokImage';
 import 'leaflet/dist/leaflet.css';
@@ -48,9 +49,9 @@ const FWMitraMap = () => {
   const fetchData = async () => {
     try {
       // Fetch all food wastes (both Tersedia and Diambil)
-      const response = await fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axios.get('/sppg/food-wastes');
+      if (response.data) {
+        const data = response.data;
         setListData(data);
         
         if (data.length > 0 && !selectedItem) {
@@ -111,10 +112,8 @@ const FWMitraMap = () => {
     setSelectedItem(prev => prev && prev.id === id ? { ...prev, status: 'Diambil' } : prev);
     
     try {
-      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/take`, {
-        method: 'PUT'
-      });
-      if (response.ok) {
+      const response = await axios.put(`/sppg/food-wastes/${id}/take`);
+      if (response.status === 200) {
         fetchData(); // This will fetch routes in the background
       }
     } catch (error) {
@@ -126,10 +125,8 @@ const FWMitraMap = () => {
   const handleSelesai = async (id) => {
     setSelectedItem(prev => prev && prev.id === id ? { ...prev, status: 'Selesai' } : prev);
     try {
-      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/complete`, {
-        method: 'PUT'
-      });
-      if (response.ok) {
+      const response = await axios.put(`/sppg/food-wastes/${id}/complete`);
+      if (response.status === 200) {
         fetchData();
       }
     } catch (error) {
