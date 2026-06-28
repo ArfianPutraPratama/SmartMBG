@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../../api/axios';
 import { Link } from 'react-router-dom';
+import NgrokImage from '../../../components/NgrokImage/NgrokImage';
 
 const PermintaanTerdekat = () => {
   const [requests, setRequests] = useState([]);
@@ -61,7 +62,7 @@ const PermintaanTerdekat = () => {
             <div className="mitra-req-left">
               <div className="mitra-req-icon" style={{ padding: 0, overflow: 'hidden', backgroundColor: 'transparent' }}>
                 {req.image ? (
-                  <img src={req.image} alt={req.school} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                  <NgrokImage src={req.image} alt={req.school} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
                 ) : (
                   <div style={{ width: '100%', height: '100%', backgroundColor: '#e8f5e9', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2e7d32' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
