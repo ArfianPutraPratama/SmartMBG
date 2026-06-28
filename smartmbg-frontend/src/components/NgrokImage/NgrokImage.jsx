@@ -12,9 +12,13 @@ const NgrokImage = ({ src, alt, style, className }) => {
 
     if (src.includes('ngrok-free.app')) {
       // Fetch the image using our global fetch interceptor
-      fetch(src)
+      fetch(src, { headers: { 'ngrok-skip-browser-warning': '69420' } })
         .then(response => {
           if (!response.ok) throw new Error('Network response was not ok');
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('text/html')) {
+             throw new Error('Ngrok returned HTML instead of image');
+          }
           return response.blob();
         })
         .then(blob => {
