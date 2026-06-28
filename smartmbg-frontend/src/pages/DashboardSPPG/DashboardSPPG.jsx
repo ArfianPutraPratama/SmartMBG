@@ -97,7 +97,7 @@ const DashboardSPPG = () => {
     }).catch(() => {});
 
     // Fetch Food Wastes for Total Food Waste Stat and Chart
-    axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes')
+    axios.get('/sppg/food-wastes')
       .then(res => {
         const data = res.data || [];
         setFwRawData(data);
@@ -155,7 +155,7 @@ const DashboardSPPG = () => {
             <div className="sppg-stat-card-new">
               <div className="sppg-stat-info">
                 <span className="sppg-stat-label">TOTAL DISTRIBUSI</span>
-                <div className="sppg-stat-value">{stats.totalDistribusi > 0 ? stats.totalDistribusi.toLocaleString('id-ID') : '12.450'}</div>
+                <div className="sppg-stat-value">{stats.totalDistribusi.toLocaleString('id-ID')} Porsi</div>
                 <div className="sppg-stat-trend positive">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                   +5.2% dari kemarin
@@ -171,7 +171,7 @@ const DashboardSPPG = () => {
               <div className="sppg-stat-info">
                 <span className="sppg-stat-label">RATA-RATA RATING</span>
                 <div className="sppg-stat-value">
-                  {stats.rataRating > 0 ? stats.rataRating : '4.8'}
+                  {stats.rataRating > 0 ? stats.rataRating : '0.0'}
                   <span className="sppg-stars">
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -181,7 +181,7 @@ const DashboardSPPG = () => {
                   </span>
                 </div>
                 <div className="sppg-stat-trend neutral">
-                  Berdasarkan {stats.totalUlasan > 0 ? stats.totalUlasan : '850'} ulasan
+                  Berdasarkan {stats.totalUlasan} ulasan
                 </div>
               </div>
               <div className="sppg-stat-icon-wrapper green">
@@ -193,7 +193,7 @@ const DashboardSPPG = () => {
             <div className="sppg-stat-card-new">
               <div className="sppg-stat-info">
                 <span className="sppg-stat-label">TOTAL FOOD WASTE</span>
-                <div className="sppg-stat-value">{stats.totalFoodWaste > 0 ? stats.totalFoodWaste.toFixed(1).replace('.', ',') : '42,5'} <span className="sppg-stat-unit">Kg</span></div>
+                <div className="sppg-stat-value">{stats.totalFoodWaste.toFixed(1).replace('.', ',')} <span className="sppg-stat-unit">Kg</span></div>
                 <div className="sppg-stat-trend negative">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
                   -2.1% (Eco Target)
