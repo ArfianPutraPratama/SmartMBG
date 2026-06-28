@@ -15,7 +15,7 @@ const WebGISGuru = () => {
 
   useEffect(() => {
     // Fetch initial data from backend
-    axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/entitas')
+    axios.get('/entitas')
       .then(response => {
         // Map database response to frontend state format if needed
         const fetchedEntities = response.data.map(item => {
@@ -34,8 +34,8 @@ const WebGISGuru = () => {
             alamat: item.alamat,
             tanggal: formattedDate,
             statusColor: color,
-            lat: item.lat,
-            lng: item.lng
+            lat: parseFloat(item.lat),
+            lng: parseFloat(item.lng)
           };
         });
         setEntities(fetchedEntities);
@@ -72,7 +72,7 @@ const WebGISGuru = () => {
               <p>Monitoring real-time status sekolah penerima Makan Bergizi Gratis (MBG) dan pengelolaan food waste.</p>
             </div>
 
-            <FoodWasteMap entities={entities} />
+            <FoodWasteMap entities={entities} foodWastes={[]} />
 
           </div>
         </div>

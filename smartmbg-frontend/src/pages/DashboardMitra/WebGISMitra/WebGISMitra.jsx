@@ -33,8 +33,8 @@ const WebGISMitra = () => {
             alamat: item.alamat,
             tanggal: formattedDate,
             statusColor: color,
-            lat: item.lat,
-            lng: item.lng
+            lat: parseFloat(item.lat),
+            lng: parseFloat(item.lng)
           };
         });
         setEntities(fetchedEntities);
@@ -71,7 +71,7 @@ const WebGISMitra = () => {
               <p>Monitoring real-time status sekolah penerima Makan Bergizi Gratis (MBG) dan pengelolaan food waste.</p>
             </div>
 
-            <FoodWasteMap entities={entities} />
+            <FoodWasteMap entities={entities} foodWastes={[]} />
 
           </div>
         </div>

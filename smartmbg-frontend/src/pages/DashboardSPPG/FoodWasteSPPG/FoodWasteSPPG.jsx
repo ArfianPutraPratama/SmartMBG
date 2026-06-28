@@ -50,8 +50,8 @@ const FoodWasteSPPG = () => {
             alamat: item.alamat,
             tanggal: formattedDate,
             statusColor: color,
-            lat: item.lat,
-            lng: item.lng,
+            lat: parseFloat(item.lat),
+            lng: parseFloat(item.lng),
             catatan: item.catatan || ''
           };
         });
