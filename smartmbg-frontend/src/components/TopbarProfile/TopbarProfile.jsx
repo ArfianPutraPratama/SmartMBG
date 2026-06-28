@@ -10,13 +10,30 @@ const TopbarProfile = ({ name: defaultName = 'User Name', role: defaultRole = 'R
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [avatarSrc, setAvatarSrc] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      
+      // Fetch avatar using axios to bypass ngrok warning
+      if (parsedUser.avatar) {
+        import('../../api/axios').then(({ default: axiosInstance }) => {
+          axiosInstance.get(`/../storage/${parsedUser.avatar}`, { responseType: 'blob' })
+            .then(res => {
+              setAvatarSrc(URL.createObjectURL(res.data));
+            })
+            .catch(err => {
+              console.error("Gagal load avatar", err);
+              // Fallback directly to URL if axios fails
+              setAvatarSrc(`https://8fb6-182-8-68-206.ngrok-free.app/storage/${parsedUser.avatar}`);
+            });
+        });
+      }
     }
   }, []);
 
@@ -70,8 +87,8 @@ const TopbarProfile = ({ name: defaultName = 'User Name', role: defaultRole = 'R
             <span className="profile-role">{role}</span>
           </div>
           <div className="profile-avatar" style={user?.avatar ? { overflow: 'hidden' } : {}}>
-            {user?.avatar ? (
-              <img src={`https://8fb6-182-8-68-206.ngrok-free.app/storage/${user.avatar}`} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            {user?.avatar && avatarSrc ? (
+              <img src={avatarSrc} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
             ) : (
               avatarText
             )}
