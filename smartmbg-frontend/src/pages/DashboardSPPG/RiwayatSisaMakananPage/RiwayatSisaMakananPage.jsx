@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import NgrokImage from '../../../components/NgrokImage/NgrokImage';
 import { Link } from 'react-router-dom';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
@@ -64,7 +65,7 @@ const RiwayatSisaMakananPage = () => {
                   <div key={item.id} style={{display:'flex', gap:'12px', padding:'16px', border:'1px solid #eee', borderRadius:'12px', backgroundColor:'#fff', boxShadow:'0 2px 8px rgba(0,0,0,0.02)'}}>
                     <div style={{width:'80px', height:'80px', borderRadius:'8px', overflow:'hidden', backgroundColor:'#f5f5f5', flexShrink:0}}>
                       {item.image_path ? (
-                        <img src={`https://8fb6-182-8-68-206.ngrok-free.app/${item.image_path}`} alt="Food Waste" style={{width:'100%', height:'100%', objectFit:'cover'}} />
+                      <NgrokImage src={`https://8fb6-182-8-68-206.ngrok-free.app/api/file/${item.image_path?.replace('storage/', '')}`} alt="Food Waste" style={{width:'100%', height:'100%', objectFit:'cover'}} />
                       ) : (
                         <div style={{width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', color:'#ccc'}}>
                           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
