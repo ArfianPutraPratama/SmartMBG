@@ -38,6 +38,16 @@ const destinationIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+// Custom Icon for Selesai (Completed)
+const selesaiIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 const FWMitraMap = () => {
   const [listData, setListData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -135,8 +145,8 @@ const FWMitraMap = () => {
     }
   };
 
-  // Filter listData to not show 'Selesai' items on the map
-  const mapData = listData.filter(item => item.status !== 'Selesai');
+  // Show all data on the map to match the list's default behavior
+  const mapData = listData;
 
   return (
     <div className="fw-mitra-map-section">
@@ -162,11 +172,17 @@ const FWMitraMap = () => {
             {mapData.map((item) => {
               if (item.lat && item.lng) {
                 const isDiambil = item.status === 'Diambil';
+                const isSelesai = item.status === 'Selesai';
+                
+                let currentIcon = new L.Icon.Default(); // Belum Diambil (Blue)
+                if (isDiambil) currentIcon = destinationIcon;
+                if (isSelesai) currentIcon = selesaiIcon;
+
                 return (
                   <Marker 
                     key={item.id} 
                     position={[item.lat, item.lng]}
-                    icon={isDiambil ? destinationIcon : new L.Icon.Default()}
+                    icon={currentIcon}
                     eventHandlers={{
                       click: () => setSelectedItem(item),
                     }}
@@ -174,7 +190,7 @@ const FWMitraMap = () => {
                     <Popup>
                       <strong>{item.lokasi.split(',')[0]}</strong><br/>
                       {item.berat} Kg<br/>
-                      <span style={{color: isDiambil ? '#f57c00' : '#2e7d32', fontWeight: 'bold'}}>{item.status}</span>
+                      <span style={{color: isSelesai ? '#757575' : (isDiambil ? '#f57c00' : '#2e7d32'), fontWeight: 'bold'}}>{item.status}</span>
                     </Popup>
                   </Marker>
                 );

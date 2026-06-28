@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from '../../../../api/axios';
 import bentoImg from '../../../../assets/bento_box.png';
 import NgrokImage from '../../../../components/NgrokImage/NgrokImage';
 
@@ -13,12 +14,11 @@ const FWMitraList = () => {
     setIsLoading(true);
     try {
       const url = filterStatus === 'Semua Status' 
-        ? 'https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes'
-        : `https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes?status=${filterStatus}`;
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = await response.json();
-        setListData(data);
+        ? '/sppg/food-wastes'
+        : `/sppg/food-wastes?status=${filterStatus}`;
+      const response = await axios.get(url);
+      if (response.data) {
+        setListData(response.data);
       }
     } catch (error) {
       console.error('Error fetching food wastes:', error);
@@ -42,10 +42,8 @@ const FWMitraList = () => {
     }
     
     try {
-      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/take`, {
-        method: 'PUT'
-      });
-      if (response.ok) {
+      const response = await axios.put(`/sppg/food-wastes/${id}/take`);
+      if (response.status === 200) {
         fetchData(); // Sync with backend silently
       } else {
         fetchData(); // Revert
@@ -63,10 +61,8 @@ const FWMitraList = () => {
     }
     
     try {
-      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/complete`, {
-        method: 'PUT'
-      });
-      if (response.ok) {
+      const response = await axios.put(`/sppg/food-wastes/${id}/complete`);
+      if (response.status === 200) {
         fetchData();
       } else {
         fetchData();
@@ -133,7 +129,7 @@ const FWMitraList = () => {
                 <div className="fw-mitra-list-content">
                   <div className="fw-mitra-list-top">
                     <div className="fw-mitra-list-title-area">
-                      <span className="badge-new">BARU</span>
+                      {item.status === 'Belum Diambil' && <span className="badge-new">BARU</span>}
                       <h4 style={{textTransform:'capitalize'}}>{item.sppg_username || item.lokasi.split(',')[0]}</h4>
                     </div>
                     <div className="badge-status">{item.status}</div>
