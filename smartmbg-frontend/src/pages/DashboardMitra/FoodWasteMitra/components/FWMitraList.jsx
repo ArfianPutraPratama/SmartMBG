@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import bentoImg from '../../../../assets/bento_box.png';
+import NgrokImage from '../../../../components/NgrokImage/NgrokImage';
 
 const FWMitraList = () => {
   const [listData, setListData] = useState([]);
@@ -121,12 +122,12 @@ const FWMitraList = () => {
             const dateObj = new Date(item.created_at);
             const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             // Use item.image_path if exists, else default bento
-            const imgSrc = item.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/${item.image_path}` : bentoImg;
+            const imgSrc = item.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/api/file/${item.image_path.replace('storage/', '')}` : bentoImg;
             
             return (
               <div className="fw-mitra-list-item" key={item.id}>
                 <div className="fw-mitra-list-img-wrapper">
-                  <img src={imgSrc} alt={item.jenis_makanan} className="fw-mitra-list-img" style={{objectFit:'cover'}} />
+                  <NgrokImage src={imgSrc} alt={item.jenis_makanan} className="fw-mitra-list-img" style={{objectFit:'cover'}} />
                 </div>
                 
                 <div className="fw-mitra-list-content">
@@ -202,7 +203,7 @@ const FWMitraList = () => {
             </div>
             
             <div style={{marginBottom: '16px'}}>
-              <img src={selectedItem.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/${selectedItem.image_path}` : bentoImg} alt={selectedItem.jenis_makanan} style={{width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px'}} />
+              <NgrokImage src={selectedItem.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/api/file/${selectedItem.image_path.replace('storage/', '')}` : bentoImg} alt={selectedItem.jenis_makanan} style={{width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px'}} />
             </div>
 
             <div style={{marginBottom: '16px'}}>
