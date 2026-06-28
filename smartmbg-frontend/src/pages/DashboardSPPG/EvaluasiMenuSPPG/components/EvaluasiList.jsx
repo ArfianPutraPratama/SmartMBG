@@ -52,7 +52,7 @@ const EvaluasiList = ({ reviews = [] }) => {
             
             <div className="eval-item-img" style={{width:'300px', flexShrink:0}}>
               <img 
-                src={item.image ? `https://9c6d-182-8-68-206.ngrok-free.app/storage/${item.image}` : saladImg} 
+                src={item.image ? `https://a5a1-182-8-68-206.ngrok-free.app/storage/${item.image}` : saladImg} 
                 alt={item.school_name} 
                 style={{width:'100%', height:'100%', objectFit:'cover'}} 
               />

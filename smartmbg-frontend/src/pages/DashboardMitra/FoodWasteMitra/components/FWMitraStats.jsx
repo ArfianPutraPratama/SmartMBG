@@ -17,7 +17,7 @@ const FWMitraStats = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://9c6d-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
+      const response = await fetch('https://a5a1-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
       if (response.ok) {
         const data = await response.json();
         

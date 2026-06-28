@@ -33,7 +33,7 @@ const ProduktivitasMaggot = () => {
   };
 
   useEffect(() => {
-    axios.get('https://9c6d-182-8-68-206.ngrok-free.app/api/laporan-mitra')
+    axios.get('https://a5a1-182-8-68-206.ngrok-free.app/api/laporan-mitra')
       .then(response => {
         setRawData(response.data);
         generateChartData(response.data, 7);
