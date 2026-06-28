@@ -52,7 +52,7 @@ const EvaluasiList = ({ reviews = [] }) => {
             
             <div className="eval-item-img" style={{width:'300px', flexShrink:0}}>
               <img 
-                src={item.image ? `https://smart-mbg-coral.vercel.app/storage/${item.image}` : saladImg} 
+                src={item.image ? `https://violet-cups-wish.loca.lt/storage/${item.image}` : saladImg} 
                 alt={item.school_name} 
                 style={{width:'100%', height:'100%', objectFit:'cover'}} 
               />

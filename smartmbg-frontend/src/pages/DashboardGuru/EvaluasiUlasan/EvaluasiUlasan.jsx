@@ -212,7 +212,7 @@ const EvaluasiUlasan = () => {
                 <div className="review-card" key={review.id}>
                   <div className="review-img-box">
                     <img 
-                      src={review.image ? `https://smart-mbg-coral.vercel.app/storage/${review.image}` : saladImg} 
+                      src={review.image ? `https://violet-cups-wish.loca.lt/storage/${review.image}` : saladImg} 
                       alt="Menu" 
                       className="review-img" 
                     />

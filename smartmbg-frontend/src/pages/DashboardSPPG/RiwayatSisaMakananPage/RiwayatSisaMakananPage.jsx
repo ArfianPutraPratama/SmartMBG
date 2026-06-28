@@ -15,7 +15,7 @@ const RiwayatSisaMakananPage = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('https://smart-mbg-coral.vercel.app/api/sppg/food-wastes');
+      const response = await fetch('https://violet-cups-wish.loca.lt/api/sppg/food-wastes');
       if (response.ok) {
         const data = await response.json();
         setHistoryData(data);
@@ -64,7 +64,7 @@ const RiwayatSisaMakananPage = () => {
                   <div key={item.id} style={{display:'flex', gap:'12px', padding:'16px', border:'1px solid #eee', borderRadius:'12px', backgroundColor:'#fff', boxShadow:'0 2px 8px rgba(0,0,0,0.02)'}}>
                     <div style={{width:'80px', height:'80px', borderRadius:'8px', overflow:'hidden', backgroundColor:'#f5f5f5', flexShrink:0}}>
                       {item.image_path ? (
-                        <img src={`https://smart-mbg-coral.vercel.app/${item.image_path}`} alt="Food Waste" style={{width:'100%', height:'100%', objectFit:'cover'}} />
+                        <img src={`https://violet-cups-wish.loca.lt/${item.image_path}`} alt="Food Waste" style={{width:'100%', height:'100%', objectFit:'cover'}} />
                       ) : (
                         <div style={{width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', color:'#ccc'}}>
                           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>

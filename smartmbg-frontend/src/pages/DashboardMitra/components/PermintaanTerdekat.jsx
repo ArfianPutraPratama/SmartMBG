@@ -24,7 +24,7 @@ const PermintaanTerdekat = () => {
       return d.toFixed(1);
     };
 
-    axios.get('https://smart-mbg-coral.vercel.app/api/sppg/food-wastes')
+    axios.get('https://violet-cups-wish.loca.lt/api/sppg/food-wastes')
       .then(response => {
         const mappedData = response.data.map(item => ({
           id: item.id,
@@ -32,7 +32,7 @@ const PermintaanTerdekat = () => {
           distance: calculateDistance(mitraLat, mitraLng, item.lat, item.lng) + ' km',
           qty: item.berat,
           status: item.status.toUpperCase(),
-          image: item.image_path ? `https://smart-mbg-coral.vercel.app/${item.image_path}` : null
+          image: item.image_path ? `https://violet-cups-wish.loca.lt/${item.image_path}` : null
         }));
         
         // Sort by shortest distance

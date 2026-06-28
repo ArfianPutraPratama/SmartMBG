@@ -33,7 +33,7 @@ const TambahLaporanMitra = () => {
     // Fetch Gudang capacity
     const fetchGudang = async () => {
       try {
-        const response = await axios.get('https://smart-mbg-coral.vercel.app/api/gudang-mitra');
+        const response = await axios.get('https://violet-cups-wish.loca.lt/api/gudang-mitra');
         setBaseFilledTon(parseFloat(response.data.terisi) || 0);
         setMaxCapacity(parseFloat(response.data.kapasitas_maksimal) || 10);
       } catch (error) {
@@ -71,7 +71,7 @@ const TambahLaporanMitra = () => {
         status: status
       };
 
-      const response = await axios.post('https://smart-mbg-coral.vercel.app/api/laporan-mitra', payload);
+      const response = await axios.post('https://violet-cups-wish.loca.lt/api/laporan-mitra', payload);
       if (response.status === 201) {
         Swal.fire({
           icon: 'success',
@@ -97,7 +97,7 @@ const TambahLaporanMitra = () => {
     setMaxCapacity(newMax);
     setIsEditingMax(false);
     try {
-      await axios.post('https://smart-mbg-coral.vercel.app/api/gudang-mitra/capacity', {
+      await axios.post('https://violet-cups-wish.loca.lt/api/gudang-mitra/capacity', {
         kapasitas_maksimal: newMax
       });
     } catch (error) {
@@ -118,7 +118,7 @@ const TambahLaporanMitra = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.post('https://smart-mbg-coral.vercel.app/api/gudang-mitra/reset');
+          await axios.post('https://violet-cups-wish.loca.lt/api/gudang-mitra/reset');
           setBaseFilledTon(0);
           Swal.fire({
             icon: 'success',
