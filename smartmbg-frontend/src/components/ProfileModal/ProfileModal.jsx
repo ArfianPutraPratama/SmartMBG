@@ -10,7 +10,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
   const [saveSuccess, setSaveSuccess] = useState(false);
   
   const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar ? `http://localhost:8000/storage/${user.avatar}` : null);
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar ? `https://smart-mbg-coral.vercel.app/storage/${user.avatar}` : null);
   const fileInputRef = React.useRef(null);
   
   // Ambil tanggal bergabung dari format ISO jika ada
@@ -46,7 +46,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
       setIsClosing(false);
       setSaveSuccess(false);
       setAvatarFile(null); // Reset
-      if(user?.avatar) setAvatarPreview(`http://localhost:8000/storage/${user.avatar}`);
+      if(user?.avatar) setAvatarPreview(`https://smart-mbg-coral.vercel.app/storage/${user.avatar}`);
       onClose();
     }, 250); // Matches animation duration
   };

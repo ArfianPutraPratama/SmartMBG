@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8000/api', // URL backend Laravel
+    baseURL: 'https://smart-mbg-coral.vercel.app/api', // URL backend Laravel
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

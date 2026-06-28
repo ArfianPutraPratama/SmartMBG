@@ -15,7 +15,7 @@ const WebGISGuru = () => {
 
   useEffect(() => {
     // Fetch initial data from backend
-    axios.get('http://localhost:8000/api/entitas')
+    axios.get('https://smart-mbg-coral.vercel.app/api/entitas')
       .then(response => {
         // Map database response to frontend state format if needed
         const fetchedEntities = response.data.map(item => {

@@ -8,8 +8,8 @@ const AktivitasTerakhir = () => {
     const fetchActivities = async () => {
       try {
         const [fwRes, laporanRes] = await Promise.all([
-          axios.get('http://localhost:8000/api/sppg/food-wastes').catch(() => ({ data: [] })),
-          axios.get('http://localhost:8000/api/laporan-mitra').catch(() => ({ data: [] }))
+          axios.get('https://smart-mbg-coral.vercel.app/api/sppg/food-wastes').catch(() => ({ data: [] })),
+          axios.get('https://smart-mbg-coral.vercel.app/api/laporan-mitra').catch(() => ({ data: [] }))
         ]);
 
         let allActivities = [];

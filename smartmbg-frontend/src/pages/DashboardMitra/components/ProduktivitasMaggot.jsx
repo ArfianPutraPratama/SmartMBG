@@ -33,7 +33,7 @@ const ProduktivitasMaggot = () => {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/laporan-mitra')
+    axios.get('https://smart-mbg-coral.vercel.app/api/laporan-mitra')
       .then(response => {
         setRawData(response.data);
         generateChartData(response.data, 7);

@@ -17,7 +17,7 @@ const FWMitraStats = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/sppg/food-wastes');
+      const response = await fetch('https://smart-mbg-coral.vercel.app/api/sppg/food-wastes');
       if (response.ok) {
         const data = await response.json();
         

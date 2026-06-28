@@ -7,7 +7,7 @@ const MitraInfo = () => {
   useEffect(() => {
     const fetchMitras = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/mitras');
+        const response = await fetch('https://smart-mbg-coral.vercel.app/api/mitras');
         if (response.ok) {
           const data = await response.json();
           setMitras(data);

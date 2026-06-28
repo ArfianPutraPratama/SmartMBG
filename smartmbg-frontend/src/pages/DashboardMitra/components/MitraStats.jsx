@@ -12,7 +12,7 @@ const MitraStats = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const foodWastesRes = await axios.get('http://localhost:8000/api/sppg/food-wastes');
+        const foodWastesRes = await axios.get('https://smart-mbg-coral.vercel.app/api/sppg/food-wastes');
         const dataFW = foodWastesRes.data;
         
         let permintaanBaru = 0;
@@ -30,7 +30,7 @@ const MitraStats = () => {
 
         let maggotDihasilkan = 0;
         try {
-          const laporanRes = await axios.get('http://localhost:8000/api/laporan-mitra');
+          const laporanRes = await axios.get('https://smart-mbg-coral.vercel.app/api/laporan-mitra');
           const dataLaporan = laporanRes.data;
           dataLaporan.forEach(laporan => {
             maggotDihasilkan += parseFloat(laporan.volume) || 0;
