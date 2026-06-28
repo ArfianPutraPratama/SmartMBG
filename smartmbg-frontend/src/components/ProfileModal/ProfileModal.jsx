@@ -16,7 +16,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
   useEffect(() => {
     if (user?.avatar) {
       import('../../api/axios').then(({ default: axiosInstance }) => {
-        axiosInstance.get(`/../storage/${user.avatar}`, { responseType: 'blob' })
+        axiosInstance.get(`/file/${user.avatar}`, { responseType: 'blob' })
           .then(res => {
             setAvatarPreview(URL.createObjectURL(res.data));
           })
@@ -63,7 +63,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
       setAvatarFile(null); // Reset
       if(user?.avatar) {
         import('../../api/axios').then(({ default: axiosInstance }) => {
-          axiosInstance.get(`/../storage/${user.avatar}`, { responseType: 'blob' })
+          axiosInstance.get(`/file/${user.avatar}`, { responseType: 'blob' })
             .then(res => setAvatarPreview(URL.createObjectURL(res.data)))
             .catch(() => setAvatarPreview(`https://8fb6-182-8-68-206.ngrok-free.app/storage/${user.avatar}`));
         });

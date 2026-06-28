@@ -23,7 +23,7 @@ const TopbarProfile = ({ name: defaultName = 'User Name', role: defaultRole = 'R
       // Fetch avatar using axios to bypass ngrok warning
       if (parsedUser.avatar) {
         import('../../api/axios').then(({ default: axiosInstance }) => {
-          axiosInstance.get(`/../storage/${parsedUser.avatar}`, { responseType: 'blob' })
+          axiosInstance.get(`/file/${parsedUser.avatar}`, { responseType: 'blob' })
             .then(res => {
               setAvatarSrc(URL.createObjectURL(res.data));
             })
