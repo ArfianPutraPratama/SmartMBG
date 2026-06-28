@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api/axios';
 import { Link } from 'react-router-dom';
+import NgrokImage from '../../../components/NgrokImage/NgrokImage';
 
 const PermintaanTerdekat = () => {
   const [requests, setRequests] = useState([]);
@@ -24,7 +25,7 @@ const PermintaanTerdekat = () => {
       return d.toFixed(1);
     };
 
-    axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes')
+    axios.get('/sppg/food-wastes')
       .then(response => {
         const mappedData = response.data.map(item => ({
           id: item.id,
@@ -32,7 +33,7 @@ const PermintaanTerdekat = () => {
           distance: calculateDistance(mitraLat, mitraLng, item.lat, item.lng) + ' km',
           qty: item.berat,
           status: item.status.toUpperCase(),
-          image: item.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/${item.image_path}` : null
+          image: item.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/api/file/${item.image_path.replace('storage/', '')}` : null
         }));
         
         // Sort by shortest distance
@@ -61,7 +62,7 @@ const PermintaanTerdekat = () => {
             <div className="mitra-req-left">
               <div className="mitra-req-icon" style={{ padding: 0, overflow: 'hidden', backgroundColor: 'transparent' }}>
                 {req.image ? (
-                  <img src={req.image} alt={req.school} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                  <NgrokImage src={req.image} alt={req.school} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
                 ) : (
                   <div style={{ width: '100%', height: '100%', backgroundColor: '#e8f5e9', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2e7d32' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>

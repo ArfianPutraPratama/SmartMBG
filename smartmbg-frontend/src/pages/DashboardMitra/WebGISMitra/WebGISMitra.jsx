@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api/axios';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
 import CurrentDate from '../../../components/CurrentDate/CurrentDate';
@@ -11,10 +11,11 @@ const initialEntities = [];
 
 const WebGISMitra = () => {
   const [entities, setEntities] = useState(initialEntities);
+  const [foodWastes, setFoodWastes] = useState([]);
 
   useEffect(() => {
     // Fetch initial data from backend
-    axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/entitas')
+    axios.get('/entitas')
       .then(response => {
         // Map database response to frontend state format if needed
         const fetchedEntities = response.data.map(item => {
@@ -33,14 +34,31 @@ const WebGISMitra = () => {
             alamat: item.alamat,
             tanggal: formattedDate,
             statusColor: color,
-            lat: item.lat,
-            lng: item.lng
+            lat: parseFloat(item.lat),
+            lng: parseFloat(item.lng)
           };
         });
         setEntities(fetchedEntities);
       })
       .catch(error => {
         console.error("Error fetching entities:", error);
+      });
+
+    // Fetch food wastes for the map
+    axios.get('/sppg/food-wastes')
+      .then(response => {
+        if (response.data) {
+          // Parse lat and lng as floats for the map
+          const parsedFW = response.data.map(fw => ({
+            ...fw,
+            lat: parseFloat(fw.lat),
+            lng: parseFloat(fw.lng)
+          }));
+          setFoodWastes(parsedFW);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching food wastes:", error);
       });
   }, []);
 
@@ -71,7 +89,7 @@ const WebGISMitra = () => {
               <p>Monitoring real-time status sekolah penerima Makan Bergizi Gratis (MBG) dan pengelolaan food waste.</p>
             </div>
 
-            <FoodWasteMap entities={entities} />
+            <FoodWasteMap entities={entities} foodWastes={foodWastes} />
 
           </div>
         </div>

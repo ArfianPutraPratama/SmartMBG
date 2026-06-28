@@ -50,8 +50,8 @@ const FoodWasteSPPG = () => {
             alamat: item.alamat,
             tanggal: formattedDate,
             statusColor: color,
-            lat: item.lat,
-            lng: item.lng,
+            lat: parseFloat(item.lat),
+            lng: parseFloat(item.lng),
             catatan: item.catatan || ''
           };
         });
@@ -64,6 +64,7 @@ const FoodWasteSPPG = () => {
 
   const fetchStats = async () => {
     try {
+      // Total Porsi
       let calcTotalPorsi = 0;
       const savedDist = localStorage.getItem('sppg_distribusi_data');
       if (savedDist) {
@@ -75,36 +76,37 @@ const FoodWasteSPPG = () => {
             if (!isNaN(num)) calcTotalPorsi += num;
           }
         });
+        setStats(prev => ({ ...prev, totalPorsi: calcTotalPorsi }));
       }
 
-      let calcLimbah = 0;
+      // Food Wastes
       try {
         const fwRes = await axios.get('/sppg/food-wastes');
         if (fwRes.data) {
-          setFoodWastes(fwRes.data.slice(0, 4));
+          const parsedFW = fwRes.data.map(fw => ({
+            ...fw,
+            lat: parseFloat(fw.lat),
+            lng: parseFloat(fw.lng)
+          }));
+          setFoodWastes(parsedFW);
+          let calcLimbah = 0;
           fwRes.data.forEach(fw => {
             if (fw.berat) calcLimbah += parseFloat(fw.berat);
           });
+          setStats(prev => ({ ...prev, limbahMakanan: Math.round(calcLimbah * 10) / 10 }));
         }
       } catch(e) { console.error(e); }
 
-      let calcRating = 0;
-      let totalUlasan = 0;
+      // Reviews
       try {
         const revRes = await axios.get('/reviews');
         if (revRes.data && revRes.data.length > 0) {
-          totalUlasan = revRes.data.length;
-          const sum = revRes.data.reduce((acc, curr) => acc + curr.rating, 0);
-          calcRating = sum / totalUlasan;
+          const totalUlasan = revRes.data.length;
+          const sum = revRes.data.reduce((acc, curr) => acc + (parseFloat(curr.rating) || 0), 0);
+          const calcRating = sum / totalUlasan;
+          setStats(prev => ({ ...prev, ratingMBG: calcRating, totalUlasan: totalUlasan }));
         }
       } catch(e) { console.error(e); }
-
-      setStats({
-        totalPorsi: calcTotalPorsi,
-        limbahMakanan: Math.round(calcLimbah * 10) / 10,
-        ratingMBG: calcRating,
-        totalUlasan: totalUlasan
-      });
 
     } catch (error) {
       console.error("Error fetching stats:", error);

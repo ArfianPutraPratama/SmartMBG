@@ -10,8 +10,23 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
   const [saveSuccess, setSaveSuccess] = useState(false);
   
   const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar ? `https://8fb6-182-8-68-206.ngrok-free.app/storage/${user.avatar}` : null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
   const fileInputRef = React.useRef(null);
+  
+  useEffect(() => {
+    if (user?.avatar) {
+      import('../../api/axios').then(({ default: axiosInstance }) => {
+        axiosInstance.get(`/file/${user.avatar}`, { responseType: 'blob' })
+          .then(res => {
+            setAvatarPreview(URL.createObjectURL(res.data));
+          })
+          .catch(err => {
+            console.error("Gagal load avatar", err);
+            setAvatarPreview(`https://8fb6-182-8-68-206.ngrok-free.app/storage/${user.avatar}`);
+          });
+      });
+    }
+  }, [user]);
   
   // Ambil tanggal bergabung dari format ISO jika ada
   const joinDateStr = user?.created_at 
@@ -46,7 +61,13 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
       setIsClosing(false);
       setSaveSuccess(false);
       setAvatarFile(null); // Reset
-      if(user?.avatar) setAvatarPreview(`https://8fb6-182-8-68-206.ngrok-free.app/storage/${user.avatar}`);
+      if(user?.avatar) {
+        import('../../api/axios').then(({ default: axiosInstance }) => {
+          axiosInstance.get(`/file/${user.avatar}`, { responseType: 'blob' })
+            .then(res => setAvatarPreview(URL.createObjectURL(res.data)))
+            .catch(() => setAvatarPreview(`https://8fb6-182-8-68-206.ngrok-free.app/storage/${user.avatar}`));
+        });
+      }
       onClose();
     }, 250); // Matches animation duration
   };

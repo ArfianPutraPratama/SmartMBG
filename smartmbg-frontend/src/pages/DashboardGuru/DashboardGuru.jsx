@@ -11,6 +11,7 @@ import ayamImg from '../../assets/ayam_kecap.png';
 import sayurImg from '../../assets/sayur_bayam.png';
 import jerukImg from '../../assets/jeruk.png';
 import saladImg from '../../assets/salad_bowl.png';
+import NgrokImage from '../../components/NgrokImage/NgrokImage';
 
 const getFoodDetails = (name) => {
   const n = (name || '').toLowerCase();
@@ -253,11 +254,19 @@ const DashboardGuru = () => {
               {latestReviews.length > 0 ? (
                 latestReviews.map((review) => (
                   <div key={review.id} style={{ display: 'flex', gap: '16px', padding: '16px', border: '1px solid #eaeaea', borderRadius: '12px', backgroundColor: '#fff' }}>
-                    <img 
-                      src={review.image ? `https://8fb6-182-8-68-206.ngrok-free.app/storage/${review.image}` : saladImg} 
-                      alt="Menu" 
-                      style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
-                    />
+                    {review.image ? (
+                      <NgrokImage 
+                        src={`https://8fb6-182-8-68-206.ngrok-free.app/api/file/${review.image}`} 
+                        alt="Menu" 
+                        style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }}
+                      />
+                    ) : (
+                      <img 
+                        src={saladImg} 
+                        alt="Menu" 
+                        style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }}
+                      />
+                    )}
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                         <h4 style={{ margin: 0, fontSize: '1rem', color: '#111' }}>{review.school_name}</h4>

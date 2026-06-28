@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import axios from '../../../../api/axios';
 import bentoImg from '../../../../assets/bento_box.png';
+import NgrokImage from '../../../../components/NgrokImage/NgrokImage';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -36,20 +38,42 @@ const destinationIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+// Custom Icon for Selesai (Completed)
+const selesaiIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+// Helper component to re-center the map when mitraLocation changes
+// (MapContainer.center is only read on first render, so we need this)
+const MapController = ({ center }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (center) {
+      map.setView(center, map.getZoom());
+    }
+  }, [center, map]);
+  return null;
+};
+
 const FWMitraMap = () => {
   const [listData, setListData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [routes, setRoutes] = useState([]);
-
-  // Dummy Mitra location in Surabaya (around Tunjungan Plaza area)
-  const mitraLocation = [-7.2614, 112.7397];
+  // Default center of Surabaya as fallback
+  const [mitraLocation, setMitraLocation] = useState([-7.2754, 112.6380]);
+  const [locationLoaded, setLocationLoaded] = useState(false);
 
   const fetchData = async () => {
     try {
       // Fetch all food wastes (both Tersedia and Diambil)
-      const response = await fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axios.get('/sppg/food-wastes');
+      if (response.data) {
+        const data = response.data;
         setListData(data);
         
         if (data.length > 0 && !selectedItem) {
@@ -100,20 +124,30 @@ const FWMitraMap = () => {
   };
 
   useEffect(() => {
+    // Fetch mitra's real location from profile
+    axios.get('/user').then(res => {
+      if (res.data && res.data.lat && res.data.lng) {
+        setMitraLocation([parseFloat(res.data.lat), parseFloat(res.data.lng)]);
+      }
+    }).catch(() => {}).finally(() => {
+      setLocationLoaded(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!locationLoaded) return;
     fetchData();
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [locationLoaded, mitraLocation]);
 
   const handleAmbil = async (id) => {
     // Optimistic UI update
     setSelectedItem(prev => prev && prev.id === id ? { ...prev, status: 'Diambil' } : prev);
     
     try {
-      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/take`, {
-        method: 'PUT'
-      });
-      if (response.ok) {
+      const response = await axios.put(`/sppg/food-wastes/${id}/take`);
+      if (response.status === 200) {
         fetchData(); // This will fetch routes in the background
       }
     } catch (error) {
@@ -125,10 +159,8 @@ const FWMitraMap = () => {
   const handleSelesai = async (id) => {
     setSelectedItem(prev => prev && prev.id === id ? { ...prev, status: 'Selesai' } : prev);
     try {
-      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/complete`, {
-        method: 'PUT'
-      });
-      if (response.ok) {
+      const response = await axios.put(`/sppg/food-wastes/${id}/complete`);
+      if (response.status === 200) {
         fetchData();
       }
     } catch (error) {
@@ -137,8 +169,8 @@ const FWMitraMap = () => {
     }
   };
 
-  // Filter listData to not show 'Selesai' items on the map
-  const mapData = listData.filter(item => item.status !== 'Selesai');
+  // Show all data on the map to match the list's default behavior
+  const mapData = listData;
 
   return (
     <div className="fw-mitra-map-section">
@@ -150,6 +182,7 @@ const FWMitraMap = () => {
         
         <div className="fw-map-container" style={{height: '350px', borderRadius:'8px', overflow:'hidden', position:'relative', zIndex: 1}}>
           <MapContainer center={mitraLocation} zoom={13} style={{ height: '100%', width: '100%' }}>
+            <MapController center={mitraLocation} />
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -164,11 +197,17 @@ const FWMitraMap = () => {
             {mapData.map((item) => {
               if (item.lat && item.lng) {
                 const isDiambil = item.status === 'Diambil';
+                const isSelesai = item.status === 'Selesai';
+                
+                let currentIcon = new L.Icon.Default(); // Belum Diambil (Blue)
+                if (isDiambil) currentIcon = destinationIcon;
+                if (isSelesai) currentIcon = selesaiIcon;
+
                 return (
                   <Marker 
                     key={item.id} 
                     position={[item.lat, item.lng]}
-                    icon={isDiambil ? destinationIcon : new L.Icon.Default()}
+                    icon={currentIcon}
                     eventHandlers={{
                       click: () => setSelectedItem(item),
                     }}
@@ -176,7 +215,7 @@ const FWMitraMap = () => {
                     <Popup>
                       <strong>{item.lokasi.split(',')[0]}</strong><br/>
                       {item.berat} Kg<br/>
-                      <span style={{color: isDiambil ? '#f57c00' : '#2e7d32', fontWeight: 'bold'}}>{item.status}</span>
+                      <span style={{color: isSelesai ? '#757575' : (isDiambil ? '#f57c00' : '#2e7d32'), fontWeight: 'bold'}}>{item.status}</span>
                     </Popup>
                   </Marker>
                 );
@@ -209,7 +248,7 @@ const FWMitraMap = () => {
         {selectedItem ? (
           <>
             <div className="detail-school-info" style={{display:'flex', gap:'12px', marginBottom:'20px'}}>
-              <img src={selectedItem.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/${selectedItem.image_path}` : bentoImg} alt={selectedItem.lokasi} style={{width:'60px', height:'60px', borderRadius:'8px', objectFit:'cover'}} />
+              <NgrokImage src={selectedItem.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/api/file/${selectedItem.image_path.replace('storage/', '')}` : bentoImg} alt={selectedItem.lokasi} style={{width:'60px', height:'60px', borderRadius:'8px', objectFit:'cover'}} />
               <div>
                 <h4 style={{margin:'0 0 4px 0', fontSize:'1.1rem', color:'#111', textTransform:'capitalize'}}>{selectedItem.lokasi.split(',')[0]}</h4>
                 <p style={{margin:0, fontSize:'0.85rem', color:'#666'}}>{selectedItem.lokasi}</p>

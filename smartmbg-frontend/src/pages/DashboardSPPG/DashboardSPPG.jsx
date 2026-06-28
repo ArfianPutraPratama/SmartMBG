@@ -13,12 +13,10 @@ const DashboardSPPG = () => {
   const [latestReviews, setLatestReviews] = useState([]);
   const [distribusiList, setDistribusiList] = useState([]);
   const [schools, setSchools] = useState([]);
-  const [stats, setStats] = useState({
-    totalDistribusi: 0,
-    rataRating: 0,
-    totalUlasan: 0,
-    totalFoodWaste: 0
-  });
+  const [totalDistribusi, setTotalDistribusi] = useState(0);
+  const [rataRating, setRataRating] = useState(0);
+  const [totalUlasan, setTotalUlasan] = useState(0);
+  const [totalFoodWaste, setTotalFoodWaste] = useState(0);
   const [fwRawData, setFwRawData] = useState([]);
   const [fwFilterDays, setFwFilterDays] = useState(7);
   const [fwChartData, setFwChartData] = useState([]);
@@ -53,9 +51,16 @@ const DashboardSPPG = () => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get('/reviews');
+        const data = response.data || [];
         // Sort descending by date and take the top 2
-        const sorted = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const sorted = data.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
         setLatestReviews(sorted.slice(0, 2));
+
+        if (data && data.length > 0) {
+          const sum = data.reduce((acc, curr) => acc + (parseFloat(curr.rating) || 0), 0);
+          setRataRating((sum / data.length).toFixed(1));
+          setTotalUlasan(data.length);
+        }
       } catch (error) {
         console.error('Failed to fetch reviews:', error);
       }
@@ -78,36 +83,20 @@ const DashboardSPPG = () => {
     if (savedDistribusi) {
       setDistribusiList(JSON.parse(savedDistribusi).slice(0, 3));
     } else {
-      const defaultData = [
-        { id: 1, tanggal: '23 Mei 2025', namaSekolah: 'SDN Ketintang 1 Surabaya', totalPorsi: '450 Box', status: 'Delivered', waktu: '09:15 WIB', wilayah: 'Ketintang', kurir: 'Budi Santoso' },
-        { id: 2, tanggal: '23 Mei 2025', namaSekolah: 'SMPN 12 Surabaya', totalPorsi: '820 Box', status: 'In Progress', waktu: 'Estimasi 11:00', wilayah: 'Ngagel', kurir: 'Siti Aminah' },
-        { id: 3, tanggal: '22 Mei 2025', namaSekolah: 'SDK Petra 1', totalPorsi: '320 Box', status: 'Delivered', waktu: '08:45 WIB', wilayah: 'Manyar', kurir: 'Andi Wijaya' }
-      ];
-      setDistribusiList(defaultData);
+      const defaultData = [];
       setDistribusiList(defaultData);
       localStorage.setItem('sppg_distribusi_data', JSON.stringify(defaultData));
     }
 
-    // Fetch Reviews for Stats
-    axios.get('/reviews').then(res => {
-      const data = res.data;
-      if (data && data.length > 0) {
-        const sum = data.reduce((acc, curr) => acc + (parseFloat(curr.rating) || 0), 0);
-        setStats(prev => ({ 
-           ...prev, 
-           rataRating: (sum / data.length).toFixed(1),
-           totalUlasan: data.length
-        }));
-      }
-    }).catch(() => {});
+    // Stats for Reviews are now handled in fetchReviews
 
     // Fetch Food Wastes for Total Food Waste Stat and Chart
-    axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes')
+    axios.get('/sppg/food-wastes')
       .then(res => {
         const data = res.data || [];
         setFwRawData(data);
         const totalFW = data.reduce((acc, curr) => acc + (parseFloat(curr.berat) || 0), 0);
-        setStats(prev => ({ ...prev, totalFoodWaste: totalFW }));
+        setTotalFoodWaste(totalFW);
         generateFwChartData(data, 7);
       })
       .catch(() => {});
@@ -120,7 +109,7 @@ const DashboardSPPG = () => {
       return acc + num;
     }, 0);
     if (totalDist > 0) {
-      setStats(prev => ({ ...prev, totalDistribusi: totalDist }));
+      setTotalDistribusi(totalDist);
     }
   }, [distribusiList]);
   return (
@@ -160,7 +149,7 @@ const DashboardSPPG = () => {
             <div className="sppg-stat-card-new">
               <div className="sppg-stat-info">
                 <span className="sppg-stat-label">TOTAL DISTRIBUSI</span>
-                <div className="sppg-stat-value">{stats.totalDistribusi > 0 ? stats.totalDistribusi.toLocaleString('id-ID') : '12.450'}</div>
+                <div className="sppg-stat-value">{totalDistribusi.toLocaleString('id-ID')} Porsi</div>
                 <div className="sppg-stat-trend positive">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                   +5.2% dari kemarin
@@ -176,17 +165,17 @@ const DashboardSPPG = () => {
               <div className="sppg-stat-info">
                 <span className="sppg-stat-label">RATA-RATA RATING</span>
                 <div className="sppg-stat-value">
-                  {stats.rataRating > 0 ? stats.rataRating : '4.8'}
+                  {rataRating > 0 ? rataRating : '0.0'}
                   <span className="sppg-stars">
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg className={stats.rataRating && stats.rataRating < 5 ? "empty" : (stats.rataRating ? "" : "empty")} viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg className={rataRating && rataRating < 5 ? "empty" : (rataRating ? "" : "empty")} viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                   </span>
                 </div>
                 <div className="sppg-stat-trend neutral">
-                  Berdasarkan {stats.totalUlasan > 0 ? stats.totalUlasan : '850'} ulasan
+                  Berdasarkan {totalUlasan} ulasan
                 </div>
               </div>
               <div className="sppg-stat-icon-wrapper green">
@@ -198,7 +187,9 @@ const DashboardSPPG = () => {
             <div className="sppg-stat-card-new">
               <div className="sppg-stat-info">
                 <span className="sppg-stat-label">TOTAL FOOD WASTE</span>
-                <div className="sppg-stat-value">{stats.totalFoodWaste > 0 ? stats.totalFoodWaste.toFixed(1).replace('.', ',') : '42,5'} <span className="sppg-stat-unit">Kg</span></div>
+                <div className="sppg-stat-value">
+                  {totalFoodWaste.toFixed(1).replace('.', ',')} <span className="sppg-stat-unit">Kg</span>
+                </div>
                 <div className="sppg-stat-trend negative">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
                   -2.1% (Eco Target)

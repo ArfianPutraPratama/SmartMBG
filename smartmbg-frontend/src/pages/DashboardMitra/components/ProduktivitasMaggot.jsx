@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api/axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ProduktivitasMaggot = () => {
@@ -33,7 +33,7 @@ const ProduktivitasMaggot = () => {
   };
 
   useEffect(() => {
-    axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/laporan-mitra')
+    axios.get('/laporan-mitra')
       .then(response => {
         setRawData(response.data);
         generateChartData(response.data, 7);

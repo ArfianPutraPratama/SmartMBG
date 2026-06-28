@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import axios from '../../../../api/axios';
 import bentoImg from '../../../../assets/bento_box.png';
+import NgrokImage from '../../../../components/NgrokImage/NgrokImage';
 
 const FWMitraList = () => {
   const [listData, setListData] = useState([]);
@@ -7,17 +9,17 @@ const FWMitraList = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState('Semua Status');
+  const [mitraCoords, setMitraCoords] = useState({ lat: null, lng: null });
 
   const fetchData = async () => {
     setIsLoading(true);
     try {
       const url = filterStatus === 'Semua Status' 
-        ? 'https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes'
-        : `https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes?status=${filterStatus}`;
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = await response.json();
-        setListData(data);
+        ? '/sppg/food-wastes'
+        : `/sppg/food-wastes?status=${filterStatus}`;
+      const response = await axios.get(url);
+      if (response.data) {
+        setListData(response.data);
       }
     } catch (error) {
       console.error('Error fetching food wastes:', error);
@@ -27,6 +29,13 @@ const FWMitraList = () => {
   };
 
   useEffect(() => {
+    // Fetch mitra's real location from profile
+    axios.get('/user').then(res => {
+      if (res.data && res.data.lat && res.data.lng) {
+        setMitraCoords({ lat: parseFloat(res.data.lat), lng: parseFloat(res.data.lng) });
+      }
+    }).catch(() => {});
+
     fetchData();
     // auto refresh every 30 seconds
     const interval = setInterval(fetchData, 30000);
@@ -41,10 +50,8 @@ const FWMitraList = () => {
     }
     
     try {
-      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/take`, {
-        method: 'PUT'
-      });
-      if (response.ok) {
+      const response = await axios.put(`/sppg/food-wastes/${id}/take`);
+      if (response.status === 200) {
         fetchData(); // Sync with backend silently
       } else {
         fetchData(); // Revert
@@ -62,10 +69,8 @@ const FWMitraList = () => {
     }
     
     try {
-      const response = await fetch(`https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes/${id}/complete`, {
-        method: 'PUT'
-      });
-      if (response.ok) {
+      const response = await axios.put(`/sppg/food-wastes/${id}/complete`);
+      if (response.status === 200) {
         fetchData();
       } else {
         fetchData();
@@ -121,18 +126,18 @@ const FWMitraList = () => {
             const dateObj = new Date(item.created_at);
             const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             // Use item.image_path if exists, else default bento
-            const imgSrc = item.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/${item.image_path}` : bentoImg;
+            const imgSrc = item.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/api/file/${item.image_path.replace('storage/', '')}` : bentoImg;
             
             return (
               <div className="fw-mitra-list-item" key={item.id}>
                 <div className="fw-mitra-list-img-wrapper">
-                  <img src={imgSrc} alt={item.jenis_makanan} className="fw-mitra-list-img" style={{objectFit:'cover'}} />
+                  <NgrokImage src={imgSrc} alt={item.jenis_makanan} className="fw-mitra-list-img" style={{objectFit:'cover'}} />
                 </div>
                 
                 <div className="fw-mitra-list-content">
                   <div className="fw-mitra-list-top">
                     <div className="fw-mitra-list-title-area">
-                      <span className="badge-new">BARU</span>
+                      {item.status === 'Belum Diambil' && <span className="badge-new">BARU</span>}
                       <h4 style={{textTransform:'capitalize'}}>{item.sppg_username || item.lokasi.split(',')[0]}</h4>
                     </div>
                     <div className="badge-status">{item.status}</div>
@@ -148,9 +153,9 @@ const FWMitraList = () => {
                     <div className="detail-item distance">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                       {(() => {
-                        const mitraLat = -7.3115;
-                        const mitraLng = 112.7275;
-                        if (!item.lat || !item.lng) return "N/A";
+                        const mitraLat = mitraCoords.lat;
+                        const mitraLng = mitraCoords.lng;
+                        if (!item.lat || !item.lng || !mitraLat || !mitraLng) return "N/A";
                         const R = 6371;
                         const dLat = (item.lat - mitraLat) * Math.PI / 180;
                         const dLon = (item.lng - mitraLng) * Math.PI / 180;
@@ -202,7 +207,7 @@ const FWMitraList = () => {
             </div>
             
             <div style={{marginBottom: '16px'}}>
-              <img src={selectedItem.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/${selectedItem.image_path}` : bentoImg} alt={selectedItem.jenis_makanan} style={{width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px'}} />
+              <NgrokImage src={selectedItem.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/api/file/${selectedItem.image_path.replace('storage/', '')}` : bentoImg} alt={selectedItem.jenis_makanan} style={{width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px'}} />
             </div>
 
             <div style={{marginBottom: '16px'}}>

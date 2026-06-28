@@ -1,6 +1,7 @@
 import React from 'react';
 import saladImg from '../../../../assets/salad_bowl.png';
 import bentoImg from '../../../../assets/bento_box.png';
+import NgrokImage from '../../../../components/NgrokImage/NgrokImage';
 
 const evaluasiData = [
   {
@@ -51,11 +52,19 @@ const EvaluasiList = ({ reviews = [] }) => {
           <div key={item.id} className="eval-item card-box" style={{display:'flex', padding:0, overflow:'hidden', alignItems:'stretch'}}>
             
             <div className="eval-item-img" style={{width:'300px', flexShrink:0}}>
-              <img 
-                src={item.image ? `https://8fb6-182-8-68-206.ngrok-free.app/storage/${item.image}` : saladImg} 
-                alt={item.school_name} 
-                style={{width:'100%', height:'100%', objectFit:'cover'}} 
-              />
+              {item.image ? (
+                <NgrokImage 
+                  src={`https://8fb6-182-8-68-206.ngrok-free.app/api/file/${item.image}`} 
+                  alt={item.school_name} 
+                  style={{width:'100%', height:'100%', objectFit:'cover'}} 
+                />
+              ) : (
+                <img 
+                  src={saladImg} 
+                  alt={item.school_name} 
+                  style={{width:'100%', height:'100%', objectFit:'cover'}} 
+                />
+              )}
             </div>
 
             <div className="eval-item-content" style={{padding:'24px', flexGrow:1, display:'flex', flexDirection:'column'}}>

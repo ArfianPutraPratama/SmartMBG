@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../../../api/axios';
+import Swal from 'sweetalert2';
 
 const UploadForm = () => {
   const [jenisMakanan, setJenisMakanan] = useState('');
@@ -89,12 +90,9 @@ const UploadForm = () => {
     }
 
     try {
-      const response = await fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes', {
-        method: 'POST',
-        body: formData
-      });
+      const response = await axios.post('/sppg/food-wastes', formData);
 
-      if (response.ok) {
+      if (response.status === 201 || response.status === 200) {
         setShowSuccess(true);
         setJenisMakanan('');
         setBerat('');
@@ -107,12 +105,24 @@ const UploadForm = () => {
         setTimeout(() => {
           window.location.reload();
         }, 2000);
-      } else {
-        alert("Terjadi kesalahan saat menyimpan data");
       }
     } catch (error) {
       console.error(error);
-      alert("Koneksi error");
+      if (error.response && error.response.status === 422) {
+        // Validation error
+        const errorMessages = Object.values(error.response.data.errors || {}).flat().join('\n');
+        Swal.fire({
+          icon: 'error',
+          title: 'Validasi Gagal',
+          text: errorMessages || 'Data yang Anda masukkan tidak valid.',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal Menyimpan',
+          text: 'Terjadi kesalahan saat menghubungi server.',
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

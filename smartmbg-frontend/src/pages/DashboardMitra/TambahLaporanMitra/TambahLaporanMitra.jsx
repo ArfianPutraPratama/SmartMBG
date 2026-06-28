@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../../api/axios';
 import Swal from 'sweetalert2';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
 import NotificationBell from '../../../components/NotificationBell/NotificationBell';
@@ -33,7 +33,7 @@ const TambahLaporanMitra = () => {
     // Fetch Gudang capacity
     const fetchGudang = async () => {
       try {
-        const response = await axios.get('https://8fb6-182-8-68-206.ngrok-free.app/api/gudang-mitra');
+        const response = await axios.get('/gudang-mitra');
         setBaseFilledTon(parseFloat(response.data.terisi) || 0);
         setMaxCapacity(parseFloat(response.data.kapasitas_maksimal) || 10);
       } catch (error) {
@@ -71,7 +71,7 @@ const TambahLaporanMitra = () => {
         status: status
       };
 
-      const response = await axios.post('https://8fb6-182-8-68-206.ngrok-free.app/api/laporan-mitra', payload);
+      const response = await axios.post('/laporan-mitra', payload);
       if (response.status === 201) {
         Swal.fire({
           icon: 'success',
@@ -97,7 +97,7 @@ const TambahLaporanMitra = () => {
     setMaxCapacity(newMax);
     setIsEditingMax(false);
     try {
-      await axios.post('https://8fb6-182-8-68-206.ngrok-free.app/api/gudang-mitra/capacity', {
+      await axios.post('/gudang-mitra/capacity', {
         kapasitas_maksimal: newMax
       });
     } catch (error) {
@@ -118,7 +118,7 @@ const TambahLaporanMitra = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.post('https://8fb6-182-8-68-206.ngrok-free.app/api/gudang-mitra/reset');
+          await axios.post('/gudang-mitra/reset');
           setBaseFilledTon(0);
           Swal.fire({
             icon: 'success',
