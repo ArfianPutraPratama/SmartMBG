@@ -7,7 +7,7 @@ const MitraInfo = () => {
   useEffect(() => {
     const fetchMitras = async () => {
       try {
-        const response = await fetch('https://violet-cups-wish.loca.lt/api/mitras');
+        const response = await fetch('https://9c6d-182-8-68-206.ngrok-free.app/api/mitras');
         if (response.ok) {
           const data = await response.json();
           setMitras(data);

@@ -10,7 +10,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
   const [saveSuccess, setSaveSuccess] = useState(false);
   
   const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar ? `https://violet-cups-wish.loca.lt/storage/${user.avatar}` : null);
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar ? `https://9c6d-182-8-68-206.ngrok-free.app/storage/${user.avatar}` : null);
   const fileInputRef = React.useRef(null);
   
   // Ambil tanggal bergabung dari format ISO jika ada
@@ -46,7 +46,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
       setIsClosing(false);
       setSaveSuccess(false);
       setAvatarFile(null); // Reset
-      if(user?.avatar) setAvatarPreview(`https://violet-cups-wish.loca.lt/storage/${user.avatar}`);
+      if(user?.avatar) setAvatarPreview(`https://9c6d-182-8-68-206.ngrok-free.app/storage/${user.avatar}`);
       onClose();
     }, 250); // Matches animation duration
   };

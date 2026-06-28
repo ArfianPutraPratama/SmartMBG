@@ -7,7 +7,7 @@ const FWMitraSchedule = () => {
   const fetchSchedule = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://violet-cups-wish.loca.lt/api/sppg/food-wastes?status=Diambil');
+      const response = await fetch('https://9c6d-182-8-68-206.ngrok-free.app/api/sppg/food-wastes?status=Diambil');
       if (response.ok) {
         const data = await response.json();
         // Limit to 5 items for schedule display, maybe order is already desc

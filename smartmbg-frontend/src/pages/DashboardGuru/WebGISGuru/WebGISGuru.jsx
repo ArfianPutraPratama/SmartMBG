@@ -15,7 +15,7 @@ const WebGISGuru = () => {
 
   useEffect(() => {
     // Fetch initial data from backend
-    axios.get('https://violet-cups-wish.loca.lt/api/entitas')
+    axios.get('https://9c6d-182-8-68-206.ngrok-free.app/api/entitas')
       .then(response => {
         // Map database response to frontend state format if needed
         const fetchedEntities = response.data.map(item => {

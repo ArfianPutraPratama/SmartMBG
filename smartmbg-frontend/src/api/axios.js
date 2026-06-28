@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://violet-cups-wish.loca.lt/api', // URL backend Laravel
+    baseURL: 'https://9c6d-182-8-68-206.ngrok-free.app/api', // URL backend Laravel
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Bypass-Tunnel-Reminder': 'true'
+        'ngrok-skip-browser-warning': '69420'
     },
     withCredentials: true, // Dibutuhkan jika backend menggunakan Sanctum stateful authentication (cookie)
 });

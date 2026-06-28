@@ -54,7 +54,7 @@ const FoodWasteMap = ({ entities, foodWastes }) => {
 
   React.useEffect(() => {
     // Fetch latest AI menu globally
-    fetch('https://violet-cups-wish.loca.lt/api/nutrition-histories')
+    fetch('https://9c6d-182-8-68-206.ngrok-free.app/api/nutrition-histories')
       .then(res => res.json())
       .then(data => {
         if (data && data.status === 'success' && data.data && data.data.length > 0) {

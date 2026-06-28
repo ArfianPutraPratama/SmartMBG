@@ -102,7 +102,7 @@ const DashboardSPPG = () => {
     }).catch(() => {});
 
     // Fetch Food Wastes for Total Food Waste Stat and Chart
-    axios.get('https://violet-cups-wish.loca.lt/api/sppg/food-wastes')
+    axios.get('https://9c6d-182-8-68-206.ngrok-free.app/api/sppg/food-wastes')
       .then(res => {
         const data = res.data || [];
         setFwRawData(data);
