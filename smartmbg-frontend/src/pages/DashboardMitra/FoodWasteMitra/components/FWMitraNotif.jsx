@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../../../api/axios';
 
 const FWMitraNotif = () => {
   const [notifications, setNotifications] = useState([]);
@@ -11,9 +12,9 @@ const FWMitraNotif = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axiosInstance.get('/sppg/food-wastes');
+      if (response.data) {
+        const data = response.data;
         
         // Sort by updated_at or created_at descending
         const sortedData = data.sort((a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at));

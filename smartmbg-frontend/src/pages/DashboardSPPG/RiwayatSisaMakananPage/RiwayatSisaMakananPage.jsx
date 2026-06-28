@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../../api/axios';
 import NgrokImage from '../../../components/NgrokImage/NgrokImage';
 import { Link } from 'react-router-dom';
 import TopbarProfile from '../../../components/TopbarProfile/TopbarProfile';
@@ -16,9 +17,9 @@ const RiwayatSisaMakananPage = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axiosInstance.get('/sppg/food-wastes');
+      if (response.data) {
+        const data = response.data;
         setHistoryData(data);
       }
     } catch (error) {

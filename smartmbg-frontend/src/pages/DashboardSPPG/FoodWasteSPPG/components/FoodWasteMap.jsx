@@ -1,4 +1,5 @@
 import React from 'react';
+import axiosInstance from '../../../../api/axios';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
@@ -54,9 +55,9 @@ const FoodWasteMap = ({ entities, foodWastes }) => {
 
   React.useEffect(() => {
     // Fetch latest AI menu globally
-    fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/nutrition-histories')
-      .then(res => res.json())
-      .then(data => {
+    axiosInstance.get('/nutrition-histories')
+      .then(res => {
+        const data = res.data;
         if (data && data.status === 'success' && data.data && data.data.length > 0) {
           const menus = data.data[0].menu_terdeteksi;
           if (menus && menus.length > 0) {

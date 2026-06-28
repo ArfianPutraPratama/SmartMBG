@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../../../api/axios';
 
 const MitraInfo = () => {
   const [mitras, setMitras] = useState([]);
@@ -7,9 +8,9 @@ const MitraInfo = () => {
   useEffect(() => {
     const fetchMitras = async () => {
       try {
-        const response = await fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/mitras');
-        if (response.ok) {
-          const data = await response.json();
+        const response = await axiosInstance.get('/mitras');
+        if (response.data) {
+          const data = response.data;
           setMitras(data);
         }
       } catch (error) {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../../../api/axios';
 
 const FWMitraSchedule = () => {
   const [scheduleData, setScheduleData] = useState([]);
@@ -7,9 +8,9 @@ const FWMitraSchedule = () => {
   const fetchSchedule = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes?status=Diambil');
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axiosInstance.get('/sppg/food-wastes', { params: { status: 'Diambil' } });
+      if (response.data) {
+        const data = response.data;
         // Limit to 5 items for schedule display, maybe order is already desc
         setScheduleData(data.slice(0, 5));
       }

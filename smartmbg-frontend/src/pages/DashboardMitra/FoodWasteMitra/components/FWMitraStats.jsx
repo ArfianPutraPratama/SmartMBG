@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../../../api/axios';
 
 const FWMitraStats = () => {
   const [stats, setStats] = useState({
@@ -17,9 +18,9 @@ const FWMitraStats = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://8fb6-182-8-68-206.ngrok-free.app/api/sppg/food-wastes');
-      if (response.ok) {
-        const data = await response.json();
+      const response = await axiosInstance.get('/sppg/food-wastes');
+      if (response.data) {
+        const data = response.data;
         
         // Permintaan Baru = jumlah data yang statusnya 'Belum Diambil'
         const availableItems = data.filter(item => item.status === 'Belum Diambil');
