@@ -245,6 +245,30 @@ const Register = () => {
               </span>
             </label>
 
+
+            {error && (
+              <div style={{ 
+                backgroundColor: '#fef2f2', 
+                border: '1px solid #fca5a5', 
+                borderRadius: '8px', 
+                padding: '12px 16px', 
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                color: '#dc2626',
+                fontSize: '0.9rem',
+                fontWeight: '500'
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                {error}
+              </div>
+            )}
+
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? 'Mendaftar...' : 'Buat Akun'}
             </button>
