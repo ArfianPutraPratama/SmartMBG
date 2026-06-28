@@ -25,7 +25,7 @@ class SppgFoodWasteController extends Controller
     {
         $validatedData = $request->validate([
             'jenis_makanan' => 'required|string',
-            'berat' => 'required|numeric',
+            'berat' => 'required|numeric|max:999999',
             'waktu_input' => 'nullable|string',
             'lokasi' => 'required|string',
             'lat' => 'nullable|numeric',
