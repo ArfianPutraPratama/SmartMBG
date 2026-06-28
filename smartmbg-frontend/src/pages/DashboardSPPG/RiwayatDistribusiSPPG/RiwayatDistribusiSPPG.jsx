@@ -34,13 +34,7 @@ const RiwayatDistribusiSPPG = () => {
       setDistribusiList(JSON.parse(saved));
     } else {
       // Default hardcoded data to initialize
-      const defaultData = [
-        { id: 1, tanggal: '23 Mei 2025', namaSekolah: 'SDN Ketintang 1 Surabaya', totalPorsi: '450 Box', status: 'Delivered', waktu: '09:15 WIB', wilayah: 'Ketintang', kurir: 'Budi Santoso' },
-        { id: 2, tanggal: '23 Mei 2025', namaSekolah: 'SMPN 12 Surabaya', totalPorsi: '820 Box', status: 'In Progress', waktu: 'Estimasi 11:00', wilayah: 'Ngagel', kurir: 'Siti Aminah' },
-        { id: 3, tanggal: '22 Mei 2025', namaSekolah: 'SDK Petra 1', totalPorsi: '320 Box', status: 'Delivered', waktu: '08:45 WIB', wilayah: 'Manyar', kurir: 'Andi Wijaya' },
-        { id: 4, tanggal: '22 Mei 2025', namaSekolah: 'SMKN 1 Surabaya', totalPorsi: '1,200 Box', status: 'Delayed', waktu: '09:55 WIB (+25m)', wilayah: 'Wonokromo', kurir: 'Hendra Saputra' },
-        { id: 5, tanggal: '21 Mei 2025', namaSekolah: 'TK Pembina Nasional', totalPorsi: '150 Box', status: 'Delivered', waktu: '08:10 WIB', wilayah: 'Gubeng', kurir: 'Joko Widodo' }
-      ];
+      const defaultData = [];
       setDistribusiList(defaultData);
       localStorage.setItem('sppg_distribusi_data', JSON.stringify(defaultData));
     }
