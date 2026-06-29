@@ -90,7 +90,7 @@ const TopbarProfile = ({ name: defaultName = 'User Name', role: defaultRole = 'R
             {user?.avatar && avatarSrc ? (
               <img src={avatarSrc} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
             ) : (
-              avatarText
+              <span>{avatarText}</span>
             )}
             <div className="online-indicator" style={{ zIndex: 2 }}></div>
           </div>
