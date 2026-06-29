@@ -6,6 +6,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AIController;
 use App\Http\Controllers\ReviewController;
 
+// Google Auth Routes
+Route::get('/auth/google/redirect', [App\Http\Controllers\GoogleAuthController::class, 'redirect']);
+Route::get('/auth/google/callback', [App\Http\Controllers\GoogleAuthController::class, 'callback']);
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
@@ -24,6 +28,9 @@ Route::get('/gudang-mitra', [App\Http\Controllers\GudangMitraController::class, 
 Route::post('/gudang-mitra/reset', [App\Http\Controllers\GudangMitraController::class, 'reset']);
 Route::post('/gudang-mitra/capacity', [App\Http\Controllers\GudangMitraController::class, 'updateCapacity']);
 
+// Review - GET is public so SPPG dashboard can read without token
+Route::get('/reviews', [ReviewController::class, 'index']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -31,8 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user/profile', [AuthController::class, 'updateProfile']);
     Route::put('/user/change-password', [AuthController::class, 'changePassword']);
     
-    // Review Routes
-    Route::get('/reviews', [ReviewController::class, 'index']);
+    // Review POST requires auth
     Route::post('/reviews', [ReviewController::class, 'store']);
 });
 
@@ -53,6 +59,15 @@ Route::get('/entitas', [EntitasController::class, 'index']);
 Route::post('/entitas', [EntitasController::class, 'store']);
 Route::put('/entitas/{id}', [EntitasController::class, 'update']);
 Route::delete('/entitas/{id}', [EntitasController::class, 'destroy']);
+
+// Proxy route to bypass CORS for storage files
+Route::get('/file/{folder}/{filename}', function ($folder, $filename) {
+    $path = storage_path('app/public/' . $folder . '/' . $filename);
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    return response()->file($path);
+});
 
 // Mitra Routes
 Route::get('/mitras', function () {
