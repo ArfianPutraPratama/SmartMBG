@@ -30,7 +30,7 @@ const TopbarProfile = ({ name: defaultName = 'User Name', role: defaultRole = 'R
             .catch(err => {
               console.error("Gagal load avatar", err);
               // Fallback directly to URL if axios fails
-              setAvatarSrc(`https://8fb6-182-8-68-206.ngrok-free.app/storage/${parsedUser.avatar}`);
+              setAvatarSrc(`https://8ead-103-242-124-22.ngrok-free.app/storage/${parsedUser.avatar}`);
             });
         });
       }

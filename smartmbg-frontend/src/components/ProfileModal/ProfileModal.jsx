@@ -22,7 +22,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
           })
           .catch(err => {
             console.error("Gagal load avatar", err);
-            setAvatarPreview(`https://8fb6-182-8-68-206.ngrok-free.app/storage/${user.avatar}`);
+            setAvatarPreview(`https://8ead-103-242-124-22.ngrok-free.app/storage/${user.avatar}`);
           });
       });
     }
@@ -65,7 +65,7 @@ const ProfileModal = ({ isOpen, onClose, user, defaultName, defaultRole, avatarT
         import('../../api/axios').then(({ default: axiosInstance }) => {
           axiosInstance.get(`/file/${user.avatar}`, { responseType: 'blob' })
             .then(res => setAvatarPreview(URL.createObjectURL(res.data)))
-            .catch(() => setAvatarPreview(`https://8fb6-182-8-68-206.ngrok-free.app/storage/${user.avatar}`));
+            .catch(() => setAvatarPreview(`https://8ead-103-242-124-22.ngrok-free.app/storage/${user.avatar}`));
         });
       }
       onClose();

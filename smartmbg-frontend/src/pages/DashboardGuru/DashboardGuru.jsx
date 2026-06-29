@@ -256,7 +256,7 @@ const DashboardGuru = () => {
                   <div key={review.id} style={{ display: 'flex', gap: '16px', padding: '16px', border: '1px solid #eaeaea', borderRadius: '12px', backgroundColor: '#fff' }}>
                     {review.image ? (
                       <NgrokImage 
-                        src={`https://8fb6-182-8-68-206.ngrok-free.app/api/file/${review.image}`} 
+                        src={`https://8ead-103-242-124-22.ngrok-free.app/api/file/${review.image}`} 
                         alt="Menu" 
                         style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }}
                       />

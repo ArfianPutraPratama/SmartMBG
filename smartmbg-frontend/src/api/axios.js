@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://8fb6-182-8-68-206.ngrok-free.app/api', // URL backend Laravel
+    baseURL: 'https://8ead-103-242-124-22.ngrok-free.app/api', // URL backend Laravel
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

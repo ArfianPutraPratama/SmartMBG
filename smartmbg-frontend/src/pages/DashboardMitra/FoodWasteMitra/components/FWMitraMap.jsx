@@ -248,7 +248,7 @@ const FWMitraMap = () => {
         {selectedItem ? (
           <>
             <div className="detail-school-info" style={{display:'flex', gap:'12px', marginBottom:'20px'}}>
-              <NgrokImage src={selectedItem.image_path ? `https://8fb6-182-8-68-206.ngrok-free.app/api/file/${selectedItem.image_path.replace('storage/', '')}` : bentoImg} alt={selectedItem.lokasi} style={{width:'60px', height:'60px', borderRadius:'8px', objectFit:'cover'}} />
+              <NgrokImage src={selectedItem.image_path ? `https://8ead-103-242-124-22.ngrok-free.app/api/file/${selectedItem.image_path.replace('storage/', '')}` : bentoImg} alt={selectedItem.lokasi} style={{width:'60px', height:'60px', borderRadius:'8px', objectFit:'cover'}} />
               <div>
                 <h4 style={{margin:'0 0 4px 0', fontSize:'1.1rem', color:'#111', textTransform:'capitalize'}}>{selectedItem.lokasi.split(',')[0]}</h4>
                 <p style={{margin:0, fontSize:'0.85rem', color:'#666'}}>{selectedItem.lokasi}</p>
