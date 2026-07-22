@@ -26,7 +26,6 @@ const AnalisisGizi = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [portionSize, setPortionSize] = useState(1);
   const [historyList, setHistoryList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentHistoryId, setCurrentHistoryId] = useState(null);
@@ -116,26 +115,6 @@ const AnalisisGizi = () => {
     setCurrentHistoryId(null);
   };
 
-  const handlePortionChange = async (size) => {
-    setPortionSize(size);
-    if (currentHistoryId && aiResult.gizi) {
-      try {
-        const payload = {
-          porsi: size === 1 ? 'Besar' : size === 0.75 ? 'Sedang' : 'Kecil',
-          kalori: aiResult.gizi.kalori * size,
-          protein: aiResult.gizi.protein * size,
-          lemak: aiResult.gizi.lemak * size,
-          karbo: aiResult.gizi.karbo * size,
-          serat: aiResult.gizi.serat * size,
-          vitamin_mineral: aiResult.gizi.vitamin_mineral * size
-        };
-        await axiosInstance.put(`/nutrition-histories/${currentHistoryId}`, payload);
-        fetchHistory(); // Refresh table
-      } catch (err) {
-        console.error('Failed to update history portion', err);
-      }
-    }
-  };
 
   return (
     <div className="dashboard-layout">
@@ -269,40 +248,18 @@ const AnalisisGizi = () => {
               <div className="analysis-header-row">
                 <div className="analysis-title-group">
                   <h3>3. Estimasi Kandungan Gizi Menu MBG</h3>
-                  <p>Estimasi perhitungan berdasarkan deteksi visual dan porsi</p>
+                  <p>Estimasi perhitungan otomatis berdasarkan persentase luas kompartemen baki</p>
                 </div>
                 <div className="ai-badge">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                   Model YOLOv8 Aktif
                 </div>
               </div>
-
-              <div className="toggle-group">
-                <button 
-                  className={`toggle-btn ${portionSize === 1 ? 'active' : ''}`}
-                  onClick={() => handlePortionChange(1)}
-                >
-                  Porsi Besar (1 Porsi)
-                </button>
-                <button 
-                  className={`toggle-btn ${portionSize === 0.75 ? 'active' : ''}`}
-                  onClick={() => handlePortionChange(0.75)}
-                >
-                  Porsi Sedang (3/4 Porsi)
-                </button>
-                <button 
-                  className={`toggle-btn ${portionSize === 0.5 ? 'active' : ''}`}
-                  onClick={() => handlePortionChange(0.5)}
-                >
-                  Porsi Kecil (1/2 Porsi)
-                </button>
-              </div>
-
               <div className="nutrients-grid" style={{ opacity: isLoading ? 0.5 : 1 }}>
                 {/* Kalori */}
                 <div className="nutrient-box">
                   <div className="nutrient-value-group c-kalori">
-                    <span className="nut-big-val">{((aiResult.gizi?.kalori ?? 0) * portionSize).toFixed(1)}</span>
+                    <span className="nut-big-val">{((aiResult.gizi?.kalori ?? 0)).toFixed(1)}</span>
                     <span className="nut-unit">kkal</span>
                   </div>
                   <p className="nut-name">Kalori</p>
@@ -312,7 +269,7 @@ const AnalisisGizi = () => {
                 {/* Protein */}
                 <div className="nutrient-box">
                   <div className="nutrient-value-group c-protein">
-                    <span className="nut-big-val">{((aiResult.gizi?.protein ?? 0) * portionSize).toFixed(1)}</span>
+                    <span className="nut-big-val">{((aiResult.gizi?.protein ?? 0)).toFixed(1)}</span>
                     <span className="nut-unit">g</span>
                   </div>
                   <p className="nut-name">Protein</p>
@@ -322,7 +279,7 @@ const AnalisisGizi = () => {
                 {/* Lemak */}
                 <div className="nutrient-box">
                   <div className="nutrient-value-group c-lemak">
-                    <span className="nut-big-val">{((aiResult.gizi?.lemak ?? 0) * portionSize).toFixed(1)}</span>
+                    <span className="nut-big-val">{((aiResult.gizi?.lemak ?? 0)).toFixed(1)}</span>
                     <span className="nut-unit">g</span>
                   </div>
                   <p className="nut-name">Lemak</p>
@@ -332,7 +289,7 @@ const AnalisisGizi = () => {
                 {/* Karbohidrat */}
                 <div className="nutrient-box">
                   <div className="nutrient-value-group c-karbo">
-                    <span className="nut-big-val">{((aiResult.gizi?.karbo ?? 0) * portionSize).toFixed(1)}</span>
+                    <span className="nut-big-val">{((aiResult.gizi?.karbo ?? 0)).toFixed(1)}</span>
                     <span className="nut-unit">g</span>
                   </div>
                   <p className="nut-name">Karbohidrat</p>
@@ -342,7 +299,7 @@ const AnalisisGizi = () => {
                 {/* Serat */}
                 <div className="nutrient-box">
                   <div className="nutrient-value-group c-serat">
-                    <span className="nut-big-val">{((aiResult.gizi?.serat ?? 0) * portionSize).toFixed(1)}</span>
+                    <span className="nut-big-val">{((aiResult.gizi?.serat ?? 0)).toFixed(1)}</span>
                     <span className="nut-unit">g</span>
                   </div>
                   <p className="nut-name">Serat</p>
@@ -352,7 +309,7 @@ const AnalisisGizi = () => {
                 {/* Vitamin & Mineral */}
                 <div className="nutrient-box">
                   <div className="nutrient-value-group c-vit">
-                    <span className="nut-big-val">{((aiResult.gizi?.vitamin_mineral ?? aiResult.gizi?.vit ?? 0) * portionSize).toFixed(1)}</span>
+                    <span className="nut-big-val">{((aiResult.gizi?.vitamin_mineral ?? aiResult.gizi?.vit ?? 0)).toFixed(1)}</span>
                     <span className="nut-unit">mg</span>
                   </div>
                   <p className="nut-name">Vitamin &amp; Mineral</p>

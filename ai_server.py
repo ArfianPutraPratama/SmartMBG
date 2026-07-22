@@ -31,53 +31,68 @@ except Exception as e:
     print(f"Gagal memuat model: {e}")
 
 # Database Gizi Sederhana (Estimasi per 1 porsi standar / gram tertentu)
+# Database Gizi Standar TKPI (Per 100 gram)
 NUTRITION_DB = {
-    'anggur': {'kalori': 69, 'protein': 0.7, 'lemak': 0.2, 'karbo': 18.1, 'serat': 0.9, 'vit': 15},
-    'ayam': {'kalori': 239, 'protein': 27, 'lemak': 14, 'karbo': 0, 'serat': 0, 'vit': 20},
-    'chicken': {'kalori': 239, 'protein': 27, 'lemak': 14, 'karbo': 0, 'serat': 0, 'vit': 20},
-    'shredded_chicken': {'kalori': 239, 'protein': 27, 'lemak': 14, 'karbo': 0, 'serat': 0, 'vit': 20},
-    'bakso': {'kalori': 250, 'protein': 14, 'lemak': 15, 'karbo': 10, 'serat': 1, 'vit': 10},
-    'meatball': {'kalori': 250, 'protein': 14, 'lemak': 15, 'karbo': 10, 'serat': 1, 'vit': 10},
-    'cap_cai': {'kalori': 120, 'protein': 5, 'lemak': 7, 'karbo': 10, 'serat': 3, 'vit': 45},
-    'daging_sapi': {'kalori': 250, 'protein': 26, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 25},
-    'meat': {'kalori': 250, 'protein': 26, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 25},
-    'jeruk': {'kalori': 43, 'protein': 0.9, 'lemak': 0.1, 'karbo': 8.3, 'serat': 2.4, 'vit': 53},
-    'fruit': {'kalori': 60, 'protein': 1.0, 'lemak': 0.2, 'karbo': 15.0, 'serat': 2.5, 'vit': 40},
-    'kacang_panjang': {'kalori': 47, 'protein': 2.8, 'lemak': 0.2, 'karbo': 8, 'serat': 3, 'vit': 30},
-    'bean': {'kalori': 47, 'protein': 2.8, 'lemak': 0.2, 'karbo': 8, 'serat': 3, 'vit': 30},
+    # Karbohidrat
+    'nasi': {'kalori': 130, 'protein': 2.7, 'lemak': 0.3, 'karbo': 28, 'serat': 0.4, 'vit': 0},
+    'rice': {'kalori': 130, 'protein': 2.7, 'lemak': 0.3, 'karbo': 28, 'serat': 0.4, 'vit': 0},
+    'mie': {'kalori': 138, 'protein': 4.5, 'lemak': 2.1, 'karbo': 25, 'serat': 1.2, 'vit': 0},
+    'noodle': {'kalori': 138, 'protein': 4.5, 'lemak': 2.1, 'karbo': 25, 'serat': 1.2, 'vit': 0},
     'kentang': {'kalori': 87, 'protein': 1.9, 'lemak': 0.1, 'karbo': 20.1, 'serat': 1.8, 'vit': 20},
     'potato': {'kalori': 87, 'protein': 1.9, 'lemak': 0.1, 'karbo': 20.1, 'serat': 1.8, 'vit': 20},
-    'lengkeng': {'kalori': 60, 'protein': 1.3, 'lemak': 0.1, 'karbo': 15, 'serat': 1.1, 'vit': 10},
-    'mie': {'kalori': 138, 'protein': 4.5, 'lemak': 2.1, 'karbo': 25, 'serat': 1.2, 'vit': 5},
-    'noodle': {'kalori': 138, 'protein': 4.5, 'lemak': 2.1, 'karbo': 25, 'serat': 1.2, 'vit': 5},
-    'nasi': {'kalori': 130, 'protein': 2.7, 'lemak': 0.3, 'karbo': 28, 'serat': 0.4, 'vit': 2},
-    'rice': {'kalori': 130, 'protein': 2.7, 'lemak': 0.3, 'karbo': 28, 'serat': 0.4, 'vit': 2},
-    'pisang': {'kalori': 89, 'protein': 1.1, 'lemak': 0.3, 'karbo': 22.8, 'serat': 2.6, 'vit': 10},
-    'selada': {'kalori': 15, 'protein': 1.4, 'lemak': 0.2, 'karbo': 2.9, 'serat': 1.3, 'vit': 30},
+    
+    # Lauk Hewani
+    'ayam': {'kalori': 295, 'protein': 37, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'chicken': {'kalori': 295, 'protein': 37, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'daging_sapi': {'kalori': 250, 'protein': 26, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'meat': {'kalori': 250, 'protein': 26, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'telur': {'kalori': 155, 'protein': 13, 'lemak': 11, 'karbo': 1.1, 'serat': 0, 'vit': 0},
+    'egg': {'kalori': 155, 'protein': 13, 'lemak': 11, 'karbo': 1.1, 'serat': 0, 'vit': 0},
+    'ikan': {'kalori': 205, 'protein': 22, 'lemak': 12, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'fish': {'kalori': 205, 'protein': 22, 'lemak': 12, 'karbo': 0, 'serat': 0, 'vit': 0},
+    
+    # Lauk Nabati
+    'tempe': {'kalori': 193, 'protein': 19, 'lemak': 11, 'karbo': 9, 'serat': 5, 'vit': 0},
+    'tahu': {'kalori': 76, 'protein': 8, 'lemak': 4.8, 'karbo': 1.9, 'serat': 0.3, 'vit': 0},
+    'tofu': {'kalori': 76, 'protein': 8, 'lemak': 4.8, 'karbo': 1.9, 'serat': 0.3, 'vit': 0},
+    
+    # Sayur & Buah
+    'sayur': {'kalori': 30, 'protein': 2.0, 'lemak': 0.2, 'karbo': 6.0, 'serat': 2.5, 'vit': 35},
     'vegetable': {'kalori': 30, 'protein': 2.0, 'lemak': 0.2, 'karbo': 6.0, 'serat': 2.5, 'vit': 35},
-    'semangka': {'kalori': 30, 'protein': 0.6, 'lemak': 0.2, 'karbo': 7.6, 'serat': 0.4, 'vit': 10},
-    'tahu': {'kalori': 76, 'protein': 8, 'lemak': 4.8, 'karbo': 1.9, 'serat': 0.3, 'vit': 15},
-    'tofu': {'kalori': 76, 'protein': 8, 'lemak': 4.8, 'karbo': 1.9, 'serat': 0.3, 'vit': 15},
-    'telur': {'kalori': 155, 'protein': 13, 'lemak': 11, 'karbo': 1.1, 'serat': 0, 'vit': 20},
-    'egg': {'kalori': 155, 'protein': 13, 'lemak': 11, 'karbo': 1.1, 'serat': 0, 'vit': 20},
-    'omelet': {'kalori': 155, 'protein': 13, 'lemak': 11, 'karbo': 1.1, 'serat': 0, 'vit': 20},
-    'tempe': {'kalori': 193, 'protein': 19, 'lemak': 11, 'karbo': 9, 'serat': 5, 'vit': 20},
-    'timun': {'kalori': 15, 'protein': 0.7, 'lemak': 0.1, 'karbo': 3.6, 'serat': 0.5, 'vit': 5},
-    'bread': {'kalori': 265, 'protein': 9, 'lemak': 3.2, 'karbo': 49, 'serat': 2.7, 'vit': 10},
-    'cassava': {'kalori': 160, 'protein': 1.4, 'lemak': 0.3, 'karbo': 38, 'serat': 1.8, 'vit': 15},
-    'cheese': {'kalori': 402, 'protein': 25, 'lemak': 33, 'karbo': 1.3, 'serat': 0, 'vit': 5},
-    'corn': {'kalori': 86, 'protein': 3.2, 'lemak': 1.2, 'karbo': 19, 'serat': 2.7, 'vit': 10},
-    'cracker': {'kalori': 500, 'protein': 7, 'lemak': 25, 'karbo': 60, 'serat': 2, 'vit': 5},
-    'fish': {'kalori': 205, 'protein': 22, 'lemak': 12, 'karbo': 0, 'serat': 0, 'vit': 15},
-    'shredded_fish': {'kalori': 205, 'protein': 22, 'lemak': 12, 'karbo': 0, 'serat': 0, 'vit': 15},
-    'fritter': {'kalori': 250, 'protein': 3, 'lemak': 15, 'karbo': 20, 'serat': 1, 'vit': 5},
-    'juice': {'kalori': 50, 'protein': 0.5, 'lemak': 0.1, 'karbo': 12, 'serat': 0.2, 'vit': 30},
-    'milk': {'kalori': 42, 'protein': 3.4, 'lemak': 1.0, 'karbo': 5, 'serat': 0, 'vit': 20},
-    'nugget': {'kalori': 296, 'protein': 14, 'lemak': 20, 'karbo': 15, 'serat': 1, 'vit': 5},
-    'oat': {'kalori': 389, 'protein': 16.9, 'lemak': 6.9, 'karbo': 66.3, 'serat': 10.6, 'vit': 5},
-    'sauce': {'kalori': 20, 'protein': 0.5, 'lemak': 0.1, 'karbo': 4, 'serat': 0, 'vit': 5},
-    'shrimp': {'kalori': 99, 'protein': 24, 'lemak': 0.3, 'karbo': 0.2, 'serat': 0, 'vit': 10}
+    'pisang': {'kalori': 89, 'protein': 1.1, 'lemak': 0.3, 'karbo': 22.8, 'serat': 2.6, 'vit': 10},
+    'jeruk': {'kalori': 43, 'protein': 0.9, 'lemak': 0.1, 'karbo': 8.3, 'serat': 2.4, 'vit': 53},
+    'fruit': {'kalori': 60, 'protein': 1.0, 'lemak': 0.2, 'karbo': 15.0, 'serat': 2.5, 'vit': 40},
+    
+    # Lainnya
+    'susu': {'kalori': 42, 'protein': 3.4, 'lemak': 1.0, 'karbo': 5, 'serat': 0, 'vit': 20},
+    'milk': {'kalori': 42, 'protein': 3.4, 'lemak': 1.0, 'karbo': 5, 'serat': 0, 'vit': 20}
 }
+
+# Kalibrasi: Persentase Luas Kompartemen Standar pada Baki MBG (Total = 1.0 atau 100% foto)
+COMPARTMENT_AREA_RATIO = {
+    'karbohidrat': 0.25, # Nasi, Mie, Kentang
+    'lauk': 0.15,        # Ayam, Daging, Telur, Ikan, Tempe, Tahu
+    'sayur': 0.20,       # Sayuran
+    'buah': 0.15,        # Buah-buahan
+    'susu': 0.10         # Susu
+}
+
+# Kalibrasi: Berat Penuh per Kompartemen dalam Gram (Jika terisi 100%)
+FULL_WEIGHT_GRAMS = {
+    'karbohidrat': 180, # Gram
+    'lauk': 70,         # Gram
+    'sayur': 60,        # Gram
+    'buah': 90,         # Gram
+    'susu': 150         # Gram (ml)
+}
+
+def get_food_category(class_name):
+    name = class_name.lower()
+    if name in ['nasi', 'rice', 'mie', 'noodle', 'kentang', 'potato', 'cassava', 'bread', 'oat', 'corn']: return 'karbohidrat'
+    if name in ['sayur', 'vegetable', 'kacang_panjang', 'bean', 'cap_cai', 'selada', 'timun']: return 'sayur'
+    if name in ['buah', 'fruit', 'jeruk', 'pisang', 'semangka', 'anggur', 'lengkeng']: return 'buah'
+    if name in ['susu', 'milk', 'juice']: return 'susu'
+    return 'lauk' # Default to lauk for ayam, daging, ikan, telur, tempe, tahu, dll.
 
 ID_TRANSLATION = {
     'bean': 'Buncis/Kacang',
@@ -194,41 +209,46 @@ async def analyze_food(file: UploadFile = File(...)):
                     "image_base64": img_str
                 })
                 
-                # PENGHITUNGAN PORSI BERDASARKAN RASIO PIKSEL (METODE 1 - GEOMETRI ELIPS)
-                # Menghitung seberapa besar objek makanan menutupi layar foto
+                # PENGHITUNGAN PORSI BERDASARKAN RASIO KOMPARTEMEN BAKI (METODE 2)
                 img_width, img_height = image.size
                 total_image_area = img_width * img_height
+                
+                # Mendapatkan kategori makanan untuk mencari rasio kompartemen
+                category = get_food_category(class_name)
+                compartment_ratio = COMPARTMENT_AREA_RATIO.get(category, 0.15)
+                full_weight = FULL_WEIGHT_GRAMS.get(category, 100)
+                
+                # Luas Kompartemen Baki (Standar)
+                compartment_area = total_image_area * compartment_ratio
                 
                 # Mengambil titik koordinat kotak (bounding box)
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 box_width = x2 - x1
                 box_height = y2 - y1
                 
-                # Menggunakan Rumus Luas Elips: Pi * (Lebar/2) * (Tinggi/2)
-                # Ini 21.5% lebih akurat dari rumus Kotak (Panjang x Lebar) untuk makanan
+                # Luas Makanan menggunakan Geometri Elips
                 import math
                 food_area = math.pi * (box_width / 2.0) * (box_height / 2.0)
                 
-                # Mendapatkan rasio ukuran makanan terhadap nampan
-                area_ratio = food_area / total_image_area
+                # Menghitung Persentase Luas Makanan terhadap Luas Kompartemen
+                fill_ratio = food_area / compartment_area
+                if fill_ratio > 1.0:
+                    fill_ratio = 1.0 # Maksimal 100% penuh
                 
-                # Logika heuristik penentuan porsi
-                portion_multiplier = 1.0 # Default 1 porsi wajar
-                if area_ratio < 0.05:     # Jika sangat kecil (< 5%)
-                    portion_multiplier = 0.5 # Dianggap Setengah Porsi
-                elif area_ratio > 0.25:   # Jika ukurannya sangat besar (> 25%)
-                    portion_multiplier = 1.5 # Dianggap Porsi Besar (1.5x)
-
+                # Estimasi Berat (Gram)
+                estimated_weight_g = fill_ratio * full_weight
                 
-                # Tambahkan nilai gizi yang sudah dikalikan dengan rasio porsi
+                # Menghitung Nilai Gizi berdasarkan Estimasi Berat (Gram)
                 if class_name in NUTRITION_DB:
                     gizi_item = NUTRITION_DB[class_name]
-                    total_gizi['kalori'] += gizi_item['kalori'] * portion_multiplier
-                    total_gizi['protein'] += gizi_item['protein'] * portion_multiplier
-                    total_gizi['lemak'] += gizi_item['lemak'] * portion_multiplier
-                    total_gizi['karbo'] += gizi_item['karbo'] * portion_multiplier
-                    total_gizi['serat'] += gizi_item['serat'] * portion_multiplier
-                    total_gizi['vit'] += gizi_item['vit'] * portion_multiplier
+                    # Rumus: (Berat / 100) * Nilai Gizi per 100g
+                    weight_multiplier = estimated_weight_g / 100.0
+                    total_gizi['kalori'] += gizi_item['kalori'] * weight_multiplier
+                    total_gizi['protein'] += gizi_item['protein'] * weight_multiplier
+                    total_gizi['lemak'] += gizi_item['lemak'] * weight_multiplier
+                    total_gizi['karbo'] += gizi_item['karbo'] * weight_multiplier
+                    total_gizi['serat'] += gizi_item['serat'] * weight_multiplier
+                    total_gizi['vit'] += gizi_item['vit'] * weight_multiplier
 
     # Jika tidak ada yang terdeteksi
     if not detected_classes:
