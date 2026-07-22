@@ -5,6 +5,7 @@ import io
 from PIL import Image
 import uvicorn
 import os
+import base64
 
 app = FastAPI(title="SmartMBG AI Microservice")
 
@@ -172,9 +173,23 @@ async def analyze_food(file: UploadFile = File(...)):
             # Sebelumnya 1% (0.01), sehingga banyak noise/salah deteksi
             if confidence > 0.30:
                 display_name = ID_TRANSLATION.get(class_name, class_name)
+                
+                # MENGAMBIL POTONGAN GAMBAR (CROP)
+                img_str = None
+                try:
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    crop = image.crop((x1, y1, x2, y2))
+                    crop.thumbnail((150, 150)) # Perkecil ukuran agar tidak berat
+                    buffered = io.BytesIO()
+                    crop.save(buffered, format="JPEG")
+                    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+                except Exception as e:
+                    print("Gagal crop gambar:", e)
+
                 detected_classes.append({
                     "name": display_name.replace("_", " ").title(),
-                    "confidence": round(confidence * 100, 2)
+                    "confidence": round(confidence * 100, 2),
+                    "image_base64": img_str
                 })
                 
                 # Tambahkan nilai gizi (asumsi 1 bounding box = 1 porsi standar)

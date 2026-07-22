@@ -6,16 +6,18 @@ import CurrentDate from '../../../components/CurrentDate/CurrentDate';
 import './AnalisisGizi.css';
 import '../DashboardGuru.css';
 import SidebarGuru from '../components/SidebarGuru';
-import defaultThumb from '../../../assets/nasi_putih.png'; // Fallback image
+import defaultThumb from '../../../assets/bento_box.png'; // Fallback image
 import nasiImg from '../../../assets/nasi_putih.png';
 import ayamImg from '../../../assets/ayam_kecap.png';
 import sayurImg from '../../../assets/sayur_bayam.png';
+import buahImg from '../../../assets/jeruk.png';
 
 const getFoodIcon = (name) => {
   const n = (name || '').toLowerCase();
-  if (n.includes('ayam')) return ayamImg;
-  if (n.includes('sayur')) return sayurImg;
-  if (n.includes('nasi')) return nasiImg;
+  if (n.includes('ayam') || n.includes('daging') || n.includes('ikan') || n.includes('telur') || n.includes('nugget')) return ayamImg;
+  if (n.includes('sayur') || n.includes('buncis')) return sayurImg;
+  if (n.includes('nasi') || n.includes('mie') || n.includes('kentang')) return nasiImg;
+  if (n.includes('buah') || n.includes('jeruk') || n.includes('pisang') || n.includes('semangka') || n.includes('anggur')) return buahImg;
   return defaultThumb;
 };
 
@@ -187,16 +189,37 @@ const AnalisisGizi = () => {
                   </div>
                 ) : (aiResult.menu_terdeteksi || []).length > 0 || (aiResult.detail_deteksi || []).length > 0 ? (
                   (() => {
-                    // Try to use menu_terdeteksi first, fallback to unique names from detail_deteksi
-                    const uniqueNames = (aiResult.menu_terdeteksi && aiResult.menu_terdeteksi.length > 0)
-                      ? aiResult.menu_terdeteksi
-                      : Array.from(new Set((aiResult.detail_deteksi || []).map(item => item.name)));
+                    // Menghilangkan duplikat nama makanan, tapi menyimpan seluruh data object (termasuk potongan gambar)
+                    const uniqueItems = [];
+                    const seenNames = new Set();
                     
-                    return uniqueNames.map((name, index) => (
+                    if (aiResult.detail_deteksi && aiResult.detail_deteksi.length > 0) {
+                      aiResult.detail_deteksi.forEach(item => {
+                        if (!seenNames.has(item.name)) {
+                          seenNames.add(item.name);
+                          uniqueItems.push(item);
+                        }
+                      });
+                    } else if (aiResult.menu_terdeteksi && aiResult.menu_terdeteksi.length > 0) {
+                      // Fallback jika tidak ada detail_deteksi
+                      aiResult.menu_terdeteksi.forEach(name => {
+                        if (!seenNames.has(name)) {
+                          seenNames.add(name);
+                          uniqueItems.push({ name: name });
+                        }
+                      });
+                    }
+                    
+                    return uniqueItems.map((item, index) => (
                       <div className="menu-item-row" key={index}>
                         <div className="menu-item-left">
-                          <img src={getFoodIcon(name)} alt="icon" className="menu-item-thumb" />
-                          <span className="menu-item-name">{name || 'Tidak diketahui'}</span>
+                          <img 
+                            src={item.image_base64 ? `data:image/jpeg;base64,${item.image_base64}` : getFoodIcon(item.name)} 
+                            alt="icon" 
+                            className="menu-item-thumb" 
+                            style={{ objectFit: 'cover' }} 
+                          />
+                          <span className="menu-item-name">{item.name || 'Tidak diketahui'}</span>
                         </div>
                         <svg className="check-icon-filled" width="20" height="20" viewBox="0 0 24 24" fill="#1a5d2c"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                       </div>
