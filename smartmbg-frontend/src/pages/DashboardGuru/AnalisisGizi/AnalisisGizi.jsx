@@ -121,7 +121,11 @@ const AnalisisGizi = () => {
           <div className="topbar-right">
             <CurrentDate />
             <NotificationBell />
-            <TopbarProfile name="Admin SPPG" role="ADMINISTRATOR" avatarText="S" />
+            <TopbarProfile 
+              name={JSON.parse(localStorage.getItem('user'))?.name || 'Guru'} 
+              role="GURU" 
+              avatarText={(JSON.parse(localStorage.getItem('user'))?.name || 'G').charAt(0).toUpperCase()} 
+            />
           </div>
         </header>
 

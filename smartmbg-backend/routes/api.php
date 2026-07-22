@@ -40,6 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Review POST requires auth
     Route::post('/reviews', [ReviewController::class, 'store']);
+    
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index']);
+    Route::put('/notifications/mark-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
 });
 
 // AI Integration Route

@@ -1,26 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CurrentDate.css';
 
-const CurrentDate = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const CurrentDate = ({ value, onChange }) => {
+  const [internalDate, setInternalDate] = useState(new Date());
+
+  // Use prop if provided, else use internal state
+  const activeDate = value || internalDate;
 
   const handleDateChange = (e) => {
     if (e.target.value) {
-      setSelectedDate(new Date(e.target.value));
+      const newDate = new Date(e.target.value);
+      setInternalDate(newDate);
+      if (onChange) {
+        onChange(newDate);
+      }
     }
   };
 
-  const formattedDate = selectedDate.toLocaleDateString('id-ID', {
+  const formattedDate = activeDate.toLocaleDateString('id-ID', {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
   });
 
   // Format date for the input value (YYYY-MM-DD)
-  // We handle timezones by getting local year, month, date
-  const year = selectedDate.getFullYear();
-  const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-  const day = String(selectedDate.getDate()).padStart(2, '0');
+  const year = activeDate.getFullYear();
+  const month = String(activeDate.getMonth() + 1).padStart(2, '0');
+  const day = String(activeDate.getDate()).padStart(2, '0');
   const isoDate = `${year}-${month}-${day}`;
 
   return (

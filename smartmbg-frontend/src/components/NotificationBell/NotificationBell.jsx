@@ -1,41 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axiosInstance from '../../api/axios';
 import './NotificationBell.css';
-
-const DUMMY_NOTIFICATIONS = [
-  {
-    id: 1,
-    title: 'Evaluasi Menu Baru',
-    message: 'Terdapat 5 ulasan baru untuk menu Ayam Kecap.',
-    time: '10 menit yang lalu',
-    isRead: false,
-    type: 'info'
-  },
-  {
-    id: 2,
-    title: 'Peringatan Sisa Makanan',
-    message: 'Sisa makanan hari ini melebihi batas toleransi (12 Kg).',
-    time: '1 jam yang lalu',
-    isRead: false,
-    type: 'warning'
-  },
-  {
-    id: 3,
-    title: 'Pengiriman Berhasil',
-    message: 'Bahan baku untuk esok hari telah diterima oleh pihak sekolah.',
-    time: '3 jam yang lalu',
-    isRead: true,
-    type: 'success'
-  }
-];
 
 const NotificationBell = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState(DUMMY_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState([]);
   const dropdownRef = useRef(null);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
+  const fetchNotifications = async () => {
+    try {
+      const res = await axiosInstance.get('/notifications');
+      setNotifications(res.data);
+    } catch (err) {
+      console.error('Failed to fetch notifications', err);
+    }
+  };
+
   useEffect(() => {
+    fetchNotifications();
+
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
@@ -47,8 +32,13 @@ const NotificationBell = () => {
     };
   }, []);
 
-  const markAllAsRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+  const markAllAsRead = async () => {
+    try {
+      await axiosInstance.put('/notifications/mark-read');
+      setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+    } catch (err) {
+      console.error('Failed to mark notifications as read', err);
+    }
   };
 
   const getIconForType = (type) => {

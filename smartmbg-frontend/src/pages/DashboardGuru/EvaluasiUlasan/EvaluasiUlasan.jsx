@@ -20,9 +20,10 @@ const EvaluasiUlasan = () => {
   // Form States
   const [rating, setRating] = useState(5);
   const [date, setDate] = useState('');
-  const [schoolName, setSchoolName] = useState('');
   const [isMatch, setIsMatch] = useState('cocok');
   const [description, setDescription] = useState('');
+  const initialSchoolName = JSON.parse(localStorage.getItem('user'))?.name || '';
+  const [schoolName, setSchoolName] = useState(initialSchoolName);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
@@ -122,7 +123,7 @@ const EvaluasiUlasan = () => {
   const resetForm = () => {
     setRating(5);
     setDate('');
-    setSchoolName('');
+    setSchoolName(JSON.parse(localStorage.getItem('user'))?.name || '');
     setIsMatch('cocok');
     setDescription('');
     setImageFile(null);
@@ -136,6 +137,16 @@ const EvaluasiUlasan = () => {
     return filled + empty;
   };
 
+  // Helper to determine fallback image
+  const getFallbackImage = (desc) => {
+    const text = (desc || '').toLowerCase();
+    if (text.includes('ayam')) return 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=300&q=80';
+    if (text.includes('ikan')) return 'https://images.unsplash.com/photo-1511256984241-11d4d038dc79?auto=format&fit=crop&w=300&q=80';
+    if (text.includes('daging') || text.includes('sapi')) return 'https://images.unsplash.com/photo-1544025162-81111421584c?auto=format&fit=crop&w=300&q=80';
+    if (text.includes('sayur') || text.includes('bayam')) return saladImg;
+    return bentoImg;
+  };
+
   return (
     <div className="dashboard-layout">
       <SidebarGuru />
@@ -147,7 +158,11 @@ const EvaluasiUlasan = () => {
           <div className="topbar-right">
             <CurrentDate />
             <NotificationBell />
-            <TopbarProfile name="Admin SPPG" role="ADMINISTRATOR" avatarText="S" />
+            <TopbarProfile 
+              name={JSON.parse(localStorage.getItem('user'))?.name || 'Guru'} 
+              role="GURU" 
+              avatarText={(JSON.parse(localStorage.getItem('user'))?.name || 'G').charAt(0).toUpperCase()} 
+            />
           </div>
         </header>
 
@@ -213,7 +228,7 @@ const EvaluasiUlasan = () => {
                 <div className="review-card" key={review.id}>
                   <div className="review-img-box">
                     <NgrokImage 
-                      src={review.image ? `https://8ead-103-242-124-22.ngrok-free.app/api/file/${review.image}` : saladImg} 
+                      src={review.image ? `https://8ead-103-242-124-22.ngrok-free.app/api/file/${review.image}` : getFallbackImage(review.description)} 
                       alt="Menu" 
                       className="review-img" 
                     />
@@ -305,7 +320,7 @@ const EvaluasiUlasan = () => {
                 </div>
                 <div className="form-group">
                   <label>Nama Sekolah</label>
-                  <input type="text" className="form-input" placeholder="Masukkan nama sekolah" value={schoolName} onChange={e => setSchoolName(e.target.value)} />
+                  <input type="text" className="form-input" style={{backgroundColor: '#f5f5f5', color: '#666', cursor: 'not-allowed'}} value={schoolName} readOnly disabled />
                 </div>
               </div>
 

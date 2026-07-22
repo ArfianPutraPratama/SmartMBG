@@ -75,7 +75,11 @@ const WebGISGuru = () => {
           <div className="topbar-right">
             <CurrentDate />
             <NotificationBell />
-            <TopbarProfile name="Pramsus Pr" role="GURU" avatarText="P" />
+            <TopbarProfile 
+              name={JSON.parse(localStorage.getItem('user'))?.name || 'Guru'} 
+              role="GURU" 
+              avatarText={(JSON.parse(localStorage.getItem('user'))?.name || 'G').charAt(0).toUpperCase()} 
+            />
           </div>
         </header>
 

@@ -24,30 +24,29 @@ const getFoodDetails = (name) => {
 
 const DashboardGuru = () => {
   const navigate = useNavigate();
+  const [filterDate, setFilterDate] = useState(new Date());
   const [latestHistory, setLatestHistory] = useState(null);
   const [latestReviews, setLatestReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState({
     siswaTerlayani: 0,
     rataRataUlasan: 0,
-    sisaMakanan: 0
+    sisaMakanan: 0,
+    totalMenu: 0
   });
 
   useEffect(() => {
     const fetchHistoryAndStats = async () => {
       try {
+        setIsLoading(true);
         const res = await axiosInstance.get('/nutrition-histories');
-        if (res.data?.status === 'success' && res.data.data && res.data.data.length > 0) {
-          const latest = res.data.data[0];
-          const latestDate = new Date(latest.created_at).toDateString();
-          const todayDate = new Date().toDateString();
-          
-          if (latestDate === todayDate) {
-            setLatestHistory(latest);
-          } else {
-            setLatestHistory(null);
-          }
-        }
+        const histories = res.data?.data || [];
+        
+        const filterDateString = filterDate.toDateString();
+        
+        // Find history for the selected date
+        const historyForDate = histories.find(h => new Date(h.created_at).toDateString() === filterDateString);
+        setLatestHistory(historyForDate || null);
 
         // Fetch dynamic stats
         const [reviewsRes, wastesRes, entitasRes] = await Promise.all([
@@ -56,9 +55,13 @@ const DashboardGuru = () => {
           axiosInstance.get('/entitas').catch(() => ({ data: [] }))
         ]);
 
-        const reviews = reviewsRes.data || [];
-        const wastes = wastesRes.data || [];
+        const allReviews = reviewsRes.data || [];
+        const allWastes = wastesRes.data || [];
         const entitas = entitasRes.data || [];
+
+        // Filter by selected date
+        const reviews = allReviews.filter(r => new Date(r.date || r.created_at).toDateString() === filterDateString);
+        const wastes = allWastes.filter(w => new Date(w.created_at).toDateString() === filterDateString);
 
         const avgRating = reviews.length > 0 
           ? (reviews.reduce((acc, r) => acc + (r.rating || 0), 0) / reviews.length).toFixed(1)
@@ -80,7 +83,8 @@ const DashboardGuru = () => {
         setStats({
           siswaTerlayani: totalSiswa,
           rataRataUlasan: avgRating,
-          sisaMakanan: totalSisa
+          sisaMakanan: totalSisa,
+          totalMenu: historyForDate?.menu_terdeteksi?.length || 0
         });
 
       } catch (err) {
@@ -91,10 +95,10 @@ const DashboardGuru = () => {
     };
 
     fetchHistoryAndStats();
-  }, []);
+  }, [filterDate]);
 
   const menuTerdeteksi = latestHistory?.menu_terdeteksi || [];
-  const totalMenu = menuTerdeteksi.length;
+  const totalMenu = stats.totalMenu;
 
   const renderStars = (score) => {
     const filled = '★'.repeat(score);
@@ -112,7 +116,7 @@ const DashboardGuru = () => {
         <header className="dashboard-topbar">
           <div className="topbar-title">WebGIS Monitoring</div>
           <div className="topbar-right">
-            <CurrentDate />
+            <CurrentDate value={filterDate} onChange={(date) => setFilterDate(date)} />
             <NotificationBell />
             <TopbarProfile 
               name={JSON.parse(localStorage.getItem('user'))?.name || 'Guru'} 
