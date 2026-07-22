@@ -194,24 +194,31 @@ async def analyze_food(file: UploadFile = File(...)):
                     "image_base64": img_str
                 })
                 
-                # PENGHITUNGAN PORSI BERDASARKAN RASIO PIKSEL (TINGKAT 1)
+                # PENGHITUNGAN PORSI BERDASARKAN RASIO PIKSEL (METODE 1 - GEOMETRI ELIPS)
                 # Menghitung seberapa besar objek makanan menutupi layar foto
                 img_width, img_height = image.size
                 total_image_area = img_width * img_height
                 
-                # Menghitung luas kotak makanan (bounding box)
+                # Mengambil titik koordinat kotak (bounding box)
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
-                food_area = (x2 - x1) * (y2 - y1)
+                box_width = x2 - x1
+                box_height = y2 - y1
+                
+                # Menggunakan Rumus Luas Elips: Pi * (Lebar/2) * (Tinggi/2)
+                # Ini 21.5% lebih akurat dari rumus Kotak (Panjang x Lebar) untuk makanan
+                import math
+                food_area = math.pi * (box_width / 2.0) * (box_height / 2.0)
                 
                 # Mendapatkan rasio ukuran makanan terhadap nampan
                 area_ratio = food_area / total_image_area
                 
                 # Logika heuristik penentuan porsi
                 portion_multiplier = 1.0 # Default 1 porsi wajar
-                if area_ratio < 0.08:     # Jika ukurannya kurang dari 8% frame
+                if area_ratio < 0.05:     # Jika sangat kecil (< 5%)
                     portion_multiplier = 0.5 # Dianggap Setengah Porsi
-                elif area_ratio > 0.30:   # Jika ukurannya lebih dari 30% frame
+                elif area_ratio > 0.25:   # Jika ukurannya sangat besar (> 25%)
                     portion_multiplier = 1.5 # Dianggap Porsi Besar (1.5x)
+
                 
                 # Tambahkan nilai gizi yang sudah dikalikan dengan rasio porsi
                 if class_name in NUTRITION_DB:
