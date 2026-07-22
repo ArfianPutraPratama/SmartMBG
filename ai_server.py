@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 # Inisialisasi model (Akan error jika best.pt belum selesai dibuat, jadi kita gunakan try-except)
-MODEL_PATH = "runs/detect/runs/detect/mbg_model_nano/weights/best.pt"
+MODEL_PATH = "best.pt"
 model = None
 try:
     if os.path.exists(MODEL_PATH):
