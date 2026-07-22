@@ -194,15 +194,34 @@ async def analyze_food(file: UploadFile = File(...)):
                     "image_base64": img_str
                 })
                 
-                # Tambahkan nilai gizi (asumsi 1 bounding box = 1 porsi standar)
+                # PENGHITUNGAN PORSI BERDASARKAN RASIO PIKSEL (TINGKAT 1)
+                # Menghitung seberapa besar objek makanan menutupi layar foto
+                img_width, img_height = image.size
+                total_image_area = img_width * img_height
+                
+                # Menghitung luas kotak makanan (bounding box)
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                food_area = (x2 - x1) * (y2 - y1)
+                
+                # Mendapatkan rasio ukuran makanan terhadap nampan
+                area_ratio = food_area / total_image_area
+                
+                # Logika heuristik penentuan porsi
+                portion_multiplier = 1.0 # Default 1 porsi wajar
+                if area_ratio < 0.08:     # Jika ukurannya kurang dari 8% frame
+                    portion_multiplier = 0.5 # Dianggap Setengah Porsi
+                elif area_ratio > 0.30:   # Jika ukurannya lebih dari 30% frame
+                    portion_multiplier = 1.5 # Dianggap Porsi Besar (1.5x)
+                
+                # Tambahkan nilai gizi yang sudah dikalikan dengan rasio porsi
                 if class_name in NUTRITION_DB:
                     gizi_item = NUTRITION_DB[class_name]
-                    total_gizi['kalori'] += gizi_item['kalori']
-                    total_gizi['protein'] += gizi_item['protein']
-                    total_gizi['lemak'] += gizi_item['lemak']
-                    total_gizi['karbo'] += gizi_item['karbo']
-                    total_gizi['serat'] += gizi_item['serat']
-                    total_gizi['vit'] += gizi_item['vit']
+                    total_gizi['kalori'] += gizi_item['kalori'] * portion_multiplier
+                    total_gizi['protein'] += gizi_item['protein'] * portion_multiplier
+                    total_gizi['lemak'] += gizi_item['lemak'] * portion_multiplier
+                    total_gizi['karbo'] += gizi_item['karbo'] * portion_multiplier
+                    total_gizi['serat'] += gizi_item['serat'] * portion_multiplier
+                    total_gizi['vit'] += gizi_item['vit'] * portion_multiplier
 
     # Jika tidak ada yang terdeteksi
     if not detected_classes:
