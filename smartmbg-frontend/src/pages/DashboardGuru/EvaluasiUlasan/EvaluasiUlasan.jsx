@@ -319,7 +319,7 @@ const EvaluasiUlasan = () => {
                   <input type="date" className="form-input" value={date} onChange={e => setDate(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>Nama Sekolah</label>
+                  <label>Nama Lengkap</label>
                   <input type="text" className="form-input" style={{backgroundColor: '#f5f5f5', color: '#666', cursor: 'not-allowed'}} value={schoolName} readOnly disabled />
                 </div>
               </div>
