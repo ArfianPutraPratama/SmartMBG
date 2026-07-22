@@ -29,7 +29,7 @@ class AIController extends Controller
                 
                 if (isset($responseData['status']) && $responseData['status'] === 'success') {
                     $gizi = $responseData['gizi'] ?? [];
-                    \App\Models\NutritionHistory::create([
+                    $history = \App\Models\NutritionHistory::create([
                         'user_id' => null,
                         'menu_terdeteksi' => $responseData['menu_terdeteksi'] ?? [],
                         'porsi' => 'Besar',
@@ -40,6 +40,8 @@ class AIController extends Controller
                         'serat' => $gizi['serat'] ?? 0,
                         'vitamin_mineral' => $gizi['vitamin_mineral'] ?? ($gizi['vit'] ?? 0),
                     ]);
+                    
+                    $responseData['history_id'] = $history->id;
                 }
 
                 return response()->json($responseData, 200);
@@ -67,5 +69,23 @@ class AIController extends Controller
             'status' => 'success',
             'data' => $histories
         ]);
+    }
+
+    public function updateNutritionHistory(Request $request, $id)
+    {
+        $history = \App\Models\NutritionHistory::find($id);
+        if ($history) {
+            $history->update([
+                'porsi' => $request->porsi ?? $history->porsi,
+                'kalori' => $request->kalori ?? $history->kalori,
+                'protein' => $request->protein ?? $history->protein,
+                'lemak' => $request->lemak ?? $history->lemak,
+                'karbo' => $request->karbo ?? $history->karbo,
+                'serat' => $request->serat ?? $history->serat,
+                'vitamin_mineral' => $request->vitamin_mineral ?? $history->vitamin_mineral,
+            ]);
+            return response()->json(['status' => 'success', 'data' => $history]);
+        }
+        return response()->json(['status' => 'error', 'message' => 'History not found'], 404);
     }
 }

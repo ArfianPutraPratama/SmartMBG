@@ -29,6 +29,7 @@ const AnalisisGizi = () => {
   const [portionSize, setPortionSize] = useState(1);
   const [historyList, setHistoryList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentHistoryId, setCurrentHistoryId] = useState(null);
   
   const fetchHistory = async () => {
     try {
@@ -91,6 +92,7 @@ const AnalisisGizi = () => {
           gizi: response.data.gizi || { kalori: 0, protein: 0, lemak: 0, karbo: 0, serat: 0, vitamin_mineral: 0 },
           rekomendasi: response.data.rekomendasi || 'Selesai.'
         });
+        setCurrentHistoryId(response.data.history_id || null);
         fetchHistory();
       } else {
         setError(response.data.message || 'Gagal menganalisis gambar');
@@ -111,6 +113,28 @@ const AnalisisGizi = () => {
       gizi: { kalori: 0, protein: 0, lemak: 0, karbo: 0, serat: 0, vitamin_mineral: 0 },
       rekomendasi: "Unggah foto nampan makanan untuk melihat analisis AI."
     });
+    setCurrentHistoryId(null);
+  };
+
+  const handlePortionChange = async (size) => {
+    setPortionSize(size);
+    if (currentHistoryId && aiResult.gizi) {
+      try {
+        const payload = {
+          porsi: size === 1 ? 'Besar' : 'Kecil',
+          kalori: aiResult.gizi.kalori * size,
+          protein: aiResult.gizi.protein * size,
+          lemak: aiResult.gizi.lemak * size,
+          karbo: aiResult.gizi.karbo * size,
+          serat: aiResult.gizi.serat * size,
+          vitamin_mineral: aiResult.gizi.vitamin_mineral * size
+        };
+        await axiosInstance.put(`/nutrition-histories/${currentHistoryId}`, payload);
+        fetchHistory(); // Refresh table
+      } catch (err) {
+        console.error('Failed to update history portion', err);
+      }
+    }
   };
 
   return (
@@ -256,13 +280,13 @@ const AnalisisGizi = () => {
               <div className="toggle-group">
                 <button 
                   className={`toggle-btn ${portionSize === 1 ? 'active' : ''}`}
-                  onClick={() => setPortionSize(1)}
+                  onClick={() => handlePortionChange(1)}
                 >
                   Porsi Besar (1 Porsi Siswa)
                 </button>
                 <button 
                   className={`toggle-btn ${portionSize === 0.5 ? 'active' : ''}`}
-                  onClick={() => setPortionSize(0.5)}
+                  onClick={() => handlePortionChange(0.5)}
                 >
                   Porsi Kecil (1/2 Porsi Siswa)
                 </button>

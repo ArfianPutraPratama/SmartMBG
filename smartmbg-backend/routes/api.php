@@ -49,6 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
 // AI Integration Route
 Route::post('/analyze-food', [AIController::class, 'analyzeFood']);
 Route::get('/nutrition-histories', [AIController::class, 'getNutritionHistory']);
+Route::put('/nutrition-histories/{id}', [AIController::class, 'updateNutritionHistory']);
 // SPPG Food Waste Routes
 use App\Http\Controllers\SppgFoodWasteController;
 Route::get('/sppg/food-wastes', [SppgFoodWasteController::class, 'index']);
