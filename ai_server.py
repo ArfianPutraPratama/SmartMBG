@@ -180,11 +180,13 @@ async def analyze_food(file: UploadFile = File(...)):
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
                     crop = image.crop((x1, y1, x2, y2))
                     crop.thumbnail((150, 150)) # Perkecil ukuran agar tidak berat
+                    if crop.mode != 'RGB':
+                        crop = crop.convert('RGB')
                     buffered = io.BytesIO()
                     crop.save(buffered, format="JPEG")
                     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
                 except Exception as e:
-                    print("Gagal crop gambar:", e)
+                    print("Gagal crop gambar:", repr(e))
 
                 detected_classes.append({
                     "name": display_name.replace("_", " ").title(),
