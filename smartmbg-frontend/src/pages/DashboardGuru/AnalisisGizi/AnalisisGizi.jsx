@@ -121,7 +121,7 @@ const AnalisisGizi = () => {
     if (currentHistoryId && aiResult.gizi) {
       try {
         const payload = {
-          porsi: size === 1 ? 'Besar' : 'Kecil',
+          porsi: size === 1 ? 'Besar' : size === 0.75 ? 'Sedang' : 'Kecil',
           kalori: aiResult.gizi.kalori * size,
           protein: aiResult.gizi.protein * size,
           lemak: aiResult.gizi.lemak * size,
@@ -268,8 +268,8 @@ const AnalisisGizi = () => {
             <div className="analysis-result-card">
               <div className="analysis-header-row">
                 <div className="analysis-title-group">
-                  <h3>3. Hasil Analisis Kandungan Gizi</h3>
-                  <p>Hasil perhitungan untuk 1 porsi</p>
+                  <h3>3. Estimasi Kandungan Gizi Menu MBG</h3>
+                  <p>Estimasi perhitungan berdasarkan deteksi visual dan porsi</p>
                 </div>
                 <div className="ai-badge">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -282,13 +282,19 @@ const AnalisisGizi = () => {
                   className={`toggle-btn ${portionSize === 1 ? 'active' : ''}`}
                   onClick={() => handlePortionChange(1)}
                 >
-                  Porsi Besar (1 Porsi Siswa)
+                  Porsi Besar (1 Porsi)
+                </button>
+                <button 
+                  className={`toggle-btn ${portionSize === 0.75 ? 'active' : ''}`}
+                  onClick={() => handlePortionChange(0.75)}
+                >
+                  Porsi Sedang (3/4 Porsi)
                 </button>
                 <button 
                   className={`toggle-btn ${portionSize === 0.5 ? 'active' : ''}`}
                   onClick={() => handlePortionChange(0.5)}
                 >
-                  Porsi Kecil (1/2 Porsi Siswa)
+                  Porsi Kecil (1/2 Porsi)
                 </button>
               </div>
 
