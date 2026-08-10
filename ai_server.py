@@ -1,6 +1,6 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from ultralytics import YOLO
+from ultralytics import RTDETR
 import io
 from PIL import Image
 import uvicorn
@@ -18,15 +18,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Inisialisasi model (Akan error jika best.pt belum selesai dibuat, jadi kita gunakan try-except)
-MODEL_PATH = "best.pt"
+# Inisialisasi model RT-DETR yang baru
+MODEL_PATH = "best (2).pt"
 model = None
 try:
     if os.path.exists(MODEL_PATH):
-        model = YOLO(MODEL_PATH)
-        print(f"Model berhasil dimuat dari {MODEL_PATH}")
+        model = RTDETR(MODEL_PATH)
+        print(f"Model RT-DETR berhasil dimuat dari {MODEL_PATH}")
     else:
-        print(f"WARNING: Model {MODEL_PATH} belum ditemukan. Tunggu proses training selesai.")
+        print(f"WARNING: Model {MODEL_PATH} belum ditemukan.")
 except Exception as e:
     print(f"Gagal memuat model: {e}")
 
@@ -35,96 +35,96 @@ except Exception as e:
 NUTRITION_DB = {
     # Karbohidrat
     'nasi': {'kalori': 130, 'protein': 2.7, 'lemak': 0.3, 'karbo': 28, 'serat': 0.4, 'vit': 0},
-    'rice': {'kalori': 130, 'protein': 2.7, 'lemak': 0.3, 'karbo': 28, 'serat': 0.4, 'vit': 0},
-    'mie': {'kalori': 138, 'protein': 4.5, 'lemak': 2.1, 'karbo': 25, 'serat': 1.2, 'vit': 0},
-    'noodle': {'kalori': 138, 'protein': 4.5, 'lemak': 2.1, 'karbo': 25, 'serat': 1.2, 'vit': 0},
-    'kentang': {'kalori': 87, 'protein': 1.9, 'lemak': 0.1, 'karbo': 20.1, 'serat': 1.8, 'vit': 20},
-    'potato': {'kalori': 87, 'protein': 1.9, 'lemak': 0.1, 'karbo': 20.1, 'serat': 1.8, 'vit': 20},
+    'nasi_goreng': {'kalori': 168, 'protein': 4.0, 'lemak': 6.2, 'karbo': 24, 'serat': 0.8, 'vit': 0},
+    'kentang_balado': {'kalori': 110, 'protein': 2.0, 'lemak': 4.5, 'karbo': 16.5, 'serat': 1.5, 'vit': 12},
     
     # Lauk Hewani
     'ayam': {'kalori': 295, 'protein': 37, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
-    'chicken': {'kalori': 295, 'protein': 37, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
-    'daging_sapi': {'kalori': 250, 'protein': 26, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
-    'meat': {'kalori': 250, 'protein': 26, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
-    'telur': {'kalori': 155, 'protein': 13, 'lemak': 11, 'karbo': 1.1, 'serat': 0, 'vit': 0},
-    'egg': {'kalori': 155, 'protein': 13, 'lemak': 11, 'karbo': 1.1, 'serat': 0, 'vit': 0},
-    'ikan': {'kalori': 205, 'protein': 22, 'lemak': 12, 'karbo': 0, 'serat': 0, 'vit': 0},
-    'fish': {'kalori': 205, 'protein': 22, 'lemak': 12, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'ayam_pop': {'kalori': 260, 'protein': 30, 'lemak': 16, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'gulai_ayam': {'kalori': 275, 'protein': 24, 'lemak': 19, 'karbo': 3.5, 'serat': 0.5, 'vit': 0},
+    'gulai_ikan': {'kalori': 180, 'protein': 18, 'lemak': 11, 'karbo': 2.0, 'serat': 0.2, 'vit': 0},
+    'gulai_tunjang': {'kalori': 251, 'protein': 15, 'lemak': 21, 'karbo': 0.8, 'serat': 0, 'vit': 0},
+    'rendang': {'kalori': 193, 'protein': 22.6, 'lemak': 7.9, 'karbo': 7.8, 'serat': 0.5, 'vit': 0},
+    'telur_balado': {'kalori': 175, 'protein': 12.5, 'lemak': 13.0, 'karbo': 2.0, 'serat': 0, 'vit': 0},
+    'telur_dadar': {'kalori': 251, 'protein': 12.4, 'lemak': 21.3, 'karbo': 1.2, 'serat': 0, 'vit': 0},
+    'udang_balado': {'kalori': 142, 'protein': 19.4, 'lemak': 6.0, 'karbo': 1.5, 'serat': 0.2, 'vit': 0},
+    'bakso': {'kalori': 202, 'protein': 15.0, 'lemak': 14.2, 'karbo': 3.2, 'serat': 0.3, 'vit': 0},
+    'pepes_ikan': {'kalori': 140, 'protein': 16.5, 'lemak': 6.8, 'karbo': 3.0, 'serat': 0.5, 'vit': 0},
+    'sate': {'kalori': 225, 'protein': 21.0, 'lemak': 14.5, 'karbo': 3.6, 'serat': 0, 'vit': 0},
     
     # Lauk Nabati
     'tempe': {'kalori': 193, 'protein': 19, 'lemak': 11, 'karbo': 9, 'serat': 5, 'vit': 0},
     'tahu': {'kalori': 76, 'protein': 8, 'lemak': 4.8, 'karbo': 1.9, 'serat': 0.3, 'vit': 0},
-    'tofu': {'kalori': 76, 'protein': 8, 'lemak': 4.8, 'karbo': 1.9, 'serat': 0.3, 'vit': 0},
     
     # Sayur & Buah
-    'sayur': {'kalori': 30, 'protein': 2.0, 'lemak': 0.2, 'karbo': 6.0, 'serat': 2.5, 'vit': 35},
-    'vegetable': {'kalori': 30, 'protein': 2.0, 'lemak': 0.2, 'karbo': 6.0, 'serat': 2.5, 'vit': 35},
-    'pisang': {'kalori': 89, 'protein': 1.1, 'lemak': 0.3, 'karbo': 22.8, 'serat': 2.6, 'vit': 10},
-    'jeruk': {'kalori': 43, 'protein': 0.9, 'lemak': 0.1, 'karbo': 8.3, 'serat': 2.4, 'vit': 53},
-    'fruit': {'kalori': 60, 'protein': 1.0, 'lemak': 0.2, 'karbo': 15.0, 'serat': 2.5, 'vit': 40},
+    'cah_kangkung': {'kalori': 45, 'protein': 2.5, 'lemak': 2.1, 'karbo': 4.2, 'serat': 2.0, 'vit': 42},
+    'cabai': {'kalori': 40, 'protein': 1.9, 'lemak': 0.4, 'karbo': 9.0, 'serat': 1.5, 'vit': 140},
+    'petai': {'kalori': 92, 'protein': 5.4, 'lemak': 1.6, 'karbo': 15.0, 'serat': 2.0, 'vit': 20},
+    'sambal_ijo': {'kalori': 85, 'protein': 1.2, 'lemak': 8.0, 'karbo': 3.0, 'serat': 0.8, 'vit': 30},
+    'sambal_merah': {'kalori': 90, 'protein': 1.4, 'lemak': 8.5, 'karbo': 3.2, 'serat': 0.8, 'vit': 35},
     
-    # Lainnya
-    'susu': {'kalori': 42, 'protein': 3.4, 'lemak': 1.0, 'karbo': 5, 'serat': 0, 'vit': 20},
-    'milk': {'kalori': 42, 'protein': 3.4, 'lemak': 1.0, 'karbo': 5, 'serat': 0, 'vit': 20}
+    # Jajanan Pasar & Lainnya
+    'bika_ambon': {'kalori': 290, 'protein': 3.5, 'lemak': 7.5, 'karbo': 52.0, 'serat': 0.5, 'vit': 0},
+    'dadar_gulung': {'kalori': 180, 'protein': 2.8, 'lemak': 4.2, 'karbo': 32.0, 'serat': 1.0, 'vit': 0},
+    'kue_cubit': {'kalori': 150, 'protein': 3.0, 'lemak': 5.0, 'karbo': 23.0, 'serat': 0.5, 'vit': 0},
+    'putu_ayu': {'kalori': 130, 'protein': 2.0, 'lemak': 3.5, 'karbo': 22.0, 'serat': 0.8, 'vit': 0},
+    'sauce': {'kalori': 80, 'protein': 1.0, 'lemak': 0.2, 'karbo': 18.0, 'serat': 0.5, 'vit': 0},
+    'lainnya': {'kalori': 50, 'protein': 1.0, 'lemak': 0.5, 'karbo': 10.0, 'serat': 0.5, 'vit': 0}
 }
 
 # Kalibrasi: Persentase Luas Kompartemen Standar pada Baki MBG (Total = 1.0 atau 100% foto)
 COMPARTMENT_AREA_RATIO = {
-    'karbohidrat': 0.25, # Nasi, Mie, Kentang
-    'lauk': 0.15,        # Ayam, Daging, Telur, Ikan, Tempe, Tahu
-    'sayur': 0.20,       # Sayuran
-    'buah': 0.15,        # Buah-buahan
-    'susu': 0.10         # Susu
+    'karbohidrat': 0.25, 
+    'lauk': 0.15,        
+    'sayur': 0.20,       
+    'buah': 0.15,        
+    'susu': 0.10         
 }
 
 # Kalibrasi: Berat Penuh per Kompartemen dalam Gram (Jika terisi 100%)
 FULL_WEIGHT_GRAMS = {
-    'karbohidrat': 180, # Gram
-    'lauk': 70,         # Gram
-    'sayur': 60,        # Gram
-    'buah': 90,         # Gram
-    'susu': 150         # Gram (ml)
+    'karbohidrat': 180, 
+    'lauk': 70,         
+    'sayur': 60,        
+    'buah': 90,         
+    'susu': 150         
 }
 
 def get_food_category(class_name):
     name = class_name.lower()
-    if name in ['nasi', 'rice', 'mie', 'noodle', 'kentang', 'potato', 'cassava', 'bread', 'oat', 'corn']: return 'karbohidrat'
-    if name in ['sayur', 'vegetable', 'kacang_panjang', 'bean', 'cap_cai', 'selada', 'timun']: return 'sayur'
-    if name in ['buah', 'fruit', 'jeruk', 'pisang', 'semangka', 'anggur', 'lengkeng']: return 'buah'
-    if name in ['susu', 'milk', 'juice']: return 'susu'
-    return 'lauk' # Default to lauk for ayam, daging, ikan, telur, tempe, tahu, dll.
+    if name in ['nasi', 'nasi_goreng', 'kentang_balado']: return 'karbohidrat'
+    if name in ['cah_kangkung', 'cabai', 'petai', 'sambal_ijo', 'sambal_merah']: return 'sayur'
+    return 'lauk' # Default ke lauk untuk ayam, sate, tempe, tahu, rendang, telur, bakso, kue, dll.
 
 ID_TRANSLATION = {
-    'bean': 'Buncis/Kacang',
-    'bread': 'Roti',
-    'cassava': 'Singkong',
-    'cheese': 'Keju',
-    'chicken': 'Ayam',
-    'corn': 'Jagung',
-    'cracker': 'Kerupuk',
-    'egg': 'Telur',
-    'empty': 'Kosong',
-    'fish': 'Ikan',
-    'fritter': 'Gorengan',
-    'fruit': 'Buah',
-    'juice': 'Jus',
-    'meat': 'Daging',
-    'meatball': 'Bakso',
-    'milk': 'Susu',
-    'noodle': 'Mie',
-    'nugget': 'Nugget',
-    'oat': 'Oat/Gandum',
-    'omelet': 'Telur Dadar',
-    'potato': 'Kentang',
-    'rice': 'Nasi',
-    'sauce': 'Saus',
-    'shredded_chicken': 'Ayam Suwir',
-    'shredded_fish': 'Ikan Suwir',
-    'shrimp': 'Udang',
+    'ayam': 'Ayam',
+    'nasi': 'Nasi',
+    'sate': 'Sate',
     'tempe': 'Tempe',
-    'tofu': 'Tahu',
-    'tray': 'Nampan',
-    'vegetable': 'Sayur'
+    'ayam_pop': 'Ayam Pop',
+    'cabai': 'Cabai',
+    'dendeng_batokok': 'Dendeng Batokok',
+    'gulai_ikan': 'Gulai Ikan',
+    'gulai_tunjang': 'Gulai Tunjang',
+    'kentang_balado': 'Kentang Balado',
+    'petai': 'Petai',
+    'rendang': 'Rendang',
+    'sambal_ijo': 'Sambal Ijo',
+    'sambal_merah': 'Sambal Merah',
+    'sauce': 'Saus',
+    'telur_balado': 'Telur Balado',
+    'telur_dadar': 'Telur Dadar',
+    'udang_balado': 'Udang Balado',
+    'bakso': 'Bakso',
+    'bika_ambon': 'Bika Ambon',
+    'dadar_gulung': 'Dadar Gulung',
+    'kue_cubit': 'Kue Cubit',
+    'nasi_goreng': 'Nasi Goreng',
+    'pepes_ikan': 'Pepes Ikan',
+    'putu_ayu': 'Putu Ayu',
+    'tahu': 'Tahu',
+    'cah_kangkung': 'Cah Kangkung',
+    'lainnya': 'Lainnya'
 }
 
 @app.get("/")
@@ -135,10 +135,9 @@ def read_root():
 async def analyze_food(file: UploadFile = File(...)):
     global model
     if not model:
-        # Coba muat model lagi
         try:
             if os.path.exists(MODEL_PATH):
-                model = YOLO(MODEL_PATH)
+                model = RTDETR(MODEL_PATH)
         except Exception as e:
             pass
             
