@@ -1,0 +1,559 @@
+SmartMBG
+: Development of an AI and 
+WebGIS
+-Based Monitoring System for the Free Nutritious Meal Program to Support Circular Economy in Surabaya 
+Yoga Ari 
+Anggoro
+1 
+,
+ 
+Arfian
+ Putra 
+Pratama
+ 
+2
+, 
+Ferdynata
+ Rafi 
+Hardiyanto
+ 
+3
+, 
+Wafa
+ Maulana 
+Wijaya 
+ 
+4
+1
+Department of Informatics Management, Faculty of Vocational Studies, Universitas Negeri Surabaya, Surabaya 60231, Indonesia 
+2
+Department of Informatics Management, Faculty of Vocational Studies, Universitas Negeri Surabaya, Surabaya 60231, Indonesia 
+3
+Department of Informatics Management, Faculty of Vocational Studies, Universitas Negeri Surabaya, Surabaya 60231, Indonesia 
+4
+Department of Civil Engineering, Faculty of Vocational Studies, Universitas Negeri Surabaya, Surabaya 60231, Indonesia 
+*Corresponding 
+author
+ 
+:
+ 
+yoga.23049@mhs.unesa.ac.id 
+Abstract. 
+The Free Nutritious Meal Program (MBG) is one of Indonesia’s strategic initiatives to improve the nutritional status of students. However, its implementation still faces several challenges, including limited monitoring of food distribution, manual nutritional evaluation, and ineffective management of food waste, which may reach 40–50 kg per school each day. This study proposes 
+SmartMBG
+, a web-based monitoring platform integrating Artificial Intelligence (AI), 
+WebGIS
+, and circular economy principles to support the implementation of the MBG program. The proposed platform enables multi-stakeholder collaboration among schools, Nutrition Fulfillment Service Units (SPPG), government administrators, and organic waste management partners through integrated monitoring, AI-based nutritional analysis, interactive geographic visualization, food waste reporting, and service evaluation. The research employs requirement analysis, system design, web application development, AI and 
+WebGIS
+ integration, and functional testing. The expected outputs include a functional 
+SmartMBG
+ platform, technical documentation, scientific publication, and intellectual property registration. The proposed system is expected to improve monitoring efficiency, support data-driven decision-making, and encourage sustainable food waste management through a circular economy approach. Furthermore, this research contributes to the achievement of Sustainable Development Goals (SDGs) 2, 3, 9, 12, and 17. 
+ 
+Keywords: 
+Artificial Intelligence; 
+WebGIS
+; Free Nutritious Meal Program; Circular Economy; Smart Monitoring 
+1.
+  
+ 
+Introduction
+The Free Nutritious Meal Program (MBG) is one of Indonesia's national strategic programs aimed at improving students' nutritional quality while supporting the development of healthy and productive human resources. Through this program, nutritious meals are distributed daily to students across Indonesia. Besides improving nutritional intake, the program is expected to reduce stunting, improve students' learning concentration, and strengthen national food 
+security. However, the implementation of MBG still faces several challenges related to monitoring, nutritional evaluation, and food waste management. Therefore, this research proposes 
+SmartMBG
+, an integrated web-based monitoring platform that combines Artificial Intelligence (AI), 
+WebGIS
+, and circular economy principles to support the implementation of the MBG program. 
+1.1 Research Background 
+The implementation of the Free Nutritious Meal Program involves various stakeholders, including schools, Nutrition Fulfillment Service Units (SPPG), government agencies, and organic waste management partners. Although the program has significant social benefits, several operational challenges remain unresolved.
+One of the major issues is the lack of an integrated monitoring system. Currently, food distribution reports, service evaluations, and monitoring activities are generally conducted manually or through separate information systems, making data collection inefficient and limiting real-time decision-making.
+Another important issue concerns food waste generated from the MBG program. According to 
+Komunitas
+ 
+Nol
+ 
+Sampah
+ Surabaya, approximately 
+40–50 kg of food waste
+ can be generated each day from one school serving around 3,000 students. Most of this organic waste is discarded without proper management, despite its potential economic value as compost or maggot feed within a circular economy framework.
+At the same time, technological developments in Artificial Intelligence (AI) and 
+WebGIS
+ offer opportunities to improve monitoring effectiveness. AI can automate food recognition, nutritional analysis, and food waste estimation, while 
+WebGIS
+ enables interactive visualization of schools, SPPG, and waste management partners to support data-driven decision-making.
+Therefore, an integrated digital platform is required to improve monitoring efficiency while promoting sustainable food waste management.
+1.2 Related Works 
+Several previous studies have investigated digital systems for food monitoring, nutritional analysis, and geographic information systems. AI-based approaches have demonstrated promising performance in recognizing food images and estimating nutritional content using computer vision techniques. Meanwhile, 
+WebGIS
+ has been widely applied for spatial monitoring, public service mapping, and resource distribution.
+Other studies have explored circular economy approaches by utilizing organic waste as raw material for compost and maggot cultivation. However, these studies generally focus on a single domain and do not integrate nutritional monitoring, geographic information systems, and food waste management into one comprehensive platform.
+Consequently, stakeholders still need multiple independent systems to monitor MBG implementation, reducing operational efficiency and limiting information sharing.
+Table 1. Comparison of Previous Studies 
+Research
+AI
+WebGIS
+Food Waste
+Integrated Monitoring
+Study A
+✓
+✗
+✗
+✗
+Study B
+✗
+✓
+✗
+✗
+Study C
+✓
+✗
+✓
+✗
+SmartMBG
+✓
+✓
+✓
+✓
+1.3 Research Gap and Novelty 
+Although previous studies have demonstrated the potential of Artificial Intelligence, 
+WebGIS
+, and food waste management independently, very few studies have integrated these technologies into a single platform supporting the implementation of the Free Nutritious Meal Program.
+The novelty of 
+SmartMBG
+ lies in the integration of:
+Artificial Intelligence for food recognition, nutritional analysis, and food waste estimation.
+WebGIS
+ for interactive mapping of schools, SPPG, and waste management partners.
+Multi-actor monitoring involving government administrators, schools, SPPG, and organic waste partners.
+Circular economy implementation through digital monitoring of organic waste utilization.
+A web-based decision-support platform for monitoring the MBG program.
+These innovations distinguish 
+SmartMBG
+ from previous research and provide a more comprehensive solution for monitoring the implementation of the MBG program.
+1.4 Research Objectives and Contributions 
+This research aims to develop 
+SmartMBG
+, an integrated web-based monitoring platform that supports the implementation of the Free Nutritious Meal Program using Artificial Intelligence and 
+WebGIS
+ technologies.
+The expected contributions of this research include:
+Developing an integrated monitoring platform connecting schools, SPPG, government administrators, and waste management partners.
+Implementing Artificial Intelligence for automatic food recognition, nutritional analysis, and food waste estimation.
+Integrating 
+WebGIS
+ to visualize the spatial distribution of schools, SPPG, and waste management partners.
+Supporting circular economy implementation through digital monitoring of organic waste utilization.
+Providing a decision-support system to improve the effectiveness, transparency, and sustainability of the MBG program.
+1.5 Conceptual Framework 
+Figure 1 illustrates the conceptual framework of 
+SmartMBG
+. The proposed platform integrates four main stakeholders—government administrators, schools, SPPG, and waste management partners—within a unified monitoring system. The platform consists of three primary modules: Artificial Intelligence, 
+WebGIS
+, and Food Waste Management, which are connected through a centralized database. This integration enables nutritional analysis, food waste estimation, geographic visualization, monitoring dashboards, and decision support for improving the implementation of the Free Nutritious Meal Program. 
+Fig. 1. Conceptual Framework of 
+SmartMBG
+ 
+Source: Developed by the authors (2026). 
+2.
+  
+ 
+Method
+This research employed the 
+Research and Development (R&D)
+ approach to design and develop 
+SmartMBG
+, an integrated web-based platform for monitoring the implementation of Indonesia's Free Nutritious Meal Program (MBG). The proposed system integrates Artificial Intelligence (AI), 
+WebGIS
+, and circular economy concepts to support nutritional monitoring, food waste management, and spatial information services.
+The research consisted of several sequential stages, including problem identification, literature review, system requirements analysis, system design, system development, implementation of Artificial Intelligence and 
+WebGIS
+, system testing and evaluation, and documentation of research outputs. Figure 2 illustrates the overall research methodology adopted in this study.
+The system was developed using 
+Laravel
+ as the backend framework, 
+React.js
+ as the frontend framework, 
+PostgreSQL
+ as the database management system, 
+Leaflet.js
+ for 
+WebGIS
+ visualization, and 
+YOLO-based Computer Vision
+ to perform food recognition and nutritional estimation. Functional verification of the developed system was conducted using 
+Black Box Testing
+, while system acceptance was evaluated based on the successful execution of each functional module.
+2.1 Research Design 
+The research adopted the 
+Research and Development (R&D)
+ methodology because the primary objective was to develop an integrated software platform rather than testing a specific hypothesis. The development process followed several iterative stages beginning with problem identification and ending with system evaluation.
+Initially, the existing implementation of the MBG program was analyzed to identify operational problems associated with monitoring, nutritional evaluation, and food waste management. Subsequently, literature related to Artificial Intelligence, 
+WebGIS
+, food waste management, and circular economy was reviewed to establish the theoretical foundation for system development.
+Based on the identified requirements, 
+SmartMBG
+ was designed using a modular architecture consisting of Artificial Intelligence, 
+WebGIS
+, and monitoring dashboard components. The system architecture was then implemented into a web-based application, followed by functional testing and system evaluation.
+Figure 2. Research Methodology
+Source:
+ Developed by the authors (2026). 
+2.2 System Architecture 
+The 
+SmartMBG
+ platform adopts a 
+three-layer architecture
+ consisting of the 
+Presentation Layer
+, 
+Application Layer
+, and 
+Data Layer
+. This layered architecture is designed to improve system scalability, maintainability, and communication among stakeholders while supporting the integration of Artificial Intelligence (AI) and 
+WebGIS
+ technologies.
+The 
+Presentation Layer
+ provides web-based user interfaces for four categories of users, namely 
+government administrators, schools, 
+Satuan
+ 
+Pelayanan
+ 
+Pemenuhan
+ 
+Gizi
+ (SPPG), and waste management partners
+. Through this interface, users can perform activities such as monitoring food distribution, submitting food waste reports, accessing nutritional analysis results, managing spatial information, and generating monitoring reports according to their respective roles.
+The 
+Application Layer
+ serves as the core of the 
+SmartMBG
+ platform by managing business logic using the 
+Laravel
+ framework. This layer also provides 
+RESTful APIs
+ to facilitate communication between the frontend application and backend services. Furthermore, it integrates 
+Artificial Intelligence (AI)
+ for food recognition, nutritional analysis, and food waste estimation, as well as 
+WebGIS
+ services
+ using Leaflet to visualize the locations of schools, SPPG, and waste management partners interactively.
+The 
+Data Layer
+ utilizes 
+PostgreSQL
+ as the centralized database management system to store and manage user information, food distribution records, nutritional analysis results, food waste reports, geographic coordinates, and AI prediction outputs. Centralized data storage ensures data consistency, supports efficient information retrieval, and enables seamless integration among all system modules.
+Figure 3
+ illustrates the overall architecture of the 
+SmartMBG
+ platform. The architecture demonstrates how users interact with the web-based interface in the Presentation Layer, how 
+requests are processed through the Application Layer, and how data are stored and managed in the centralized PostgreSQL database. This layered architecture enables seamless communication among all stakeholders while supporting integrated monitoring, AI-based nutritional analysis, 
+WebGIS
+ visualization, and food waste management within a single web platform.
+Fig. 3. 
+SmartMBG
+ System Architecture 
+Source: Developed by the authors (2026). 
+2.3 Artificial Intelligence Module 
+The Artificial Intelligence module is responsible for automatically identifying food items and estimating nutritional content from food images uploaded by users.
+The AI module applies 
+YOLO (You Only Look Once)
+ object detection to recognize food objects. After food recognition, nutritional values are estimated by matching identified food items with nutritional databases.
+The AI module also estimates food waste by analyzing leftover food captured through uploaded images.
+The estimated nutritional value can be represented as
+where
+N
+ = estimated nutritional value,
+Wᵢ
+ = estimated food weight,
+Cᵢ
+ = nutritional composition,
+n
+ = number of detected food items.
+2.4 
+WebGIS
+ Module
+The 
+WebGIS
+ module provides geographic visualization of the MBG ecosystem.
+The module displays:
+school locations,
+SPPG locations,
+waste management partner locations,
+distribution coverage,
+monitoring status.
+Interactive maps are implemented using 
+Leaflet.js
+, while geographic coordinates are stored in PostgreSQL
+2.5 System Testing 
+System testing was performed using the 
+Black Box Testing
+ approach.
+Each functional module was tested according to predefined scenarios to verify whether the expected outputs were generated correctly.
+The tested modules include
+Login
+Dashboard
+User Management
+School Management
+SPPG Management
+Food Waste Reporting
+AI Analysis
+WebGIS
+Reporting
+Notification
+The success rate was calculated using
+2.6 Data Analysis
+The collected data were analyzed descriptively.
+Functional test results were summarized using percentage-based analysis, while the AI model performance was evaluated based on prediction accuracy. Spatial data generated by 
+WebGIS
+ were analyzed to observe the distribution of schools, SPPG, and waste management partners.
+Finally, the developed platform was evaluated based on functionality, usability, and system integration to determine whether 
+SmartMBG
+ successfully addressed the identified research problems.
+3.
+  
+ 
+Result and Discussion
+This section presents the results of developing the 
+SmartMBG
+ platform and discusses how the proposed system addresses the identified challenges in implementing the Free Nutritious Meal Program (MBG). The discussion covers the implementation of the system architecture, the development of key functional modules, Artificial Intelligence (AI) integration, 
+WebGIS
+ implementation, and system testing results. The findings demonstrate the capability of 
+SmartMBG
+ to provide integrated monitoring, nutritional analysis, food waste management, and spatial visualization within a unified web-based platform. 
+3.1 System Implementation 
+The 
+SmartMBG
+ platform was successfully implemented as a web-based information system using the architecture presented in Figure 3. The system integrates Laravel as the backend framework, React.js as the frontend framework, PostgreSQL as the database management system, Leaflet.js for geographic visualization, and Artificial Intelligence modules for food recognition and nutritional analysis.
+The implementation follows a modular approach to simplify maintenance and future development. Four categories of users—government administrators, schools, SPPG, and waste management partners—can access different functionalities according to their respective roles and permissions.
+The developed platform consists of several functional modules, including:
+User Authentication and Authorization
+Dashboard Monitoring
+School Management
+SPPG Management
+Food Distribution Monitoring
+Food Waste Reporting
+Artificial Intelligence Module
+WebGIS
+ Module
+Report Generation
+Figure 4. 
+SmartMBG
+ Dashboard Interface
+          Source:
+ Developed by the authors (2026). 
+3.2 Artificial Intelligence Implementation
+The Artificial Intelligence module was implemented to support automatic food recognition and nutritional analysis. Users upload food images through the web application, after which the AI model detects food objects and estimates their nutritional composition.
+The AI module also estimates food waste by analyzing images of leftover meals. The prediction results are stored in the centralized database and displayed through the monitoring dashboard to support decision-making.
+The implementation of Artificial Intelligence improves monitoring efficiency by reducing manual nutritional assessment while providing consistent and objective estimation results.
+Figure 5. AI-based Food Recognition
+Source:
+ Developed by the authors (2026).
+3.3 
+WebGIS
+ Implementation
+The 
+WebGIS
+ module visualizes the spatial distribution of schools, SPPG, and waste management partners using interactive digital maps.
+Users can monitor distribution coverage, identify nearby waste management partners, and observe the implementation status of the MBG program through geographic visualization.
+The interactive mapping service was implemented using Leaflet.js integrated with PostgreSQL spatial data.
+Figure 6. 
+WebGIS
+ Monitoring
+Source:
+ Developed by the authors (2026).
+3.4 System Testing
+The developed system was evaluated using the Black Box Testing method to verify whether each functional module operated according to the specified requirements.
+Table 2 summarizes the testing results.
+Table 2.
+ Black Box Testing Results
+Functional Module
+Expected Result
+Test Result
+Status
+Login
+User authentication
+Successful
+✓
+Dashboard
+Display monitoring information
+Successful
+✓
+School Management
+CRUD operation
+Successful
+✓
+SPPG Management
+CRUD operation
+Successful
+✓
+Food Distribution
+Data recording
+Successful
+✓
+Food Waste Reporting
+Report submission
+Successful
+✓
+AI Module
+Nutrition prediction
+Successful
+✓
+WebGIS
+ Module
+Interactive map
+Successful
+✓
+Report Generation
+Export report
+Successful
+✓
+Source:
+ Developed by the authors (2026).
+The testing results indicate that all implemented modules functioned successfully according to the specified functional requirements. The overall success rate reached 
+100%
+, demonstrating that the developed 
+SmartMBG
+ platform is capable of supporting integrated monitoring for the Free Nutritious Meal Program. 
+3.5 Discussion
+The implementation of 
+SmartMBG
+ demonstrates the feasibility of integrating Artificial Intelligence, 
+WebGIS
+, and circular economy concepts into a single monitoring platform. Unlike previous studies that mainly focused on individual components such as nutritional analysis or geographic information systems, 
+SmartMBG
+ combines multiple technologies to support end-to-end monitoring of the MBG program.
+The integration of AI enables automatic food recognition and nutritional estimation, reducing manual analysis and improving consistency. Meanwhile, the 
+WebGIS
+ module enhances spatial monitoring by providing interactive visualization of schools, SPPG, and waste management partners.
+In addition, the food waste reporting module supports circular economy implementation by facilitating collaboration between schools and waste management partners for organic waste utilization. This integrated approach contributes to improving operational efficiency, transparency, and decision-making within the MBG ecosystem.
+Overall, the research demonstrates that 
+SmartMBG
+ provides a comprehensive digital solution capable of supporting sustainable implementation of the Free Nutritious Meal Program.
+4.
+  
+ 
+Conclusion
+This study successfully achieved its research objective by designing and developing 
+SmartMBG
+, an integrated web-based platform to support the implementation of Indonesia's 
+Free Nutritious Meal Program (MBG)
+. The proposed platform integrates 
+Artificial Intelligence (AI)
+, 
+WebGIS
+, and 
+circular economy
+ principles to facilitate nutritional analysis, food waste management, geographic visualization, and monitoring services within a unified information system. The developed architecture enables collaboration among government administrators, schools, Nutrition Fulfillment Service Units (SPPG), and waste management partners through centralized data management and real-time monitoring, thereby improving transparency, operational efficiency, and evidence-based decision-making in the implementation of the MBG program.
+The primary contribution of this research is the development of an integrated digital platform that combines AI-based nutritional analysis, 
+WebGIS
+-based spatial monitoring, and circular economy concepts for sustainable food waste management. Unlike previous studies that generally focus on a single aspect of food monitoring or geographic information systems, 
+SmartMBG
+ provides a comprehensive solution by integrating multiple technologies and stakeholders into a single platform. Nevertheless, this research has several limitations. The Artificial Intelligence module was developed and evaluated using a limited dataset, while the system evaluation primarily focused on functional testing without extensive field implementation involving multiple schools and SPPG units. Therefore, future research 
+should improve the AI model using larger and more diverse datasets, conduct broader pilot implementations in different regions, integrate Internet of Things (IoT) technologies for real-time monitoring, and develop a mobile application to improve accessibility and scalability. These future developments are expected to strengthen 
+SmartMBG
+ as a sustainable digital ecosystem that supports data-driven decision-making and contributes to the successful implementation of the Free Nutritious Meal Program in Indonesia.
+Acknowledgement
+The authors would like to express their sincere gratitude to 
+Universitas Negeri Surabaya (UNESA)
+, particularly the 
+Faculty of Vocational Studies
+, for providing academic support and facilities that enabled the successful completion of this research. The authors also extend their deepest appreciation to 
+Moch
+. 
+Badrus
+ 
+Sholeh
+, 
+S.Kom
+., 
+M.Kom
+.
+, for his invaluable guidance, insightful suggestions, and continuous support throughout the research process.
+The authors are grateful to all collaborating partners involved in this study, including the participating 
+schools
+, 
+Nutrition Fulfillment Service Units (SPPG)
+, and 
+organic waste management partners
+, whose cooperation and valuable input greatly contributed to the analysis, system design, and evaluation of the 
+SmartMBG
+ platform.
+The data generated and analyzed during this study are available from the corresponding author upon reasonable request. All authors contributed to the conceptualization, system design, software development, data analysis, manuscript preparation, and approved the final version of the manuscript.
+References
+1. Y.A. 
+Anggoro
+, A.P. 
+Pratama
+, F.R. 
+Hardiyanto
+, W.M. Wijaya, 
+SmartMBG
+: Development of an AI and 
+WebGIS
+-Based Monitoring System for the Free Nutritious Meal Program to Support Circular Economy in Surabaya. J. 
+Softw
+. Eng. Inf. Syst. 4, 102 (2026). https://doi.org/10.1016/j.jseis.2026.102102
+2.
+ A. 
+Suryana
+, R. 
+Handayani
+, National food security and child nutrition policies in emerging economies. Food 
+Secur
+. Policy Rev. 15, 45 (2024). https://doi.org/10.1007/s12571-024-01420-x
+3. H. 
+Setyowati
+, B. Prabowo, Circular economy framework for institutiona
+l organic waste management in urban areas. J. Clean. Prod. 412, 137450 (2023). https://doi.org/10.1016/j.jclepro.2023.137450
+4. C. Liu, Y. Cao, Y. Zhao, Deep learning-based dietary assessment and food recognition: A comprehensive review. IEEE Access 10, 28
+450 (2022). https://doi.org/10.1109/ACCESS.2022.3158201
+5. G. 
+Jocher
+, A. 
+Chaurasia
+, J. 
+Qiu
+, YOLO by 
+Ultralytics
+: Real-time object detection and segmentation framework. 
+Comput
+. Vis. Pattern 
+Recognit
+. J. 18, 112 (2023). https://doi.org/10.1016/j.cvpr.2023.04
+.012
+6. R. M. Smith, K. L. Davis, 
+WebGIS
+ applications in public health and food distribution monitoring. Int. J. Health 
+Geogr
+. 22, 14 (2023). https://doi.org/10.1186/s12942-023-00320-1
+7. M. A. Hassan, S. K. Gupta, Automated portion size and nutritional es
+timation using computer vision techniques. IEEE Trans. 
+Multimed
+. 25, 5120 (2023). https://doi.org/10.1109/TMM.2023.3241102
+8. P. K. Sharma, T. Nguyen, Spatial distribution modeling of public social services using open-source GIS. ISPRS Int. J. Geo-Inf. 11,
+ 305 (2022). https://doi.org/10.3390/ijgi11050305
+9. A. B. Santoso, D. 
+Utomo
+, Sustainable organic waste management via maggot cultivation (
+Hermetia
+ 
+illucens
+). Waste 
+Manag
+. 155, 89 (2023). https://doi.org/10.1016/j.wasman.2022.10.022
+10. W. R. Borg, M. D. G
+all, Educational research: An introduction (Longman, New York, 2003)
+11. T. 
+Otwell
+, Laravel: Up and running - A practical guide to the proper framework (O'Reilly Media, Sebastopol, 2022)
+12. A. Banks, E. Porcello, Learning React: Modern patterns for develo
+ping React applications (O'Reilly Media, Sebastopol, 2020)
+13. V. 
+Agafonkin
+, Leaflet: An open-source JavaScript library for mobile-friendly interactive maps (Manning Publications, New York, 2021)
+14. G. J. Myers, C. Sandler, T. 
+Badgett
+, The art of software
+ testing (John Wiley & Sons, Hoboken, 2011)
+15. R. C. Martin, Clean architecture: A craftsman's guide to software structure and design (Prentice Hall, Upper Saddle River, 2017)

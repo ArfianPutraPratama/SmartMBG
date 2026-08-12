@@ -19,7 +19,7 @@ app.add_middleware(
 )
 
 # Inisialisasi model RT-DETR yang baru
-MODEL_PATH = "best (2).pt"
+MODEL_PATH = "best.pt"
 model = None
 try:
     if os.path.exists(MODEL_PATH):
@@ -41,6 +41,7 @@ NUTRITION_DB = {
     # Lauk Hewani
     'ayam': {'kalori': 295, 'protein': 37, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
     'ayam_pop': {'kalori': 260, 'protein': 30, 'lemak': 16, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'dendeng_batokok': {'kalori': 240, 'protein': 28, 'lemak': 12, 'karbo': 2.0, 'serat': 0, 'vit': 0},
     'gulai_ayam': {'kalori': 275, 'protein': 24, 'lemak': 19, 'karbo': 3.5, 'serat': 0.5, 'vit': 0},
     'gulai_ikan': {'kalori': 180, 'protein': 18, 'lemak': 11, 'karbo': 2.0, 'serat': 0.2, 'vit': 0},
     'gulai_tunjang': {'kalori': 251, 'protein': 15, 'lemak': 21, 'karbo': 0.8, 'serat': 0, 'vit': 0},
@@ -62,6 +63,7 @@ NUTRITION_DB = {
     'petai': {'kalori': 92, 'protein': 5.4, 'lemak': 1.6, 'karbo': 15.0, 'serat': 2.0, 'vit': 20},
     'sambal_ijo': {'kalori': 85, 'protein': 1.2, 'lemak': 8.0, 'karbo': 3.0, 'serat': 0.8, 'vit': 30},
     'sambal_merah': {'kalori': 90, 'protein': 1.4, 'lemak': 8.5, 'karbo': 3.2, 'serat': 0.8, 'vit': 35},
+    'buah': {'kalori': 60, 'protein': 0.8, 'lemak': 0.2, 'karbo': 15.0, 'serat': 2.5, 'vit': 45},
     
     # Jajanan Pasar & Lainnya
     'bika_ambon': {'kalori': 290, 'protein': 3.5, 'lemak': 7.5, 'karbo': 52.0, 'serat': 0.5, 'vit': 0},
@@ -94,6 +96,7 @@ def get_food_category(class_name):
     name = class_name.lower()
     if name in ['nasi', 'nasi_goreng', 'kentang_balado']: return 'karbohidrat'
     if name in ['cah_kangkung', 'cabai', 'petai', 'sambal_ijo', 'sambal_merah']: return 'sayur'
+    if name in ['buah']: return 'buah'
     return 'lauk' # Default ke lauk untuk ayam, sate, tempe, tahu, rendang, telur, bakso, kue, dll.
 
 ID_TRANSLATION = {
@@ -124,6 +127,7 @@ ID_TRANSLATION = {
     'putu_ayu': 'Putu Ayu',
     'tahu': 'Tahu',
     'cah_kangkung': 'Cah Kangkung',
+    'buah': 'Buah',
     'lainnya': 'Lainnya'
 }
 
