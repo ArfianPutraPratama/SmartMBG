@@ -1,13 +1,14 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from ultralytics import RTDETR
+from ultralytics import YOLO
 import io
 from PIL import Image
 import uvicorn
 import os
 import base64
+import math
 
-app = FastAPI(title="SmartMBG AI Microservice")
+app = FastAPI(title="SmartMBG AI Microservice (YOLO11)")
 
 # Izinkan CORS agar Laravel/React bisa mengakses API ini
 app.add_middleware(
@@ -18,13 +19,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Inisialisasi model RT-DETR yang baru
-MODEL_PATH = "best (2).pt" if os.path.exists("best (2).pt") else "best.pt"
+# Inisialisasi model YOLO11 Terbaru
+MODEL_PATH = "best_yolo11s.pt" if os.path.exists("best_yolo11s.pt") else ("best.pt" if os.path.exists("best.pt") else "best (5).pt")
 model = None
 try:
     if os.path.exists(MODEL_PATH):
-        model = RTDETR(MODEL_PATH)
-        print(f"Model RT-DETR berhasil dimuat dari {MODEL_PATH}")
+        model = YOLO(MODEL_PATH)
+        print(f"✅ Model YOLO11 ({len(model.names)} Kelas) berhasil dimuat dari: {MODEL_PATH}")
     else:
         print(f"WARNING: Model {MODEL_PATH} belum ditemukan.")
 except Exception as e:
@@ -189,7 +190,12 @@ ID_TRANSLATION = {
 
 @app.get("/")
 def read_root():
-    return {"message": "SmartMBG AI Microservice is running!"}
+    return {
+        "status": "online",
+        "service": "SmartMBG AI Microservice",
+        "model": "YOLO11 Small (29 Indonesian Food Classes)",
+        "model_file": MODEL_PATH
+    }
 
 @app.post("/analyze-food")
 async def analyze_food(file: UploadFile = File(...)):
@@ -197,40 +203,24 @@ async def analyze_food(file: UploadFile = File(...)):
     if not model:
         try:
             if os.path.exists(MODEL_PATH):
-                model = RTDETR(MODEL_PATH)
+                model = YOLO(MODEL_PATH)
         except Exception as e:
             pass
-            
-    # MOCK RESPONSE UNTUK TESTING SEMENTARA TRAINING BELUM SELESAI
+
     if not model:
-        import asyncio
-        await asyncio.sleep(2) # Simulasi loading AI 2 detik
         return {
-            "status": "success",
-            "menu_terdeteksi": ["Nasi", "Ayam", "Tempe", "Sayur Bayam"],
-            "detail_deteksi": [
-                {"name": "Nasi", "confidence": 95.4},
-                {"name": "Ayam", "confidence": 88.2},
-                {"name": "Tempe", "confidence": 91.5},
-                {"name": "Sayur Bayam", "confidence": 82.1}
-            ],
-            "gizi": {
-                "kalori": 577.0,
-                "protein": 49.0,
-                "lemak": 25.0,
-                "karbo": 40.0,
-                "serat": 6.7,
-                "vitamin_mineral": 72.0
-            },
-            "rekomendasi": "[MODE SIMULASI] Model aslinya sedang dilatih ulang menggunakan versi Nano (Sangat Cepat) dengan 30 Epoch. Ini adalah hasil simulasi sementara agar Anda bisa mencoba fitur Upload!"
+            "status": "error",
+            "message": f"Model {MODEL_PATH} tidak dapat dimuat."
         }
 
     # Membaca gambar yang diunggah
     image_data = await file.read()
     image = Image.open(io.BytesIO(image_data))
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
 
-    # Melakukan deteksi dengan YOLO
-    results = model(image)
+    # Melakukan deteksi dengan YOLO11
+    results = model(image, conf=0.20, imgsz=640)
     
     detected_classes = []
     total_gizi = {'kalori': 0, 'protein': 0, 'lemak': 0, 'karbo': 0, 'serat': 0, 'vit': 0}
@@ -243,9 +233,8 @@ async def analyze_food(file: UploadFile = File(...)):
             confidence = box.conf[0].item()
             class_name = model.names[class_id]
             
-            # Filter deteksi dengan akurasi di atas 30% (bisa disesuaikan)
-            # Sebelumnya 1% (0.01), sehingga banyak noise/salah deteksi
-            if confidence > 0.30:
+            # Filter deteksi dengan akurasi di atas 20%
+            if confidence >= 0.20:
                 display_name = ID_TRANSLATION.get(class_name, class_name)
                 
                 # MENGAMBIL POTONGAN GAMBAR (CROP)
@@ -254,17 +243,17 @@ async def analyze_food(file: UploadFile = File(...)):
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
                     crop = image.crop((x1, y1, x2, y2))
                     crop.thumbnail((150, 150)) # Perkecil ukuran agar tidak berat
-                    if crop.mode != 'RGB':
-                        crop = crop.convert('RGB')
                     buffered = io.BytesIO()
-                    crop.save(buffered, format="JPEG")
+                    crop.save(buffered, format="JPEG", quality=85)
                     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
                 except Exception as e:
                     print("Gagal crop gambar:", repr(e))
 
                 detected_classes.append({
                     "name": display_name.replace("_", " ").title(),
+                    "class_raw": class_name,
                     "confidence": round(confidence * 100, 2),
+                    "box": [int(v) for v in box.xyxy[0]],
                     "image_base64": img_str
                 })
                 
@@ -282,15 +271,14 @@ async def analyze_food(file: UploadFile = File(...)):
                 
                 # Mengambil titik koordinat kotak (bounding box)
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
-                box_width = x2 - x1
-                box_height = y2 - y1
+                box_width = max(1, x2 - x1)
+                box_height = max(1, y2 - y1)
                 
                 # Luas Makanan menggunakan Geometri Elips
-                import math
                 food_area = math.pi * (box_width / 2.0) * (box_height / 2.0)
                 
                 # Menghitung Persentase Luas Makanan terhadap Luas Kompartemen
-                fill_ratio = food_area / compartment_area
+                fill_ratio = food_area / compartment_area if compartment_area > 0 else 0.5
                 if fill_ratio > 1.0:
                     fill_ratio = 1.0 # Maksimal 100% penuh
                 
@@ -300,7 +288,6 @@ async def analyze_food(file: UploadFile = File(...)):
                 # Menghitung Nilai Gizi berdasarkan Estimasi Berat (Gram)
                 if class_name in NUTRITION_DB:
                     gizi_item = NUTRITION_DB[class_name]
-                    # Rumus: (Berat / 100) * Nilai Gizi per 100g
                     weight_multiplier = estimated_weight_g / 100.0
                     total_gizi['kalori'] += gizi_item['kalori'] * weight_multiplier
                     total_gizi['protein'] += gizi_item['protein'] * weight_multiplier
@@ -314,7 +301,15 @@ async def analyze_food(file: UploadFile = File(...)):
          return {
             "status": "success",
             "menu_terdeteksi": [],
-            "gizi": total_gizi,
+            "detail_deteksi": [],
+            "gizi": {
+                "kalori": 0,
+                "protein": 0,
+                "lemak": 0,
+                "karbo": 0,
+                "serat": 0,
+                "vitamin_mineral": 0
+            },
             "rekomendasi": "Tidak dapat mendeteksi makanan yang spesifik dari foto ini."
         }
 
@@ -330,7 +325,7 @@ async def analyze_food(file: UploadFile = File(...)):
             "serat": round(total_gizi['serat'], 1),
             "vitamin_mineral": round(total_gizi['vit'], 1)
         },
-        "rekomendasi": "Menu ini telah dianalisis berdasarkan deteksi visual. Hasil mungkin bervariasi bergantung pada ukuran porsi aslinya."
+        "rekomendasi": "Menu bergizi ini telah dianalisis menggunakan YOLO11 (29 Kelas Makanan Indonesia) dengan kalkulasi nutrisi terstandarisasi."
     }
 
 if __name__ == "__main__":
