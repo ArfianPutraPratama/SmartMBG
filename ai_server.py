@@ -19,7 +19,7 @@ app.add_middleware(
 )
 
 # Inisialisasi model RT-DETR yang baru
-MODEL_PATH = "best.pt"
+MODEL_PATH = "best (2).pt" if os.path.exists("best (2).pt") else "best.pt"
 model = None
 try:
     if os.path.exists(MODEL_PATH):
@@ -30,40 +30,67 @@ try:
 except Exception as e:
     print(f"Gagal memuat model: {e}")
 
-# Database Gizi Sederhana (Estimasi per 1 porsi standar / gram tertentu)
 # Database Gizi Standar TKPI (Per 100 gram)
 NUTRITION_DB = {
     # Karbohidrat
     'nasi': {'kalori': 130, 'protein': 2.7, 'lemak': 0.3, 'karbo': 28, 'serat': 0.4, 'vit': 0},
+    'rice': {'kalori': 130, 'protein': 2.7, 'lemak': 0.3, 'karbo': 28, 'serat': 0.4, 'vit': 0},
     'nasi_goreng': {'kalori': 168, 'protein': 4.0, 'lemak': 6.2, 'karbo': 24, 'serat': 0.8, 'vit': 0},
+    'bread': {'kalori': 265, 'protein': 9.0, 'lemak': 3.2, 'karbo': 49.0, 'serat': 2.7, 'vit': 0},
+    'noodle': {'kalori': 138, 'protein': 4.5, 'lemak': 2.1, 'karbo': 25.0, 'serat': 1.2, 'vit': 0},
+    'potato': {'kalori': 87, 'protein': 1.9, 'lemak': 0.1, 'karbo': 20.0, 'serat': 1.8, 'vit': 19},
+    'cassava': {'kalori': 160, 'protein': 1.4, 'lemak': 0.3, 'karbo': 38.0, 'serat': 1.8, 'vit': 20},
+    'corn': {'kalori': 96, 'protein': 3.4, 'lemak': 1.5, 'karbo': 21.0, 'serat': 2.4, 'vit': 7},
+    'oat': {'kalori': 68, 'protein': 2.4, 'lemak': 1.4, 'karbo': 12.0, 'serat': 1.7, 'vit': 0},
     'kentang_balado': {'kalori': 110, 'protein': 2.0, 'lemak': 4.5, 'karbo': 16.5, 'serat': 1.5, 'vit': 12},
     
     # Lauk Hewani
     'ayam': {'kalori': 295, 'protein': 37, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'chicken': {'kalori': 295, 'protein': 37, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
     'ayam_pop': {'kalori': 260, 'protein': 30, 'lemak': 16, 'karbo': 0, 'serat': 0, 'vit': 0},
     'dendeng_batokok': {'kalori': 240, 'protein': 28, 'lemak': 12, 'karbo': 2.0, 'serat': 0, 'vit': 0},
     'gulai_ayam': {'kalori': 275, 'protein': 24, 'lemak': 19, 'karbo': 3.5, 'serat': 0.5, 'vit': 0},
     'gulai_ikan': {'kalori': 180, 'protein': 18, 'lemak': 11, 'karbo': 2.0, 'serat': 0.2, 'vit': 0},
     'gulai_tunjang': {'kalori': 251, 'protein': 15, 'lemak': 21, 'karbo': 0.8, 'serat': 0, 'vit': 0},
     'rendang': {'kalori': 193, 'protein': 22.6, 'lemak': 7.9, 'karbo': 7.8, 'serat': 0.5, 'vit': 0},
+    'meat': {'kalori': 250, 'protein': 26, 'lemak': 15, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'meatball': {'kalori': 202, 'protein': 15.0, 'lemak': 14.2, 'karbo': 3.2, 'serat': 0.3, 'vit': 0},
+    'bakso': {'kalori': 202, 'protein': 15.0, 'lemak': 14.2, 'karbo': 3.2, 'serat': 0.3, 'vit': 0},
+    'fish': {'kalori': 120, 'protein': 20.0, 'lemak': 4.0, 'karbo': 0, 'serat': 0, 'vit': 0},
+    'pepes_ikan': {'kalori': 140, 'protein': 16.5, 'lemak': 6.8, 'karbo': 3.0, 'serat': 0.5, 'vit': 0},
+    'shrimp': {'kalori': 99, 'protein': 24.0, 'lemak': 0.3, 'karbo': 0.2, 'serat': 0, 'vit': 0},
+    'udang_balado': {'kalori': 142, 'protein': 19.4, 'lemak': 6.0, 'karbo': 1.5, 'serat': 0.2, 'vit': 0},
+    'egg': {'kalori': 155, 'protein': 13.0, 'lemak': 11.0, 'karbo': 1.1, 'serat': 0, 'vit': 0},
     'telur_balado': {'kalori': 175, 'protein': 12.5, 'lemak': 13.0, 'karbo': 2.0, 'serat': 0, 'vit': 0},
     'telur_dadar': {'kalori': 251, 'protein': 12.4, 'lemak': 21.3, 'karbo': 1.2, 'serat': 0, 'vit': 0},
-    'udang_balado': {'kalori': 142, 'protein': 19.4, 'lemak': 6.0, 'karbo': 1.5, 'serat': 0.2, 'vit': 0},
-    'bakso': {'kalori': 202, 'protein': 15.0, 'lemak': 14.2, 'karbo': 3.2, 'serat': 0.3, 'vit': 0},
-    'pepes_ikan': {'kalori': 140, 'protein': 16.5, 'lemak': 6.8, 'karbo': 3.0, 'serat': 0.5, 'vit': 0},
+    'omelet': {'kalori': 154, 'protein': 11.0, 'lemak': 12.0, 'karbo': 0.6, 'serat': 0, 'vit': 0},
     'sate': {'kalori': 225, 'protein': 21.0, 'lemak': 14.5, 'karbo': 3.6, 'serat': 0, 'vit': 0},
+    'nugget': {'kalori': 296, 'protein': 15.0, 'lemak': 20.0, 'karbo': 14.0, 'serat': 0.5, 'vit': 0},
+    'shredded_chicken': {'kalori': 220, 'protein': 25.0, 'lemak': 11.0, 'karbo': 2.0, 'serat': 0, 'vit': 0},
+    'shredded_fish': {'kalori': 210, 'protein': 24.0, 'lemak': 10.0, 'karbo': 2.0, 'serat': 0, 'vit': 0},
     
     # Lauk Nabati
     'tempe': {'kalori': 193, 'protein': 19, 'lemak': 11, 'karbo': 9, 'serat': 5, 'vit': 0},
     'tahu': {'kalori': 76, 'protein': 8, 'lemak': 4.8, 'karbo': 1.9, 'serat': 0.3, 'vit': 0},
+    'tofu': {'kalori': 76, 'protein': 8, 'lemak': 4.8, 'karbo': 1.9, 'serat': 0.3, 'vit': 0},
+    'bean': {'kalori': 127, 'protein': 9.0, 'lemak': 0.5, 'karbo': 23.0, 'serat': 7.0, 'vit': 0},
+    'fritter': {'kalori': 200, 'protein': 4.0, 'lemak': 12.0, 'karbo': 19.0, 'serat': 1.5, 'vit': 0},
+    'cheese': {'kalori': 402, 'protein': 25.0, 'lemak': 33.0, 'karbo': 1.3, 'serat': 0, 'vit': 0},
+    'cracker': {'kalori': 500, 'protein': 7.0, 'lemak': 25.0, 'karbo': 60.0, 'serat': 1.0, 'vit': 0},
     
     # Sayur & Buah
     'cah_kangkung': {'kalori': 45, 'protein': 2.5, 'lemak': 2.1, 'karbo': 4.2, 'serat': 2.0, 'vit': 42},
+    'vegetable': {'kalori': 40, 'protein': 2.0, 'lemak': 0.5, 'karbo': 7.0, 'serat': 2.5, 'vit': 50},
     'cabai': {'kalori': 40, 'protein': 1.9, 'lemak': 0.4, 'karbo': 9.0, 'serat': 1.5, 'vit': 140},
     'petai': {'kalori': 92, 'protein': 5.4, 'lemak': 1.6, 'karbo': 15.0, 'serat': 2.0, 'vit': 20},
     'sambal_ijo': {'kalori': 85, 'protein': 1.2, 'lemak': 8.0, 'karbo': 3.0, 'serat': 0.8, 'vit': 30},
     'sambal_merah': {'kalori': 90, 'protein': 1.4, 'lemak': 8.5, 'karbo': 3.2, 'serat': 0.8, 'vit': 35},
     'buah': {'kalori': 60, 'protein': 0.8, 'lemak': 0.2, 'karbo': 15.0, 'serat': 2.5, 'vit': 45},
+    'fruit': {'kalori': 60, 'protein': 0.8, 'lemak': 0.2, 'karbo': 15.0, 'serat': 2.5, 'vit': 45},
+    
+    # Susu & Minuman (MBG)
+    'milk': {'kalori': 65, 'protein': 3.3, 'lemak': 3.6, 'karbo': 4.8, 'serat': 0, 'vit': 10},
+    'juice': {'kalori': 45, 'protein': 0.5, 'lemak': 0.1, 'karbo': 11.0, 'serat': 0.2, 'vit': 30},
     
     # Jajanan Pasar & Lainnya
     'bika_ambon': {'kalori': 290, 'protein': 3.5, 'lemak': 7.5, 'karbo': 52.0, 'serat': 0.5, 'vit': 0},
@@ -94,14 +121,17 @@ FULL_WEIGHT_GRAMS = {
 
 def get_food_category(class_name):
     name = class_name.lower()
-    if name in ['nasi', 'nasi_goreng', 'kentang_balado']: return 'karbohidrat'
-    if name in ['cah_kangkung', 'cabai', 'petai', 'sambal_ijo', 'sambal_merah']: return 'sayur'
-    if name in ['buah']: return 'buah'
+    if name in ['nasi', 'nasi_goreng', 'kentang_balado', 'rice', 'bread', 'noodle', 'potato', 'cassava', 'corn', 'oat']: return 'karbohidrat'
+    if name in ['cah_kangkung', 'cabai', 'petai', 'sambal_ijo', 'sambal_merah', 'vegetable']: return 'sayur'
+    if name in ['buah', 'fruit']: return 'buah'
+    if name in ['milk', 'juice']: return 'susu'
     return 'lauk' # Default ke lauk untuk ayam, sate, tempe, tahu, rendang, telur, bakso, kue, dll.
 
 ID_TRANSLATION = {
     'ayam': 'Ayam',
+    'chicken': 'Ayam',
     'nasi': 'Nasi',
+    'rice': 'Nasi',
     'sate': 'Sate',
     'tempe': 'Tempe',
     'ayam_pop': 'Ayam Pop',
@@ -117,17 +147,43 @@ ID_TRANSLATION = {
     'sauce': 'Saus',
     'telur_balado': 'Telur Balado',
     'telur_dadar': 'Telur Dadar',
+    'omelet': 'Telur Dadar',
+    'egg': 'Telur',
     'udang_balado': 'Udang Balado',
+    'shrimp': 'Udang',
     'bakso': 'Bakso',
+    'meatball': 'Bakso',
+    'meat': 'Daging',
+    'fish': 'Ikan',
+    'pepes_ikan': 'Pepes Ikan',
     'bika_ambon': 'Bika Ambon',
     'dadar_gulung': 'Dadar Gulung',
     'kue_cubit': 'Kue Cubit',
     'nasi_goreng': 'Nasi Goreng',
-    'pepes_ikan': 'Pepes Ikan',
     'putu_ayu': 'Putu Ayu',
     'tahu': 'Tahu',
+    'tofu': 'Tahu',
     'cah_kangkung': 'Cah Kangkung',
+    'vegetable': 'Sayur',
     'buah': 'Buah',
+    'fruit': 'Buah',
+    'milk': 'Susu MBG',
+    'juice': 'Jus',
+    'bread': 'Roti',
+    'noodle': 'Mie',
+    'nugget': 'Nugget',
+    'cracker': 'Kerupuk',
+    'cheese': 'Keju',
+    'bean': 'Kacang',
+    'fritter': 'Gorengan',
+    'corn': 'Jagung',
+    'potato': 'Kentang',
+    'cassava': 'Singkong',
+    'oat': 'Oat',
+    'shredded_chicken': 'Ayam Suwir',
+    'shredded_fish': 'Abon Ikan',
+    'tray': 'Baki MBG',
+    'empty': 'Kosong',
     'lainnya': 'Lainnya'
 }
 
