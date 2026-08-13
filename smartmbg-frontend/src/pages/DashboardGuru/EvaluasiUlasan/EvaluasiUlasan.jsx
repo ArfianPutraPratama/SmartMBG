@@ -228,7 +228,7 @@ const EvaluasiUlasan = () => {
                 <div className="review-card" key={review.id}>
                   <div className="review-img-box">
                     <NgrokImage 
-                      src={review.image ? `https://8ead-103-242-124-22.ngrok-free.app/api/file/${review.image}` : getFallbackImage(review.description)} 
+                      src={review.image ? `https://5e86-182-8-67-131.ngrok-free.app/api/file/${review.image}` : getFallbackImage(review.description)} 
                       alt="Menu" 
                       className="review-img" 
                     />
