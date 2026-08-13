@@ -54,7 +54,7 @@ const EvaluasiList = ({ reviews = [] }) => {
             <div className="eval-item-img" style={{width:'300px', flexShrink:0}}>
               {item.image ? (
                 <NgrokImage 
-                  src={`https://5e86-182-8-67-131.ngrok-free.app/api/file/${item.image}`} 
+                  src={`https://033b-182-8-67-131.ngrok-free.app/api/file/${item.image}`} 
                   alt={item.school_name} 
                   style={{width:'100%', height:'100%', objectFit:'cover'}} 
                 />
