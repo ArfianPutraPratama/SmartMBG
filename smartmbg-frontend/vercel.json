@@ -1,6 +1,18 @@
 {
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "https://5e86-182-8-67-131.ngrok-free.app/api/:path*"
+    },
+    {
+      "source": "/storage/:path*",
+      "destination": "https://5e86-182-8-67-131.ngrok-free.app/storage/:path*"
+    },
+    {
+      "source": "/sanctum/:path*",
+      "destination": "https://5e86-182-8-67-131.ngrok-free.app/sanctum/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

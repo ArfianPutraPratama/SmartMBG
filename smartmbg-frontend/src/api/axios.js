@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'https://5e86-182-8-67-131.ngrok-free.app/api', // Menggunakan Environment Variable dari Vercel
+    baseURL: import.meta.env.VITE_API_URL || '/api', // Menggunakan proxy Vercel untuk menghindari CORS
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
