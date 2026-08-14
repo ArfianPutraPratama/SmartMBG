@@ -19,8 +19,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Inisialisasi model YOLO11 Terbaru
-MODEL_PATH = "best_yolo11s.pt" if os.path.exists("best_yolo11s.pt") else ("best.pt" if os.path.exists("best.pt") else "best (5).pt")
+# Inisialisasi model YOLO11 Terbaru (Mega Dataset 1.181 Kelas)
+MODEL_PATH = r"yolo11v2\best_new.pt"
 model = None
 try:
     if os.path.exists(MODEL_PATH):
@@ -101,6 +101,24 @@ NUTRITION_DB = {
     'sauce': {'kalori': 80, 'protein': 1.0, 'lemak': 0.2, 'karbo': 18.0, 'serat': 0.5, 'vit': 0},
     'lainnya': {'kalori': 50, 'protein': 1.0, 'lemak': 0.5, 'karbo': 10.0, 'serat': 0.5, 'vit': 0}
 }
+
+import csv
+try:
+    with open('nutrition.csv', mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            name_key = row['name'].lower()
+            if name_key not in NUTRITION_DB:
+                NUTRITION_DB[name_key] = {
+                    'kalori': float(row['calories'] or 0),
+                    'protein': float(row['proteins'] or 0),
+                    'lemak': float(row['fat'] or 0),
+                    'karbo': float(row['carbohydrate'] or 0),
+                    'serat': 1.0, # Default
+                    'vit': 0
+                }
+except Exception as e:
+    print("WARNING: Gagal memuat nutrition.csv tambahan:", e)
 
 # Kalibrasi: Persentase Luas Kompartemen Standar pada Baki MBG (Total = 1.0 atau 100% foto)
 COMPARTMENT_AREA_RATIO = {
@@ -193,7 +211,7 @@ def read_root():
     return {
         "status": "online",
         "service": "SmartMBG AI Microservice",
-        "model": "YOLO11 Small (29 Indonesian Food Classes)",
+        "model": "YOLO11 Small (72 Indonesian Food Classes)",
         "model_file": MODEL_PATH
     }
 
@@ -286,8 +304,16 @@ async def analyze_food(file: UploadFile = File(...)):
                 estimated_weight_g = fill_ratio * full_weight
                 
                 # Menghitung Nilai Gizi berdasarkan Estimasi Berat (Gram)
-                if class_name in NUTRITION_DB:
-                    gizi_item = NUTRITION_DB[class_name]
+                lookup_name = class_name.lower()
+                gizi_item = NUTRITION_DB.get(lookup_name)
+                
+                if not gizi_item:
+                    for db_key, db_val in NUTRITION_DB.items():
+                        if lookup_name in db_key:
+                            gizi_item = db_val
+                            break
+
+                if gizi_item:
                     weight_multiplier = estimated_weight_g / 100.0
                     total_gizi['kalori'] += gizi_item['kalori'] * weight_multiplier
                     total_gizi['protein'] += gizi_item['protein'] * weight_multiplier
@@ -325,7 +351,7 @@ async def analyze_food(file: UploadFile = File(...)):
             "serat": round(total_gizi['serat'], 1),
             "vitamin_mineral": round(total_gizi['vit'], 1)
         },
-        "rekomendasi": "Menu bergizi ini telah dianalisis menggunakan YOLO11 (29 Kelas Makanan Indonesia) dengan kalkulasi nutrisi terstandarisasi."
+        "rekomendasi": "Menu bergizi ini telah dianalisis menggunakan YOLO11 (72 Kelas Makanan Indonesia) dengan kalkulasi nutrisi terstandarisasi."
     }
 
 if __name__ == "__main__":
